@@ -91,10 +91,7 @@ class _PatrimonioReaderComponentState
     if (mounted) {
       resultado = await context
           .read<ConferenciaProvider>()
-          .atualizaStatusConferido(
-            "conferido",
-            patrimonioLido,
-          );
+          .atualizaStatusConferido("conferido", patrimonioLido);
     }
 
     if (!resultado) {
@@ -129,9 +126,7 @@ class _PatrimonioReaderComponentState
             content: RichText(
               text: TextSpan(
                 children: [
-                  TextSpan(
-                    text: "Patrimônio ",
-                  ),
+                  TextSpan(text: "Patrimônio "),
                   TextSpan(
                     text: patrimonioLido,
                     style: TextStyle(fontWeight: FontWeight.bold), // negrito
@@ -163,8 +158,17 @@ class _PatrimonioReaderComponentState
                   final lista = provider.itens;
 
                   if (lista.isEmpty) {
-                    return Text(
-                      'Nenhum patrimônio listado para conferência.',
+                    return Center(
+                      child: Text(
+                        'Nenhum patrimônio listado para conferência.',
+                      ).animate(
+                        effects: [
+                          FadeEffect(
+                            delay: Duration(milliseconds: 100),
+                            duration: Duration(milliseconds: 800),
+                          ),
+                        ],
+                      ),
                     );
                   }
 
@@ -185,45 +189,60 @@ class _PatrimonioReaderComponentState
                         final patrimonio = lista[index];
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Card(
-                            child: ListTile(
-                              isThreeLine: true,
-                              selected:
-                                  patrimonio.situacaoConferencia == "conferido",
-                              tileColor:
-                                  patrimonio.situacaoConferencia == "pendente"
-                                      ? null
-                                      : Theme.of(
-                                        context,
-                                      ).colorScheme.surfaceContainerHigh,
-                              onTap: () {
-                                final String situacao =
-                                    patrimonio.situacaoConferencia == "pendente"
-                                        ? "conferido"
-                                        : "pendente";
-                                context
-                                    .read<ConferenciaProvider>()
-                                    .atualizaStatusConferido(
-                                      situacao,
-                                      patrimonio.patrimonio,
-                                    );
-                                // });
-                              },
-                              leading:
-                                  patrimonio.situacaoConferencia == "pendente"
-                                      ? Icon(
-                                        Icons.check_box_outline_blank,
-                                      )
-                                      : Icon(
-                                        Icons.check_box,
-                                      ),
-                              title: Text(
-                                patrimonio.nAntigo != ""
-                                    ? "Patrimônio: ${patrimonio.patrimonio}\nNº Antigo: ${patrimonio.nAntigo}"
-                                    : "Patrimônio: ${patrimonio.patrimonio}",
+                          child: Dismissible(
+                            direction: DismissDirection.endToStart,
+                            background: Container(
+                              padding: EdgeInsets.only(right: 30),
+                              margin: EdgeInsets.symmetric(vertical: 6),
+                              color: Theme.of(context).colorScheme.error,
+                              alignment: Alignment.centerRight,
+                              child: Icon(
+                                Icons.delete_forever,
+                                color: Colors.white,
                               ),
-                              subtitle: Text(
-                                patrimonio.descricao,
+                            ),
+                            key: ValueKey(patrimonio.patrimonio),
+                            onDismissed: (_) {
+                              context.read<ConferenciaProvider>().removerItem(
+                                patrimonio.patrimonio,
+                              );
+                            },
+                            child: Card(
+                              child: ListTile(
+                                isThreeLine: true,
+                                selected:
+                                    patrimonio.situacaoConferencia ==
+                                    "conferido",
+                                tileColor:
+                                    patrimonio.situacaoConferencia == "pendente"
+                                        ? null
+                                        : Theme.of(
+                                          context,
+                                        ).colorScheme.surfaceContainerHigh,
+                                onTap: () {
+                                  final String situacao =
+                                      patrimonio.situacaoConferencia ==
+                                              "pendente"
+                                          ? "conferido"
+                                          : "pendente";
+                                  context
+                                      .read<ConferenciaProvider>()
+                                      .atualizaStatusConferido(
+                                        situacao,
+                                        patrimonio.patrimonio,
+                                      );
+                                  // });
+                                },
+                                leading:
+                                    patrimonio.situacaoConferencia == "pendente"
+                                        ? Icon(Icons.check_box_outline_blank)
+                                        : Icon(Icons.check_box),
+                                title: Text(
+                                  patrimonio.nAntigo != ""
+                                      ? "Patrimônio: ${patrimonio.patrimonio}\nNº Antigo: ${patrimonio.nAntigo}"
+                                      : "Patrimônio: ${patrimonio.patrimonio}",
+                                ),
+                                subtitle: Text(patrimonio.descricao),
                               ),
                             ),
                           ),
@@ -245,10 +264,7 @@ class _PatrimonioReaderComponentState
                 right: 10,
                 child: FloatingActionButton(
                   onPressed: lerPatrimonio,
-                  child: Icon(
-                    Icons.barcode_reader,
-                    size: 30,
-                  ),
+                  child: Icon(Icons.barcode_reader, size: 30),
                 ),
               ).animate(
                 effects: [
