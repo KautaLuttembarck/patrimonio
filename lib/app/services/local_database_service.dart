@@ -190,13 +190,9 @@ class LocalDatabaseService {
       return false;
     }
     try {
-      _database!.delete(
-        'patrimonios',
-      );
+      _database!.delete('patrimonios');
 
-      _database!.delete(
-        'alteracoes',
-      );
+      _database!.delete('alteracoes');
     } catch (e) {
       debugPrint('Erro ao esvaziar o banco $e');
       return false;
@@ -316,5 +312,15 @@ class LocalDatabaseService {
       whereArgs: [patrimonio],
     );
     return result.map((e) => Patrimonio.fromMapConferencia(e)).toList();
+  }
+
+  // Remove da tabela de conferência o patrimônio informado
+  Future<void> removePatrimonioDaConferencia(String patrimonio) async {
+    if (_database == null) return;
+    await _database!.delete(
+      'conferencia',
+      where: "Patrimonio = ?",
+      whereArgs: [patrimonio],
+    );
   }
 }
