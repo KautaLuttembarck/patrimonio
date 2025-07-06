@@ -57,4 +57,9 @@ class ConferenciaProvider extends ChangeNotifier {
 
     return result > 0;
   }
+
+  Future<void> removerItem(String patrimonio) async {
+    await _db.removePatrimonioDaConferencia(patrimonio);
+    await carregarItens(); // recarrega e notifica
+  }
 }
