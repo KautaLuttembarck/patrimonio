@@ -323,4 +323,17 @@ class LocalDatabaseService {
       whereArgs: [patrimonio],
     );
   }
+
+  // Obtém a quantidade de patrimonios conferidos
+  Future<int> getPatrimoniosConferidos() async {
+    if (_database == null) return 0;
+
+    final result = await _database!.rawQuery(
+      'SELECT COUNT(*) AS \'conferidos\' '
+      'FROM conferencia '
+      'WHERE conferencia.situacaoConferencia != \'pendente\';',
+    );
+
+    return result[0]['conferidos'] as int;
+  }
 }
