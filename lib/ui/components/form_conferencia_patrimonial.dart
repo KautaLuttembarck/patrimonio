@@ -150,6 +150,15 @@ class _PatrimonioReaderComponentState
       spacing: 15,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (context.watch<ConferenciaProvider>().tamanhoLista > 0)
+          Padding(
+            padding: const EdgeInsets.only(top: 15.0),
+            child: Text(
+              "Patrimônios conferidos: ${context.watch<ConferenciaProvider>().patrimoniosConferidos} / ${context.watch<ConferenciaProvider>().tamanhoLista}",
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+          ),
+
         Expanded(
           child: Stack(
             children: [
