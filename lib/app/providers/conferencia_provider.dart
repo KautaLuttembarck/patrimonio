@@ -5,14 +5,17 @@ import 'package:patrimonio/app/services/local_database_service.dart';
 class ConferenciaProvider extends ChangeNotifier {
   final LocalDatabaseService _db;
   List<Patrimonio> _itens = [];
+  int _patrimoniosConferidos = 0;
 
   ConferenciaProvider(this._db);
 
   List<Patrimonio> get itens => List.unmodifiable(_itens);
   int get tamanhoLista => _itens.length;
+  int get patrimoniosConferidos => _patrimoniosConferidos;
 
   Future<void> carregarItens() async {
     _itens = await _db.getConferencia();
+    _patrimoniosConferidos = await _db.getPatrimoniosConferidos();
     notifyListeners();
   }
 
