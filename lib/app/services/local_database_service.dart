@@ -2,6 +2,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter/material.dart';
 import 'package:patrimonio/app/models/patrimonio.dart';
+import 'package:patrimonio/app/services/local_database_config.dart';
 
 class LocalDatabaseService {
   static Database? _database;
@@ -130,7 +131,7 @@ class LocalDatabaseService {
 
   // retorna o registro da última ação realizada no banco de dados local
   // retorna null em caso de tabela vazia
-  Future<Map<String, dynamic>?> obterUltimaAcao() async {
+  Future<Map<String, dynamic>?> obterUltimaCarga() async {
     if (_database == null) {
       return null;
     }
@@ -138,12 +139,14 @@ class LocalDatabaseService {
     final List<Map<String, dynamic>> resultado = await _database!.query(
       'alteracoes',
       orderBy: 'realizado_em DESC',
+      where: "acao = ?",
+      whereArgs: ['inserirPatrimonios'],
       limit: 1,
     );
     return resultado.isNotEmpty ? resultado.first : null;
   }
 
-  // Obtem a data da última ação no banco e retorna:
+  // Obtém a data da última carga no banco e retorna:
   //  - verdadeiro para data maior que 24h da data atual
   //  - falso não exista registro de ação ou a ação registrada tenha ocorrido
   //    em menos de 24h
@@ -151,7 +154,7 @@ class LocalDatabaseService {
     if (_database == null) {
       return false;
     }
-    Map<String, dynamic>? ultimaAcao = await obterUltimaAcao();
+    Map<String, dynamic>? ultimaAcao = await obterUltimaCarga();
 
     if (ultimaAcao == null) {
       return true;
@@ -164,7 +167,7 @@ class LocalDatabaseService {
     // Verifica se já passou mais de 1 dia (24 horas)
     final Duration diferenca = agora.difference(dataUltima);
 
-    return diferenca.inHours >= 24;
+    return diferenca.inHours >= LocalDatabaseConfig.validadeDosDados;
   }
 
   Future<List<Patrimonio>> getPatrimoniosDaUl(int ul) async {
