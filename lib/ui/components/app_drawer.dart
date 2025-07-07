@@ -20,7 +20,7 @@ class AppDrawer extends StatelessWidget {
             const AppDrawerActionList(),
             Expanded(child: SizedBox()),
             Text(
-              "Versão: 0.1 RC1",
+              "Versão: 0.1a",
               textAlign: TextAlign.center,
               style: Theme.of(
                 context,
