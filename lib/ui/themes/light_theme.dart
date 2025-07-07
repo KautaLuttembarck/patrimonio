@@ -169,9 +169,9 @@ final ThemeData lightTheme = ThemeData(
 
   snackBarTheme: SnackBarThemeData(
     showCloseIcon: true,
-    closeIconColor: _baseTextColor,
+    closeIconColor: _reverseTextColor,
     contentTextStyle: TextStyle(
-      color: _baseTextColor,
+      color: _reverseTextColor,
     ),
     behavior: SnackBarBehavior.floating,
   ),
