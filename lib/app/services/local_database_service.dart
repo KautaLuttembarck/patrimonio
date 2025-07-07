@@ -108,6 +108,9 @@ class LocalDatabaseService {
       'SELECT COUNT(*) AS total FROM patrimonios',
     );
 
+    // Registra na tabela acoes
+    await inserirAcaoRealizada("lerQuantidadePatrimonios");
+
     if (result != null && result.isNotEmpty) {
       return Sqflite.firstIntValue(result) ?? 0;
     }
@@ -147,9 +150,9 @@ class LocalDatabaseService {
   }
 
   // Obtém a data da última carga no banco e retorna:
-  //  - verdadeiro para data maior que 24h da data atual
-  //  - falso não exista registro de ação ou a ação registrada tenha ocorrido
-  //    em menos de 24h
+  //  - verdadeiro para data maior que o valor da validade dos dados ou caso
+  //  não exista registro de carga
+  //  - falso caso a carga registrada tenha ocorrido em menos de 24h
   Future<bool> precisaAtualizar() async {
     if (_database == null) {
       return false;
@@ -164,9 +167,9 @@ class LocalDatabaseService {
     final DateTime dataUltima = DateTime.parse(dataStr);
     final DateTime agora = DateTime.now();
 
-    // Verifica se já passou mais de 1 dia (24 horas)
     final Duration diferenca = agora.difference(dataUltima);
 
+    // Retorna se já passou a validade dos dados
     return diferenca.inHours >= LocalDatabaseConfig.validadeDosDados;
   }
 
@@ -200,6 +203,8 @@ class LocalDatabaseService {
       debugPrint('Erro ao esvaziar o banco $e');
       return false;
     }
+    // Registra na tabela acoes
+    await inserirAcaoRealizada("esvaziaTabelaPatrimonios");
     return true;
   }
 
@@ -227,7 +232,8 @@ class LocalDatabaseService {
 
       await batch.commit(noResult: true);
     });
-    // await inserirAcaoRealizada('copiarParaConferenciaPorUl:$idUl');
+    // Registra na tabela acoes
+    await inserirAcaoRealizada("copiarParaConferenciaPorUl");
   }
 
   // Recupera os dados da tabela de conferencia
@@ -251,14 +257,16 @@ class LocalDatabaseService {
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
 
-    // await inserirAcaoRealizada("inserirConferencia");
+    // Registra na tabela acoes
+    await inserirAcaoRealizada("inserirNaConferencia");
   }
 
   Future<void> limparTabelaConferencia() async {
     if (_database == null) return;
 
     await _database!.delete('conferencia');
-    // await inserirAcaoRealizada("limparConferencia");
+    // Registra na tabela acoes
+    await inserirAcaoRealizada("limparTabelaConferencia");
   }
 
   // Atualiza a situação de conferência de um patrimônio
@@ -325,10 +333,13 @@ class LocalDatabaseService {
       where: "Patrimonio = ?",
       whereArgs: [patrimonio],
     );
+
+    // Registra na tabela acoes
+    await inserirAcaoRealizada("removePatrimonioDaConferencia $patrimonio");
   }
 
   // Obtém a quantidade de patrimonios conferidos
-  Future<int> getPatrimoniosConferidos() async {
+  Future<int> getQuantidadePatrimoniosConferidos() async {
     if (_database == null) return 0;
 
     final result = await _database!.rawQuery(
