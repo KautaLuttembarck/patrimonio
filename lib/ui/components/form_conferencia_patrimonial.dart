@@ -189,13 +189,9 @@ class _PatrimonioReaderComponentState
                     scrollbarOrientation: ScrollbarOrientation.right,
                     child: ListView.builder(
                       controller: _scrollController,
-                      padding: const EdgeInsets.symmetric(vertical: 15.0),
-                      itemCount: lista.length + 1, // Adicionado SizedBox
+                      padding: const EdgeInsets.only(bottom: 60.0),
+                      itemCount: lista.length,
                       itemBuilder: (context, index) {
-                        if (index == lista.length) {
-                          // Último item: espaço extra
-                          return const SizedBox(height: 60);
-                        }
                         final patrimonio = lista[index];
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
