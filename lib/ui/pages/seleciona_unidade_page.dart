@@ -20,12 +20,11 @@ class _SelecionaUnidadeState extends State<SelecionaUnidadePage> {
       child: Scaffold(
         appBar: AppBar(title: Text("Definir Localização")),
         drawer: AppDrawer(),
-        body: Container(
-          margin: EdgeInsets.only(top: 40, right: 20, bottom: 20, left: 20),
-          constraints: BoxConstraints(
-            minWidth: MediaQuery.of(context).size.width,
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: FormSelecionaUnidade(),
           ),
-          child: FormSelecionaUnidade(),
         ),
       ),
     );

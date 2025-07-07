@@ -13,13 +13,11 @@ class _ConfiguracoesPageState extends State<ConfiguracoesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Configurações"),
-      ),
+      appBar: AppBar(title: Text("Configurações")),
       drawer: AppDrawer(),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          padding: const EdgeInsets.all(20.0),
           child: const FormConfiguracoes(),
         ),
       ),

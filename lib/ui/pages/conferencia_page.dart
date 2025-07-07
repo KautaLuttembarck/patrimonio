@@ -34,17 +34,12 @@ class _ConferenciaPageState extends State<ConferenciaPage> {
       appBar: AppBar(
         title: Text("Conferência Patrimonial"),
         actions: [
-          IconButton(
-            onPressed: _openBottomSheet,
-            icon: Icon(Icons.edit_note),
-          ),
+          IconButton(onPressed: _openBottomSheet, icon: Icon(Icons.edit_note)),
         ],
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 18,
-          ),
+          padding: const EdgeInsets.all(20.0),
           child: const FormConferenciaPatrimonial(),
         ),
       ),
