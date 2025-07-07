@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 
-final Color _baseTextColor = Colors.black87;
-final Color _primaryTextButtonFontColor = Color(0xFF1B3C72);
+final Color _baseTextColor = Colors.white;
+final Color _primaryTextButtonFontColor = Colors.white;
 final Color _reverseTextColor = Colors.white;
 final Color _errorColor = Colors.red.shade900;
 final Color _baseBackgroundColor = Color(0xFF1B3C72);
-final Color _baseOverlayColor = Colors.black12;
+final Color _themeFontColor = Color(0xFF1B3C72);
+final Color _baseOverlayColor = Colors.white38;
 final double _baseElevation = 5;
 
 final ThemeData darkTheme = ThemeData(
   useMaterial3: true,
   primaryColor: _baseBackgroundColor,
 
-  scaffoldBackgroundColor: Colors.white,
+  scaffoldBackgroundColor: Colors.black,
 
   colorScheme: ColorScheme(
     brightness: Brightness.dark,
@@ -26,11 +27,15 @@ final ThemeData darkTheme = ThemeData(
     error: _errorColor,
     onError: _errorColor,
 
-    surface: Colors.white,
-    onSurface: Colors.black54,
+    surface: Colors.grey[800]!,
+    onSurface: Colors.white,
 
     surfaceContainerHighest: Colors.grey,
     surfaceBright: Colors.blue,
+
+    shadow: Colors.white24,
+
+    outline: Colors.white,
   ),
 
   appBarTheme: AppBarTheme(
@@ -39,11 +44,11 @@ final ThemeData darkTheme = ThemeData(
   ),
 
   listTileTheme: ListTileThemeData(
-    iconColor: _primaryTextButtonFontColor,
-    textColor: Colors.black87,
-    tileColor: Colors.white,
+    iconColor: _baseTextColor,
+    textColor: _baseTextColor,
+    tileColor: Colors.grey[800]!,
     selectedTileColor: Color(0xFFE3F2FD),
-    selectedColor: Colors.blue,
+    selectedColor: _themeFontColor,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(10),
     ),
@@ -53,7 +58,7 @@ final ThemeData darkTheme = ThemeData(
       vertical: 4,
     ),
     titleTextStyle: TextStyle(
-      color: Colors.black87,
+      color: _baseTextColor,
       fontWeight: FontWeight.bold,
     ),
   ),
@@ -114,6 +119,7 @@ final ThemeData darkTheme = ThemeData(
   progressIndicatorTheme: ProgressIndicatorThemeData(
     color: _baseBackgroundColor,
     circularTrackColor: Color.fromRGBO(0, 0, 0, 0.0),
+    linearTrackColor: Color.fromRGBO(0, 0, 0, 0.0),
   ),
 
   elevatedButtonTheme: ElevatedButtonThemeData(
@@ -162,5 +168,14 @@ final ThemeData darkTheme = ThemeData(
       ),
       borderRadius: BorderRadius.circular(10),
     ),
+  ),
+
+  snackBarTheme: SnackBarThemeData(
+    showCloseIcon: true,
+    closeIconColor: _baseTextColor,
+    contentTextStyle: TextStyle(
+      color: _baseTextColor,
+    ),
+    behavior: SnackBarBehavior.floating,
   ),
 );

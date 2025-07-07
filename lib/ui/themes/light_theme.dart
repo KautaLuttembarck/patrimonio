@@ -31,6 +31,8 @@ final ThemeData lightTheme = ThemeData(
 
     surfaceContainerHighest: Colors.grey,
     surfaceBright: Colors.blue,
+
+    outline: Colors.grey,
   ),
 
   appBarTheme: AppBarTheme(
@@ -40,7 +42,7 @@ final ThemeData lightTheme = ThemeData(
 
   listTileTheme: ListTileThemeData(
     iconColor: _primaryTextButtonFontColor,
-    textColor: Colors.black87,
+    textColor: _primaryTextButtonFontColor,
     tileColor: Colors.white,
     selectedTileColor: Color(0xFFE3F2FD),
     selectedColor: Colors.blue,
@@ -114,6 +116,7 @@ final ThemeData lightTheme = ThemeData(
   progressIndicatorTheme: ProgressIndicatorThemeData(
     color: _baseBackgroundColor,
     circularTrackColor: Color.fromRGBO(0, 0, 0, 0.0),
+    linearTrackColor: Color.fromRGBO(0, 0, 0, 0.0),
   ),
 
   elevatedButtonTheme: ElevatedButtonThemeData(
@@ -162,5 +165,14 @@ final ThemeData lightTheme = ThemeData(
       ),
       borderRadius: BorderRadius.circular(10),
     ),
+  ),
+
+  snackBarTheme: SnackBarThemeData(
+    showCloseIcon: true,
+    closeIconColor: _baseTextColor,
+    contentTextStyle: TextStyle(
+      color: _baseTextColor,
+    ),
+    behavior: SnackBarBehavior.floating,
   ),
 );
