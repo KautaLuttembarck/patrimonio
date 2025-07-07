@@ -77,7 +77,9 @@ class _FormLoginState extends State<FormLogin> {
             children: [
               SizedBox(),
               Image.asset(
-                'assets/images/logo_metro_horizontal.png',
+                MediaQuery.of(context).platformBrightness == Brightness.dark
+                    ? "assets/images/logo_metro_horizontal_invertido.png"
+                    : 'assets/images/logo_metro_horizontal.png',
                 width: 220,
               ),
               SizedBox(),
