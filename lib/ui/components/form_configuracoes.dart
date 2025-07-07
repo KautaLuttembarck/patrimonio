@@ -158,9 +158,9 @@ class _FormConfiguracoesState extends State<FormConfiguracoes> {
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("👻👻👻"),
-                    Text("Tira o dedo do ícone!"),
-                    Text("👻👻👻"),
+                    Text("🏆🏆🏆"),
+                    Text("Desenvolvido pela PGSIS!"),
+                    Text("🏆🏆🏆"),
                   ],
                 ),
               ),
