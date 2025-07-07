@@ -15,7 +15,7 @@ class ConferenciaProvider extends ChangeNotifier {
 
   Future<void> carregarItens() async {
     _itens = await _db.getConferencia();
-    _patrimoniosConferidos = await _db.getPatrimoniosConferidos();
+    _patrimoniosConferidos = await _db.getQuantidadePatrimoniosConferidos();
     notifyListeners();
   }
 
