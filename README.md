@@ -2,15 +2,13 @@
 
 App acessório para o sistema de controle patrimonial
 
-## Getting Started
+## Funcionalidades
 
-This project is a starting point for a Flutter application.
+- Obter a lista patrimonial com armazenamento na memória do dispositivo
+- Realizar a conferência de patrimônios sem necessidade de rede celular/wifi;
+- Acrescentar/remover patrimônios manualmente na lista de conferência;
+- Enviar o resultado da conferência ao SPMETRODF para registro;
 
-A few resources to get you started if this is your first Flutter project:
+## Sistema principal:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Tela de login [SPMETRODF](https://spmetrodf.com/agpat/login.php);
