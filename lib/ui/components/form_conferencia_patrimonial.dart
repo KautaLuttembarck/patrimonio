@@ -64,6 +64,7 @@ class _PatrimonioReaderComponentState
       delayMillis: 500,
       cameraFace: CameraFace.back,
       scanFormat: ScanFormat.ONLY_BARCODE,
+      lineColor: "#F29100",
     );
 
     try {
