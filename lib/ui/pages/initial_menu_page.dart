@@ -18,7 +18,7 @@ class InitialMenuPage extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            padding: const EdgeInsets.all(20.0),
             child: InitialMenuPageActionList(),
           ),
         ),
