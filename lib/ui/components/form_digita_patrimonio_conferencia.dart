@@ -214,6 +214,7 @@ class _FormDigitaPatrimonioConferenciaState
       maxChildSize: _tamanhoMaximo,
       builder: (context, scrollController) {
         return Scaffold(
+          backgroundColor: Theme.of(context).colorScheme.surface,
           body: Container(
             padding: EdgeInsets.all(16),
             child: ListView(
