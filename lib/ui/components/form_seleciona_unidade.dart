@@ -215,7 +215,9 @@ class _FormSelecionaUnidadeState extends State<FormSelecionaUnidade> {
                       itemCount: listagemPatrimonial!.length,
                       itemBuilder: (context, index) {
                         return Material(
+                          color: Colors.transparent,
                           child: ListTile(
+                            tileColor: Colors.transparent,
                             title: Text(
                               listagemPatrimonial![index].nAntigo != ""
                                   ? "Patrimônio: ${listagemPatrimonial![index].patrimonio}\nNº Antigo: ${listagemPatrimonial![index].nAntigo}"
