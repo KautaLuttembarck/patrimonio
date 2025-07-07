@@ -189,9 +189,6 @@ class _FormConfiguracoesState extends State<FormConfiguracoes> {
             shape: RoundedRectangleBorder(
               side: BorderSide(
                 color: Theme.of(context).colorScheme.primary,
-                // .withAlpha(
-                //   (255 * _downloadProgress).toInt(),
-                // ), // Cor da borda
                 width: 1.6, // Largura da borda
               ),
               borderRadius: BorderRadius.circular(5),
