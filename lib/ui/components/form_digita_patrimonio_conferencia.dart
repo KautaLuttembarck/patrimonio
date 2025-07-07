@@ -6,9 +6,7 @@ import 'package:patrimonio/app/models/patrimonio.dart';
 import 'package:patrimonio/app/services/local_database_service.dart';
 
 class FormDigitaPatrimonioConferencia extends StatefulWidget {
-  const FormDigitaPatrimonioConferencia({
-    super.key,
-  });
+  const FormDigitaPatrimonioConferencia({super.key});
 
   @override
   State<FormDigitaPatrimonioConferencia> createState() =>
@@ -37,13 +35,13 @@ class _FormDigitaPatrimonioConferenciaState
           (ctx) => AlertDialog(
             icon: Icon(Icons.wrong_location, size: 42),
             iconColor: Theme.of(context).colorScheme.error,
-            title: Text("Patrimônio de outra UL"),
+            title: Text("Patrimônio não listado"),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               spacing: 20,
               children: [
                 Text(
-                  "O Patrimônio ${patrimonio.patrimonio} ${patrimonio.nAntigo.isEmpty ? "" : "(número antigo: ${patrimonio.nAntigo})"} está registrado em outra UL "
+                  "O Patrimônio ${patrimonio.patrimonio} ${patrimonio.nAntigo.isEmpty ? "" : "(número antigo ${patrimonio.nAntigo})"} não está na lista de conferência "
                   "e possui as seguintes informações associadas:",
                   textAlign: TextAlign.justify,
                 ),
@@ -55,58 +53,35 @@ class _FormDigitaPatrimonioConferenciaState
                         child: RichText(
                           text: TextSpan(
                             text: "",
-                            style:
-                                Theme.of(
-                                  context,
-                                ).textTheme.bodySmall,
+                            style: Theme.of(context).textTheme.bodySmall,
                             children: [
                               TextSpan(
                                 text: "UA: ",
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.bodySmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(fontWeight: FontWeight.bold),
                               ),
-                              TextSpan(
-                                text: "${patrimonio.ua}\n",
-                              ),
+                              TextSpan(text: "${patrimonio.ua}\n"),
 
                               TextSpan(
                                 text: "UL: ",
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.bodySmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(fontWeight: FontWeight.bold),
                               ),
-                              TextSpan(
-                                text: "${patrimonio.localidade}\n",
-                              ),
+                              TextSpan(text: "${patrimonio.localidade}\n"),
 
                               TextSpan(
                                 text: "Responsável: ",
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.bodySmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(fontWeight: FontWeight.bold),
                               ),
-                              TextSpan(
-                                text: "${patrimonio.responsavel}\n\n",
-                              ),
+                              TextSpan(text: "${patrimonio.responsavel}\n\n"),
 
                               TextSpan(
                                 text: "Decrição: ",
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.bodySmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(fontWeight: FontWeight.bold),
                               ),
-                              TextSpan(
-                                text: patrimonio.descricao,
-                              ),
+                              TextSpan(text: patrimonio.descricao),
                             ],
                           ),
                         ),
@@ -157,9 +132,7 @@ class _FormDigitaPatrimonioConferenciaState
     } else {
       resultado = await context
           .read<LocalDatabaseService>()
-          .getPatrimonioAntigo(
-            patrimonio,
-          );
+          .getPatrimonioAntigo(patrimonio);
     }
     return resultado;
   }
@@ -170,10 +143,7 @@ class _FormDigitaPatrimonioConferenciaState
       if (!_useNAntigo) {
         resultado = await context
             .read<ConferenciaProvider>()
-            .atualizaStatusConferido(
-              "conferido",
-              _patrimonioController.text,
-            );
+            .atualizaStatusConferido("conferido", _patrimonioController.text);
       } else {
         resultado = await context
             .read<ConferenciaProvider>()
@@ -199,9 +169,7 @@ class _FormDigitaPatrimonioConferenciaState
         return;
       } else {
         final List<Patrimonio> patrimonioImportado =
-            await _obtemPatrimonioForaDaConferencia(
-              _patrimonioController.text,
-            );
+            await _obtemPatrimonioForaDaConferencia(_patrimonioController.text);
         if (patrimonioImportado.isEmpty) {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -330,9 +298,7 @@ class _FormDigitaPatrimonioConferenciaState
                         onPressed: _atualizaPatrimonio,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text("Marcar como conferido"),
-                          ],
+                          children: [Text("Marcar como conferido")],
                         ),
                       ),
                     ],
