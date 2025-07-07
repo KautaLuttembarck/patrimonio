@@ -54,9 +54,11 @@ class _FormConfiguracoesState extends State<FormConfiguracoes> {
           _situacaoTransferencia = "Transferência realizada!";
           _downloadProgress = 1;
         });
-        context.read<LocalDatabaseService>().obterUltimaAcao().then((retorno) {
-          if (retorno != null && retorno.isNotEmpty) {
-            DateTime data = DateTime.parse(retorno['realizado_em']);
+        context.read<LocalDatabaseService>().obterUltimaCarga().then((
+          ultimaCarga,
+        ) {
+          if (ultimaCarga != null && ultimaCarga.isNotEmpty) {
+            DateTime data = DateTime.parse(ultimaCarga['realizado_em']);
             setState(() {
               _dataAtualizacao = DateFormat(
                 "dd/MM/yyyy HH:mm",
@@ -123,9 +125,9 @@ class _FormConfiguracoesState extends State<FormConfiguracoes> {
   @override
   void initState() {
     super.initState();
-    context.read<LocalDatabaseService>().obterUltimaAcao().then((ultimaAcao) {
-      if (ultimaAcao != null && ultimaAcao.isNotEmpty) {
-        DateTime data = DateTime.parse(ultimaAcao['realizado_em']);
+    context.read<LocalDatabaseService>().obterUltimaCarga().then((ultimaCarga) {
+      if (ultimaCarga != null && ultimaCarga.isNotEmpty) {
+        DateTime data = DateTime.parse(ultimaCarga['realizado_em']);
         setState(() {
           _dataAtualizacao = DateFormat(
             "dd/MM/yyyy HH:mm",
