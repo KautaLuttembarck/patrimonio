@@ -46,21 +46,25 @@ class ItemMenuPrincipal extends StatelessWidget {
         elevation: 5,
         child: ListTile(
           visualDensity: VisualDensity.comfortable,
-          tileColor: Theme.of(context).colorScheme.secondary,
+          // tileColor: Theme.of(context).colorScheme.secondary,
           onTap: navigate,
           onLongPress: showHelp,
           title: Text(
             acao,
-            style: TextStyle(color: Theme.of(context).colorScheme.primary),
+            // style: TextStyle(color: Theme.of(context).colorScheme.primary),
           ),
           horizontalTitleGap: 25,
           leading: Padding(
             padding: const EdgeInsets.only(left: 10),
-            child: Icon(icone, size: 35, color: Theme.of(context).primaryColor),
+            child: Icon(
+              icone,
+              size: 35,
+              // color: Theme.of(context).primaryColor,
+            ),
           ),
           subtitle: Text(
             explicacao,
-            style: TextStyle(color: Theme.of(context).colorScheme.primary),
+            // style: TextStyle(color: Theme.of(context).colorScheme.primary),
           ),
           trailing: const Icon(Icons.arrow_forward_ios_outlined, size: 40),
         ),
