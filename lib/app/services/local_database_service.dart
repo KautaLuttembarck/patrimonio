@@ -15,6 +15,8 @@ class LocalDatabaseService {
       dbPath,
       version: 1,
       onCreate: (db, version) async {
+        // Tabela patrimônios armazena todos os dados de patrimônio da empresa
+        // para execução offline
         await db.execute(
           'CREATE TABLE patrimonios '
           '('
@@ -29,8 +31,9 @@ class LocalDatabaseService {
           'Responsavel TEXT '
           ')',
         );
-        debugPrint("tabela de patrimonios criado!");
 
+        // Tabela alterações armazena os registros de ações realizadas para
+        // debug e controle da data da última carga da tabela patrimônios
         await db.execute(
           'CREATE TABLE alteracoes '
           '('
@@ -39,8 +42,9 @@ class LocalDatabaseService {
           'realizado_em TEXT DEFAULT CURRENT_TIMESTAMP '
           ')',
         );
-        debugPrint("tabela de alteracoes criada!");
 
+        // Tabela conferencia armazena os patrimônios de uma UL e o status de
+        // conferência para envio posterior ao SPMETRODF
         await db.execute(
           'CREATE TABLE conferencia '
           '('
@@ -56,13 +60,11 @@ class LocalDatabaseService {
           'situacaoConferencia TEXT DEFAULT \'pendente\' '
           ')',
         );
-        debugPrint("tabela de conferencia criada!");
-        debugPrint("Banco de dados criado!");
       },
     );
   }
 
-  // Limpa a tabela e insere nova lista de patrimonios no banco de dados.
+  // Limpa a tabela e insere nova lista de patrimônios no banco de dados.
   // Retorna verdadeiro caso a inserção tenha ocorrido corretamente
   // Retorna falso em caso de erro
   Future<bool> inserirPatrimonios(List<Patrimonio> lista) async {
@@ -94,7 +96,7 @@ class LocalDatabaseService {
       });
 
       // Registra na tabela acoes a inserção
-      await inserirAcaoRealizada("inserirPatrimonios");
+      inserirAcaoRealizada("inserirPatrimonios");
       return true;
     } catch (e) {
       debugPrint('Erro ao inserir patrimonios: $e');
@@ -109,7 +111,7 @@ class LocalDatabaseService {
     );
 
     // Registra na tabela acoes
-    await inserirAcaoRealizada("lerQuantidadePatrimonios");
+    inserirAcaoRealizada("lerQuantidadePatrimonios");
 
     if (result != null && result.isNotEmpty) {
       return Sqflite.firstIntValue(result) ?? 0;
@@ -204,7 +206,7 @@ class LocalDatabaseService {
       return false;
     }
     // Registra na tabela acoes
-    await inserirAcaoRealizada("esvaziaTabelaPatrimonios");
+    inserirAcaoRealizada("esvaziaTabelaPatrimonios");
     return true;
   }
 
@@ -233,7 +235,7 @@ class LocalDatabaseService {
       await batch.commit(noResult: true);
     });
     // Registra na tabela acoes
-    await inserirAcaoRealizada("copiarParaConferenciaPorUl");
+    inserirAcaoRealizada("copiarParaConferenciaPorUl");
   }
 
   // Recupera os dados da tabela de conferencia
@@ -258,7 +260,7 @@ class LocalDatabaseService {
     );
 
     // Registra na tabela acoes
-    await inserirAcaoRealizada("inserirNaConferencia");
+    inserirAcaoRealizada("inserirNaConferencia");
   }
 
   Future<void> limparTabelaConferencia() async {
@@ -266,7 +268,7 @@ class LocalDatabaseService {
 
     await _database!.delete('conferencia');
     // Registra na tabela acoes
-    await inserirAcaoRealizada("limparTabelaConferencia");
+    inserirAcaoRealizada("limparTabelaConferencia");
   }
 
   // Atualiza a situação de conferência de um patrimônio
@@ -335,10 +337,10 @@ class LocalDatabaseService {
     );
 
     // Registra na tabela acoes
-    await inserirAcaoRealizada("removePatrimonioDaConferencia $patrimonio");
+    inserirAcaoRealizada("removePatrimonioDaConferencia $patrimonio");
   }
 
-  // Obtém a quantidade de patrimonios conferidos
+  // Obtém a quantidade de patrimônios conferidos
   Future<int> getQuantidadePatrimoniosConferidos() async {
     if (_database == null) return 0;
 
