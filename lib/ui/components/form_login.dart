@@ -48,7 +48,7 @@ class _FormLoginState extends State<FormLogin> {
             context.read<UserProvider>().registraLogin(
               userData: loginStatus['usuario'],
             );
-            Navigator.of(context).popAndPushNamed(AppRoutes.menuInicial);
+            Navigator.of(context).pushReplacementNamed(AppRoutes.menuInicial);
           }
         } else {
           setState(() => isLoading = false);
@@ -76,12 +76,21 @@ class _FormLoginState extends State<FormLogin> {
             spacing: 30,
             children: [
               SizedBox(),
-              Image.asset(
-                MediaQuery.of(context).platformBrightness == Brightness.dark
-                    ? "assets/images/logo_metro_horizontal_invertido.png"
-                    : 'assets/images/logo_metro_horizontal.png',
-                width: 220,
-              ),
+
+              if (MediaQuery.of(context).platformBrightness == Brightness.dark)
+                Hero(
+                  tag: "assets/images/logo_metro_horizontal_invertido.png",
+                  child: Image.asset(
+                    "assets/images/logo_metro_horizontal_invertido.png",
+                    width: 220,
+                  ),
+                ),
+
+              if (MediaQuery.of(context).platformBrightness == Brightness.light)
+                Image.asset(
+                  'assets/images/logo_metro_horizontal.png',
+                  width: 220,
+                ),
               SizedBox(),
               TextFormField(
                 controller: _matriculaController,
