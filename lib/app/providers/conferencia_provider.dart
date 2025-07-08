@@ -61,8 +61,21 @@ class ConferenciaProvider extends ChangeNotifier {
     return result > 0;
   }
 
-  Future<void> removerItem(String patrimonio) async {
-    await _db.removePatrimonioDaConferencia(patrimonio);
-    await carregarItens(); // recarrega e notifica
+  // Remove um patrimônio da lista de conferência.
+  // Retorna verdadeiro pra caso de remoção com sucesso e falso pra caso de falha
+  Future<bool> removerItem(Patrimonio patrimonio, int index) async {
+    _itens.removeAt(index);
+    if (patrimonio.situacaoConferencia == "conferido") {
+      _patrimoniosConferidos--;
+    }
+    notifyListeners();
+    try {
+      await _db.removePatrimonioDaConferencia(patrimonio.patrimonio);
+      return true;
+    } catch (e) {
+      // Se falhar, recarrega toda a lista
+      await carregarItens(); // recarrega e notifica
+      return false;
+    }
   }
 }
