@@ -193,26 +193,39 @@ class _PatrimonioReaderComponentState
                       itemCount: lista.length,
                       itemBuilder: (context, index) {
                         final patrimonio = lista[index];
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Dismissible(
-                            direction: DismissDirection.endToStart,
-                            background: Container(
-                              padding: EdgeInsets.only(right: 30),
-                              margin: EdgeInsets.symmetric(vertical: 6),
-                              color: Theme.of(context).colorScheme.error,
-                              alignment: Alignment.centerRight,
-                              child: Icon(
-                                Icons.delete_forever,
-                                color: Colors.white,
-                              ),
+                        return Dismissible(
+                          direction: DismissDirection.endToStart,
+                          background: Container(
+                            padding: EdgeInsets.only(right: 30),
+                            margin: EdgeInsets.symmetric(vertical: 6),
+                            color: Theme.of(context).colorScheme.error,
+                            alignment: Alignment.centerRight,
+                            child: Icon(
+                              Icons.delete_forever,
+                              color: Colors.white,
                             ),
-                            key: ValueKey(patrimonio.patrimonio),
-                            onDismissed: (_) {
-                              context.read<ConferenciaProvider>().removerItem(
-                                patrimonio.patrimonio,
-                              );
-                            },
+                          ),
+                          key: ValueKey(patrimonio.patrimonio),
+                          onDismissed: (_) async {
+                            final bool success = await context
+                                .read<ConferenciaProvider>()
+                                .removerItem(patrimonio, index);
+                            if (!success) {
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      "Erro ao remover o patrimônio!",
+                                    ),
+                                    backgroundColor:
+                                        Theme.of(context).colorScheme.error,
+                                  ),
+                                );
+                              }
+                            }
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
                             child: Card(
                               child: ListTile(
                                 isThreeLine: true,
