@@ -7,7 +7,7 @@
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>CFBundleDisplayName</key>
-		<string>Patrimonio</string>
+		<string>Patrimônio</string>
 		<key>NSCameraUsageDescription</key>
 		<string>O uso da câmera é necessário para a leitura óptica dos patrimônios.</string>
 		<key>CFBundleExecutable</key>
