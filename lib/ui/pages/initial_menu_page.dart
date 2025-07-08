@@ -9,9 +9,12 @@ class InitialMenuPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Image.asset(
-          "assets/images/logo_metro_horizontal_invertido.png",
-          height: 50,
+        title: Hero(
+          tag: "assets/images/logo_metro_horizontal_invertido.png",
+          child: Image.asset(
+            "assets/images/logo_metro_horizontal_invertido.png",
+            height: 50,
+          ),
         ),
       ),
       drawer: AppDrawer(),
