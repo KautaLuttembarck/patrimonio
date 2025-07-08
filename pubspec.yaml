@@ -51,6 +51,7 @@ dependencies:
   flutter_native_splash: ^2.4.6
 
   clarity_flutter: ^1.0.0
+  flutter_launcher_icons: ^0.14.4
 
 dev_dependencies:
   flutter_test:
@@ -104,6 +105,63 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+flutter_launcher_icons:
+  #  Shown below is the full list of attributes which you can specify within your Flutter Launcher Icons configuration.
+  #  Basta descomentar o que é necessário e aplicar o parâmetro com base na explicação ao lado;
+
+  #  GLOBAL
+  image_path: "assets/images/app_icon.png" #The location of the icon image file which you want to use as the app launcher icon.
+
+
+  #  ANDROID
+  android: true # 4 options below:
+  #   true: Override the default existing Flutter launcher icon for the platform specified
+  #   false: Ignore making launcher icons for this platform
+  #   icon/path/here.png: This will generate a new launcher icons for the platform with the name you specify, without removing the old default existing Flutter launcher icon.
+  #   image_path_android: The location of the icon image file specific for Android platform (optional - if not defined then the image_path is used)
+
+  min_sdk_android: 21 # android min sdk min:16, default 21 # Specify android min sdk value The next two attributes are only used when generating Android launcher icon
+  #adaptive_icon_background: # The color (E.g. "#ffffff") or image asset (E.g. "assets/images/christmas-background.png") which will be used to fill out the background of the adaptive icon.
+  #adaptive_icon_foreground: # The image asset which will be used for the icon foreground of the adaptive icon Note: Adaptive Icons will only be generated when both adaptive_icon_background and adaptive_icon_foreground are specified. (the image_path is not automatically taken as foreground)
+  #adaptive_icon_foreground_inset: # This is used to add padding (in %) to the foreground icon when generating an adaptive icon. The default value is 16.
+  #adaptive_icon_monochrome: # The image asset which will be used for the icon foreground of the Android 13+ themed icon. For more information see Android Adaptive Icons
+
+
+  #  IOS
+  ios: true # 3 options below:
+  #   true: Override the default existing Flutter launcher icon for the platform specified
+  #   false: Ignore making launcher icons for this platform
+  #   icon/path/here.png: This will generate a new launcher icons for the platform with the name you specify, without removing the old default existing Flutter launcher icon.
+
+  #image_path_ios: The location of the icon image file specific for iOS platform (optional - if not defined then the image_path is used)
+  remove_alpha_ios: true # Removes alpha channel for IOS icons
+  image_path_ios_dark_transparent: "assets/images/app_icon_transparent.png" # The location of the dark mode icon image file specific for iOS 18+ platform. Note: Apple recommends this icon to be transparent. For more information see Apple Human Interface Guidelines for App Icons
+  image_path_ios_tinted_grayscale: "assets/images/app_icon.png" # The location of the tinted mode icon image file specific for iOS 18+ platform. Note: This icon should be an grayscale image. Use desaturate_tinted_to_grayscale_ios: true to automatically desaturate the image provided here.
+  desaturate_tinted_to_grayscale_ios: true # Automatically desaturates tinted mode icon image to grayscale, defaults to false
+  background_color_ios: "#1B3C72" # The color (in the format "#RRGGBB") to be used as the background when removing the alpha channel. It is used only when the remove_alpha_ios property is set to true. (optional - if not defined then #ffffff is used)
+
+
+  #  WEB
+  web: # Add web related configs
+    generate: false # true/false # Specifies whether to generate icons for this platform or not
+    #image_path: Path to web icon.png
+    #background_color: Updates background_color in web/manifest.json
+    #theme_color: Updates theme_color in web/manifest.json
+
+
+  #  WINDOWS
+  windows: # Add Windows related configs
+    generate: false # true/false # Specifies whether to generate icons for Windows platform or not
+    #image_path: Path to windows icon.png
+    #icon_size: Windows app icon size. Icon size should be within this constrains 48<=icon_size<=256, defaults to 48
+
+  #  MACOS
+  macos: # Add MacOS related configs
+    generate: false # true/false # Specifies whether to generate icons for MacOS platform or not
+    #image_path: Path to macos icon.png file
+  #Note: iOS icons should fill the entire image and not contain transparent borders.
+
 
 flutter_native_splash:
   # This package generates native code to customize Flutter's default white native splash screen
