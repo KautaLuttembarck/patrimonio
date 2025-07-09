@@ -31,38 +31,37 @@ class _FormLoginState extends State<FormLogin> {
   }
 
   Future<void> submitLogin() async {
-    // if (_formKey.currentState!.validate()) {
-    setState(() => isLoading = true);
-    _matriculaController.text = "16799";
-    _senhaController.text = "123456";
-    var res = await SpDatabaseService().login(
-      _matriculaController.text,
-      _senhaController.text,
-    );
+    if (_formKey.currentState!.validate()) {
+      setState(() => isLoading = true);
 
-    var loginStatus = jsonDecode(res);
-    if (loginStatus['login_result']) {
-      setState(() => isLoading = false);
-      if (mounted) {
-        context.read<UserProvider>().registraLogin(
-          userData: loginStatus['usuario'],
-        );
-        Navigator.of(context).pushReplacementNamed(AppRoutes.menuInicial);
-      }
-    } else {
-      setState(() => isLoading = false);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(loginStatus['Erro']),
-            backgroundColor: Theme.of(context).colorScheme.error,
-            showCloseIcon: true,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+      var res = await SpDatabaseService().login(
+        _matriculaController.text,
+        _senhaController.text,
+      );
+
+      var loginStatus = jsonDecode(res);
+      if (loginStatus['login_result']) {
+        setState(() => isLoading = false);
+        if (mounted) {
+          context.read<UserProvider>().registraLogin(
+            userData: loginStatus['usuario'],
+          );
+          Navigator.of(context).pushReplacementNamed(AppRoutes.menuInicial);
+        }
+      } else {
+        setState(() => isLoading = false);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(loginStatus['Erro']),
+              backgroundColor: Theme.of(context).colorScheme.error,
+              showCloseIcon: true,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
       }
     }
-    // }
   }
 
   @override
