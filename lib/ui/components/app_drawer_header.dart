@@ -20,7 +20,9 @@ class AppDrawerHeader extends StatelessWidget {
           child: const ClarityMask(
             child: CircleAvatar(
               radius: 40,
-              backgroundImage: AssetImage("assets/images/empregado.png"),
+              backgroundImage: AssetImage(
+                "assets/images/empregado_250x250.png",
+              ),
             ),
           ),
         ),

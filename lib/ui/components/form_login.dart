@@ -30,42 +30,43 @@ class _FormLoginState extends State<FormLogin> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    Future<void> submitLogin() async {
-      if (_formKey.currentState!.validate()) {
-        setState(() => isLoading = true);
+  Future<void> submitLogin() async {
+    // if (_formKey.currentState!.validate()) {
+    setState(() => isLoading = true);
+    _matriculaController.text = "16799";
+    _senhaController.text = "123456";
+    var res = await SpDatabaseService().login(
+      _matriculaController.text,
+      _senhaController.text,
+    );
 
-        var res = await SpDatabaseService().login(
-          _matriculaController.text,
-          _senhaController.text,
+    var loginStatus = jsonDecode(res);
+    if (loginStatus['login_result']) {
+      setState(() => isLoading = false);
+      if (mounted) {
+        context.read<UserProvider>().registraLogin(
+          userData: loginStatus['usuario'],
         );
-
-        var loginStatus = jsonDecode(res);
-        if (loginStatus['login_result']) {
-          setState(() => isLoading = false);
-          if (context.mounted) {
-            context.read<UserProvider>().registraLogin(
-              userData: loginStatus['usuario'],
-            );
-            Navigator.of(context).pushReplacementNamed(AppRoutes.menuInicial);
-          }
-        } else {
-          setState(() => isLoading = false);
-          if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(loginStatus['Erro']),
-                backgroundColor: Theme.of(context).colorScheme.error,
-                showCloseIcon: true,
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-          }
-        }
+        Navigator.of(context).pushReplacementNamed(AppRoutes.menuInicial);
+      }
+    } else {
+      setState(() => isLoading = false);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(loginStatus['Erro']),
+            backgroundColor: Theme.of(context).colorScheme.error,
+            showCloseIcon: true,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
       }
     }
+    // }
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.all(25),
       child: Form(
