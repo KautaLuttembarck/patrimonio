@@ -111,7 +111,7 @@ class _FormLoginState extends State<FormLogin> {
                 validator: (matriculaInformada) {
                   String matricula = matriculaInformada ?? "";
                   if (matricula.isEmpty) {
-                    return "Preencha uma matrícula!";
+                    return "Preencha sua matrícula!";
                   }
                   return null;
                 },
@@ -138,7 +138,7 @@ class _FormLoginState extends State<FormLogin> {
                 validator: (senhaInformada) {
                   String senha = senhaInformada ?? "";
                   if (senha.isEmpty) {
-                    return "Informe uma senha!";
+                    return "Informe sua senha!";
                   }
                   return null;
                 },
