@@ -5,6 +5,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:patrimonio/app/providers/conferencia_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:vibration/vibration.dart';
 
 class FormConfiguracoes extends StatefulWidget {
   const FormConfiguracoes({super.key});
@@ -154,19 +155,30 @@ class _FormConfiguracoesState extends State<FormConfiguracoes> {
       children: [
         SizedBox(height: 30),
         GestureDetector(
-          onLongPress: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("🏆🏆🏆"),
-                    Text("Desenvolvido pela PGSIS!"),
-                    Text("🏆🏆🏆"),
-                  ],
+          onLongPress: () async {
+            if (await Vibration.hasVibrator()) {
+              Vibration.vibrate(duration: 50);
+            }
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("🏆🏆🏆"),
+                      Text(
+                        "Desenvolvido pela PGSIS!",
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                      Text("🏆🏆🏆"),
+                    ],
+                  ),
+                  showCloseIcon: false,
                 ),
-              ),
-            );
+              );
+            }
           },
           child: Icon(
             Icons.settings,
