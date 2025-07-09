@@ -109,6 +109,7 @@ flutter:
 flutter_launcher_icons:
   #  Shown below is the full list of attributes which you can specify within your Flutter Launcher Icons configuration.
   #  Basta descomentar o que é necessário e aplicar o parâmetro com base na explicação ao lado;
+  #  Para criar o ícone, é só executar o comando dart run flutter_launcher_icons
 
   #  GLOBAL
   image_path: "assets/images/app_icon.png" #The location of the icon image file which you want to use as the app launcher icon.
@@ -122,10 +123,10 @@ flutter_launcher_icons:
   #   image_path_android: The location of the icon image file specific for Android platform (optional - if not defined then the image_path is used)
 
   min_sdk_android: 21 # android min sdk min:16, default 21 # Specify android min sdk value The next two attributes are only used when generating Android launcher icon
-  #adaptive_icon_background: # The color (E.g. "#ffffff") or image asset (E.g. "assets/images/christmas-background.png") which will be used to fill out the background of the adaptive icon.
-  #adaptive_icon_foreground: # The image asset which will be used for the icon foreground of the adaptive icon Note: Adaptive Icons will only be generated when both adaptive_icon_background and adaptive_icon_foreground are specified. (the image_path is not automatically taken as foreground)
+  adaptive_icon_background: "assets/images/app_icon_background.png" # The color (E.g. "#ffffff") or image asset (E.g. "assets/images/christmas-background.png") which will be used to fill out the background of the adaptive icon.
+  adaptive_icon_foreground: "assets/images/app_icon_logo.png" # The image asset which will be used for the icon foreground of the adaptive icon Note: Adaptive Icons will only be generated when both adaptive_icon_background and adaptive_icon_foreground are specified. (the image_path is not automatically taken as foreground)
   #adaptive_icon_foreground_inset: # This is used to add padding (in %) to the foreground icon when generating an adaptive icon. The default value is 16.
-  #adaptive_icon_monochrome: # The image asset which will be used for the icon foreground of the Android 13+ themed icon. For more information see Android Adaptive Icons
+  adaptive_icon_monochrome: "assets/images/app_icon_logo_bw.png" # The image asset which will be used for the icon foreground of the Android 13+ themed icon. For more information see Android Adaptive Icons
 
 
   #  IOS
