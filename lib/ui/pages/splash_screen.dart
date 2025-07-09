@@ -90,10 +90,9 @@ class _SplashScreenState extends State<SplashScreen>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
-                    "assets/images/logo_metro_horizontal_invertido.png",
+                    "assets/images/logo_metro_horizontal_invertido_600x209.png",
                     width: 220,
                   ),
-                  const SizedBox(height: 24),
                   SizedBox(
                     width: 24,
                     height: 24,
