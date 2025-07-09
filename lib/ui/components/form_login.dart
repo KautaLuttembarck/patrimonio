@@ -78,20 +78,12 @@ class _FormLoginState extends State<FormLogin> {
             children: [
               SizedBox(),
 
-              if (MediaQuery.of(context).platformBrightness == Brightness.dark)
-                Hero(
-                  tag: "assets/images/logo_metro_horizontal_invertido.png",
-                  child: Image.asset(
-                    "assets/images/logo_metro_horizontal_invertido.png",
-                    width: 220,
-                  ),
-                ),
-
-              if (MediaQuery.of(context).platformBrightness == Brightness.light)
-                Image.asset(
-                  'assets/images/logo_metro_horizontal.png',
-                  width: 220,
-                ),
+              Image.asset(
+                MediaQuery.of(context).platformBrightness == Brightness.dark
+                    ? "assets/images/logo_metro_horizontal_invertido_600x209.png"
+                    : 'assets/images/logo_metro_horizontal.png',
+                width: 220,
+              ),
               SizedBox(),
               TextFormField(
                 controller: _matriculaController,
