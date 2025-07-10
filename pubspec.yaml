@@ -50,7 +50,7 @@ dependencies:
   path: ^1.9.1
   flutter_native_splash: ^2.4.6
 
-  clarity_flutter: ^1.0.0
+  clarity_flutter: ^1.1.0
   flutter_launcher_icons: ^0.14.4
 
 dev_dependencies:
