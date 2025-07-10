@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:clarity_flutter/clarity_flutter.dart';
+
 import 'package:patrimonio/app/providers/conferencia_provider.dart';
 import 'package:patrimonio/app/models/patrimonio.dart';
 import 'package:patrimonio/app/services/local_database_service.dart';
@@ -165,6 +167,7 @@ class _FormDigitaPatrimonioConferenciaState
             ),
           );
         }
+        Clarity.sendCustomEvent("Conferiu patrimonio digitando");
         _patrimonioController.text = "";
         return;
       } else {
