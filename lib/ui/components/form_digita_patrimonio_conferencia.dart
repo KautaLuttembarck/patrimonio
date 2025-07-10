@@ -116,7 +116,7 @@ class _FormDigitaPatrimonioConferenciaState
               ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: Text("Fechar"),
+                child: Text("Voltar"),
               ),
             ],
           ),
