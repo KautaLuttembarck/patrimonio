@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:clarity_flutter/clarity_flutter.dart';
 
 import 'package:patrimonio/app/models/patrimonio.dart';
-import 'package:patrimonio/app/utils/app_routes.dart';
+import 'package:patrimonio/app/navigation/app_routes.dart';
 import 'package:patrimonio/app/services/sp_database_service.dart';
 import 'package:patrimonio/app/models/dropdown_item.dart';
 import 'package:patrimonio/ui/widgets/dropdown_search.dart';

@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:patrimonio/app/providers/conferencia_provider.dart';
 import 'package:patrimonio/ui/widgets/item_menu_principal.dart';
-import 'package:patrimonio/app/utils/app_routes.dart';
+import 'package:patrimonio/app/navigation/app_routes.dart';
 import 'package:patrimonio/app/utils/help_dialog.dart' as helper;
 
 class InitialMenuPageActionList extends StatelessWidget {

@@ -4,7 +4,7 @@ import 'package:patrimonio/app/navigation/clarity_route_observer.dart';
 import 'package:provider/provider.dart';
 
 import 'package:patrimonio/ui/themes/app_theme.dart';
-import 'package:patrimonio/app/utils/app_routes.dart';
+import 'package:patrimonio/app/navigation/app_routes.dart';
 import 'package:patrimonio/app/services/local_database_service.dart';
 import 'package:patrimonio/ui/pages/auth_page.dart';
 import 'package:patrimonio/ui/pages/splash_screen.dart';

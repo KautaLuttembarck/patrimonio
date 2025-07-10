@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'auth_page.dart';
-import 'package:patrimonio/app/utils/app_routes.dart';
+import 'package:patrimonio/app/navigation/app_routes.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
