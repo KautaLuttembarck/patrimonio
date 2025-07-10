@@ -17,7 +17,7 @@ class AppDrawerHeader extends StatelessWidget {
             shape: BoxShape.circle,
             border: Border.all(color: Colors.white, width: 2),
           ),
-          child: const ClarityMask(
+          child: const ClarityUnmask(
             child: CircleAvatar(
               radius: 40,
               backgroundImage: AssetImage(
@@ -27,14 +27,14 @@ class AppDrawerHeader extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 20),
-        ClarityMask(
+        ClarityUnmask(
           child: Text(
             context.watch<UserProvider>().nome,
             textAlign: TextAlign.center,
             style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
           ),
         ),
-        ClarityMask(
+        ClarityUnmask(
           child: Text(
             context.watch<UserProvider>().matricula,
             textAlign: TextAlign.center,
