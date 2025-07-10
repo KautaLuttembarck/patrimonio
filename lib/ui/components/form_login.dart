@@ -42,8 +42,16 @@ class _FormLoginState extends State<FormLogin> {
 
       var loginStatus = jsonDecode(res);
       if (loginStatus['login_result']) {
-        Clarity.sendCustomEvent(loginStatus['usuario']['permissao']);
         Clarity.setCustomUserId(loginStatus['usuario']['matricula']);
+        Clarity.setCustomTag(
+          'UserLoggedIn',
+          loginStatus['usuario']['matricula'],
+        );
+        Clarity.setCustomTag(
+          'UserPermission',
+          loginStatus['usuario']['permissao'],
+        );
+
         setState(() => isLoading = false);
         if (mounted) {
           context.read<UserProvider>().registraLogin(
