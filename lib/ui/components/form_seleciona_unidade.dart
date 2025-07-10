@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 import 'package:provider/provider.dart';
+import 'package:clarity_flutter/clarity_flutter.dart';
 
 import 'package:patrimonio/app/models/patrimonio.dart';
 import 'package:patrimonio/app/utils/app_routes.dart';
@@ -12,8 +13,6 @@ import 'package:patrimonio/app/models/dropdown_item.dart';
 import 'package:patrimonio/ui/widgets/dropdown_search.dart';
 import 'package:patrimonio/app/services/local_database_service.dart';
 import 'package:patrimonio/app/providers/conferencia_provider.dart';
-
-import 'package:clarity_flutter/clarity_flutter.dart';
 
 class FormSelecionaUnidade extends StatefulWidget {
   const FormSelecionaUnidade({super.key});
