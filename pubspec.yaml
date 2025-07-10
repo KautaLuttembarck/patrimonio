@@ -138,9 +138,9 @@ flutter_launcher_icons:
   #image_path_ios: The location of the icon image file specific for iOS platform (optional - if not defined then the image_path is used)
   remove_alpha_ios: true # Removes alpha channel for IOS icons
   image_path_ios_dark_transparent: "assets/images/app_icon_transparent.png" # The location of the dark mode icon image file specific for iOS 18+ platform. Note: Apple recommends this icon to be transparent. For more information see Apple Human Interface Guidelines for App Icons
-  image_path_ios_tinted_grayscale: "assets/images/app_icon.png" # The location of the tinted mode icon image file specific for iOS 18+ platform. Note: This icon should be an grayscale image. Use desaturate_tinted_to_grayscale_ios: true to automatically desaturate the image provided here.
-  desaturate_tinted_to_grayscale_ios: true # Automatically desaturates tinted mode icon image to grayscale, defaults to false
-  background_color_ios: "#1B3C72" # The color (in the format "#RRGGBB") to be used as the background when removing the alpha channel. It is used only when the remove_alpha_ios property is set to true. (optional - if not defined then #ffffff is used)
+  image_path_ios_tinted_grayscale: "assets/images/app_icon_bw.png" # The location of the tinted mode icon image file specific for iOS 18+ platform. Note: This icon should be an grayscale image. Use desaturate_tinted_to_grayscale_ios: true to automatically desaturate the image provided here.
+  desaturate_tinted_to_grayscale_ios: false # Automatically desaturates tinted mode icon image to grayscale, defaults to false
+  #background_color_ios: "#1B3C72" # The color (in the format "#RRGGBB") to be used as the background when removing the alpha channel. It is used only when the remove_alpha_ios property is set to true. (optional - if not defined then #ffffff is used)
 
 
   #  WEB
