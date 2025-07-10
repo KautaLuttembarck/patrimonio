@@ -125,6 +125,7 @@ class _PatrimonioReaderComponentState
         );
       }
     } else {
+      Clarity.sendCustomEvent("Conferiu patrimonio por leitura óptica");
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
