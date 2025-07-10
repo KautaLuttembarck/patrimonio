@@ -6,6 +6,7 @@ import 'package:patrimonio/app/providers/conferencia_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:vibration/vibration.dart';
+import 'package:clarity_flutter/clarity_flutter.dart';
 
 class FormConfiguracoes extends StatefulWidget {
   const FormConfiguracoes({super.key});
@@ -43,6 +44,9 @@ class _FormConfiguracoesState extends State<FormConfiguracoes> {
           _downloadProgress = 0;
         });
       } else {
+        Clarity.sendCustomEvent(
+          "Obteve os dados patrimoniais na tela de Configuração",
+        );
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("Dados salvos com sucesso!"),

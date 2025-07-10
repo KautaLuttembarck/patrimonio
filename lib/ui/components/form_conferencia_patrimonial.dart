@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import 'package:patrimonio/app/providers/conferencia_provider.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
+import 'package:clarity_flutter/clarity_flutter.dart';
 
 class FormConferenciaPatrimonial extends StatefulWidget {
   const FormConferenciaPatrimonial({super.key});
@@ -23,6 +24,9 @@ class _PatrimonioReaderComponentState
     setState(() => _isLoading = true);
 
     // on success:
+    Clarity.sendCustomEvent(
+      "Enviou a conferência patrimonial para o SPMETRODF",
+    );
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

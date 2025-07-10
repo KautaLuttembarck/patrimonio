@@ -13,6 +13,8 @@ import 'package:patrimonio/ui/widgets/dropdown_search.dart';
 import 'package:patrimonio/app/services/local_database_service.dart';
 import 'package:patrimonio/app/providers/conferencia_provider.dart';
 
+import 'package:clarity_flutter/clarity_flutter.dart';
+
 class FormSelecionaUnidade extends StatefulWidget {
   const FormSelecionaUnidade({super.key});
 
@@ -30,12 +32,13 @@ class _FormSelecionaUnidadeState extends State<FormSelecionaUnidade> {
           SnackBar(
             content: Text("Erro ao salvar os dados de patrimonio!"),
             backgroundColor: Theme.of(context).colorScheme.error,
-            showCloseIcon: true,
-            behavior: SnackBarBehavior.floating,
           ),
         );
         setState(() => _isLoadingPatrimonios = false);
       } else {
+        Clarity.sendCustomEvent(
+          "Obteve os dados patrimoniais na tela de Seleção de UL",
+        );
         final patrimonios = await context
             .read<LocalDatabaseService>()
             .getPatrimoniosDaUl(idUlSelecionada!);

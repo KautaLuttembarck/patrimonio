@@ -4,6 +4,7 @@ import 'package:patrimonio/app/services/sp_database_service.dart';
 import 'package:patrimonio/app/utils/app_routes.dart';
 import 'package:provider/provider.dart';
 import 'package:patrimonio/app/providers/user_provider.dart';
+import 'package:clarity_flutter/clarity_flutter.dart';
 
 class FormLogin extends StatefulWidget {
   const FormLogin({super.key});
@@ -41,6 +42,7 @@ class _FormLoginState extends State<FormLogin> {
 
       var loginStatus = jsonDecode(res);
       if (loginStatus['login_result']) {
+        Clarity.sendCustomEvent(loginStatus['usuario']['permissao']);
         setState(() => isLoading = false);
         if (mounted) {
           context.read<UserProvider>().registraLogin(
