@@ -4,5 +4,5 @@ class AppRoutes {
   static const menuInicial = '/menu';
   static const conferenciaPage = '/conferencia';
   static const selecionaUlPage = '/selecionaUl';
-  static const configuracoesPage = '/patrimonioDownloader';
+  static const configuracoesPage = '/configuracoes';
 }
