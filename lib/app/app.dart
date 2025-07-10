@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:patrimonio/app/navigation/clarity_route_observer.dart';
 import 'package:provider/provider.dart';
 
 import 'package:patrimonio/ui/themes/app_theme.dart';
@@ -13,6 +14,8 @@ import 'package:patrimonio/ui/pages/seleciona_unidade_page.dart';
 import 'package:patrimonio/ui/pages/initial_menu_page.dart';
 import 'package:patrimonio/app/providers/conferencia_provider.dart';
 import 'package:patrimonio/app/providers/user_provider.dart';
+
+final clarityObserver = ClarityRouteObserver();
 
 class App extends StatelessWidget {
   final LocalDatabaseService localDatabaseService;
@@ -50,6 +53,8 @@ class App extends StatelessWidget {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
+        // navigatorObserver criado para passar o nome das rotas ao Clarity
+        navigatorObservers: [clarityObserver],
         routes: {
           AppRoutes.splashScreen: (ctx) => SplashScreen(),
           AppRoutes.authPage: (ctx) => AuthPage(),
