@@ -153,19 +153,20 @@ class _FormSelecionaUnidadeState extends State<FormSelecionaUnidade> {
               // e consequente responsável
               if (idUaSelecionada != null)
                 _isLoadingListaUl
-                    ? Center(
-                      child: LinearProgressIndicator(
-                        borderRadius: BorderRadius.circular(5),
-                        minHeight: 50,
-                        color: Colors.white60.withAlpha(6),
-                      ).animate(
-                        effects: [
-                          FadeEffect(
-                            delay: Duration(milliseconds: 200),
-                            duration: const Duration(milliseconds: 200),
-                          ),
-                        ],
-                      ),
+                    ? LinearProgressIndicator(
+                      borderRadius: BorderRadius.circular(5),
+                      minHeight: 50,
+                      backgroundColor: Colors.grey,
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.primary.withAlpha(10),
+                    ).animate(
+                      effects: [
+                        FadeEffect(
+                          delay: const Duration(milliseconds: 200),
+                          duration: const Duration(milliseconds: 200),
+                        ),
+                      ],
                     )
                     : DropdownSearch(
                       isEnabled: !conferenciaAndamento,
