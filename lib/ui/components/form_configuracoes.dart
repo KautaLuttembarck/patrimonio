@@ -93,6 +93,9 @@ class _FormConfiguracoesState extends State<FormConfiguracoes> {
       await context.read<LocalDatabaseService>().limparTabelaConferencia();
     }
     if (result) {
+      Clarity.sendCustomEvent(
+        "Limpou o banco de dados local",
+      );
       setState(() {
         _dataAtualizacao = null;
         _downloadProgress = 0;
@@ -115,6 +118,9 @@ class _FormConfiguracoesState extends State<FormConfiguracoes> {
 
   void limparBancoDeDadosConferencias() async {
     await context.read<ConferenciaProvider>().limparConferencia();
+    Clarity.sendCustomEvent(
+      "Cancelou uma conferência em andamento",
+    );
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
