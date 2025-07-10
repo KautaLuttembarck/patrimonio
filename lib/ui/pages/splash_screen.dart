@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'auth_page.dart';
+import 'package:patrimonio/app/utils/app_routes.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -41,6 +42,7 @@ class _SplashScreenState extends State<SplashScreen>
         Navigator.pushReplacement(
           context,
           PageRouteBuilder(
+            settings: const RouteSettings(name: AppRoutes.authPage),
             pageBuilder:
                 (context, animation, secondaryAnimation) => const AuthPage(),
             transitionDuration: const Duration(milliseconds: 800),
