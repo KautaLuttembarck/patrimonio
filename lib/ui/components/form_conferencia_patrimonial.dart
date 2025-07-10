@@ -74,6 +74,7 @@ class _PatrimonioReaderComponentState
     try {
       // Encerra a função em caso de leitura cancelada
       if (patrimonioLido == '-1') {
+        Clarity.sendCustomEvent("Leitura óptica cancelada pelo usuário");
         return;
       }
 
@@ -100,6 +101,15 @@ class _PatrimonioReaderComponentState
     }
 
     if (!resultado) {
+      if (patrimonioLido != "INVÁLIDO") {
+        Clarity.sendCustomEvent(
+          "Patrimônio lido não encontrado na lista de conferência",
+        );
+      } else {
+        Clarity.sendCustomEvent(
+          "Leitura óptica retornou um patrimônio INVÁLIDO",
+        );
+      }
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
