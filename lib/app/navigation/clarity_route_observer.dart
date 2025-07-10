@@ -9,11 +9,6 @@ class ClarityRouteObserver extends RouteObserver<PageRoute<dynamic>> {
     if (route is PageRoute) {
       final screenName = route.settings.name ?? route.runtimeType.toString();
       if (screenName.trim().isNotEmpty) {
-        debugPrint(
-          "\n###########################\n"
-          "Nome de página registrado no Micorsoft Clarity: $screenName"
-          " \n###########################\n",
-        );
         Clarity.setCurrentScreenName(screenName);
       }
     }
