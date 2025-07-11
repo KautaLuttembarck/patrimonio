@@ -58,7 +58,6 @@ class _FormSelecionaUnidadeState extends State<FormSelecionaUnidade> {
     SpDatabaseService().getListaUa().then((data) {
       final List<dynamic> decodedList = jsonDecode(data);
 
-      // listaUa = decodedList.map((item) => Ua.fromJson(item)).toList();
       uaDropdownList =
           decodedList.map((item) => DropdownItem.fromUaJson(item)).toList();
 
@@ -73,7 +72,7 @@ class _FormSelecionaUnidadeState extends State<FormSelecionaUnidade> {
 
   @override
   void dispose() {
-    _scrollController.dispose(); // Liberando recursos
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -89,7 +88,7 @@ class _FormSelecionaUnidadeState extends State<FormSelecionaUnidade> {
   int? idUlSelecionada;
   String? idResponsavelSelecionado;
 
-  List<Patrimonio>? listagemPatrimonial;
+  List<Patrimonio> listagemPatrimonial = [];
   late ScrollController _scrollController;
   DropdownItem? _selectedUa;
   DropdownItem? _selectedUl;
@@ -126,7 +125,7 @@ class _FormSelecionaUnidadeState extends State<FormSelecionaUnidade> {
                     _selectedUl = null;
                     idUlSelecionada = null;
                     _isLoadingListaUl = true;
-                    listagemPatrimonial = null;
+                    listagemPatrimonial = [];
                   });
                   SpDatabaseService().getListaUl(idUaSelecionada!).then((data) {
                     final List<dynamic> decodedList = jsonDecode(data);
