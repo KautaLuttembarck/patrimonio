@@ -184,7 +184,6 @@ class _FormSelecionaUnidadeState extends State<FormSelecionaUnidade> {
                           _selectedUl = value;
                           _errorTextUl = null;
                           idUlSelecionada = int.parse(value?.id ?? '0');
-                          // listagemPatrimonial = null;
                         });
 
                         final patrimonios = await context
@@ -203,44 +202,52 @@ class _FormSelecionaUnidadeState extends State<FormSelecionaUnidade> {
                     ),
 
               // Listview dos patrimonios
-              if (idUaSelecionada != null &&
-                  idUlSelecionada != null &&
-                  listagemPatrimonial != null)
+              if (idUaSelecionada != null && idUlSelecionada != null)
                 Expanded(
-                  child: RawScrollbar(
-                    controller: _scrollController,
-                    radius: Radius.circular(10),
-                    interactive: true,
-                    scrollbarOrientation: ScrollbarOrientation.right,
-                    child: ListView.builder(
-                      controller: _scrollController,
-                      itemCount: listagemPatrimonial!.length,
-                      itemBuilder: (context, index) {
-                        return Material(
-                          color: Colors.transparent,
-                          child: ListTile(
-                            tileColor: Colors.transparent,
-                            title: Text(
-                              listagemPatrimonial![index].nAntigo != ""
-                                  ? "Patrimônio: ${listagemPatrimonial![index].patrimonio}\nNº Antigo: ${listagemPatrimonial![index].nAntigo}"
-                                  : "Patrimônio: ${listagemPatrimonial![index].patrimonio}",
+                  child:
+                      listagemPatrimonial.isEmpty
+                          ? Center(
+                            child: Text(
+                              _precisaAtualizar
+                                  ? "Baixe ou atualize os dados locais para visualizar os patrimônios associados a esta UL"
+                                  : "Não existem patrimônios associados a esta UL",
+                              textAlign: TextAlign.center,
                             ),
-                            dense: true,
-                            subtitle: Text(
-                              listagemPatrimonial![index].descricao,
+                          )
+                          : RawScrollbar(
+                            controller: _scrollController,
+                            radius: Radius.circular(10),
+                            interactive: true,
+                            scrollbarOrientation: ScrollbarOrientation.right,
+                            child: ListView.builder(
+                              controller: _scrollController,
+                              itemCount: listagemPatrimonial.length,
+                              itemBuilder: (context, index) {
+                                return Material(
+                                  color: Colors.transparent,
+                                  child: ListTile(
+                                    tileColor: Colors.transparent,
+                                    title: Text(
+                                      listagemPatrimonial[index].nAntigo != ""
+                                          ? "Patrimônio: ${listagemPatrimonial[index].patrimonio}\nNº Antigo: ${listagemPatrimonial[index].nAntigo}"
+                                          : "Patrimônio: ${listagemPatrimonial[index].patrimonio}",
+                                    ),
+                                    dense: true,
+                                    subtitle: Text(
+                                      listagemPatrimonial[index].descricao,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ).animate(
+                              effects: [
+                                FadeEffect(
+                                  delay: Duration(milliseconds: 100),
+                                  duration: const Duration(milliseconds: 300),
+                                ),
+                              ],
                             ),
                           ),
-                        );
-                      },
-                    ).animate(
-                      effects: [
-                        FadeEffect(
-                          delay: Duration(milliseconds: 100),
-                          duration: const Duration(milliseconds: 300),
-                        ),
-                      ],
-                    ),
-                  ),
                 ).animate(
                   effects: [
                     FadeEffect(
@@ -254,26 +261,33 @@ class _FormSelecionaUnidadeState extends State<FormSelecionaUnidade> {
               if (!_precisaAtualizar &&
                   idUaSelecionada != null &&
                   idUlSelecionada != null &&
-                  listagemPatrimonial != null &&
-                  listagemPatrimonial!.isNotEmpty &&
                   !conferenciaAndamento)
                 ElevatedButton(
-                  onPressed: () {
-                    context
-                        .read<LocalDatabaseService>()
-                        .copiarParaConferenciaPorUl(idUlSelecionada!)
-                        .then((_) {
-                          if (context.mounted) {
-                            Navigator.of(context).pushNamed(
-                              AppRoutes.conferenciaPage,
-                              arguments: {'idUl': idUlSelecionada!},
-                            );
-                          }
-                        });
-                  },
+                  onPressed:
+                      listagemPatrimonial.isEmpty
+                          ? null
+                          : () {
+                            context
+                                .read<LocalDatabaseService>()
+                                .copiarParaConferenciaPorUl(idUlSelecionada!)
+                                .then((_) {
+                                  if (context.mounted) {
+                                    Navigator.of(context).pushNamed(
+                                      AppRoutes.conferenciaPage,
+                                      arguments: {'idUl': idUlSelecionada!},
+                                    );
+                                  }
+                                });
+                          },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [Text("Iniciar a conferência Patrimonial")],
+                    children: [
+                      Text(
+                        listagemPatrimonial.isEmpty
+                            ? "Selecione uma UL com patrimônios"
+                            : "Iniciar a conferência Patrimonial",
+                      ),
+                    ],
                   ),
                 ).animate(
                   effects: [
@@ -304,8 +318,7 @@ class _FormSelecionaUnidadeState extends State<FormSelecionaUnidade> {
 
               if (idUaSelecionada != null &&
                   idUlSelecionada != null &&
-                  listagemPatrimonial != null &&
-                  (_precisaAtualizar || listagemPatrimonial!.isEmpty))
+                  _precisaAtualizar)
                 OutlinedButton(
                   onPressed:
                       _isLoadingPatrimonios ? null : obtemDadosPatrimoniais,
