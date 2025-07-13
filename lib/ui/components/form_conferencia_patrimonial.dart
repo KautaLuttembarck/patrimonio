@@ -4,10 +4,11 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import 'package:clarity_flutter/clarity_flutter.dart';
+import 'package:vibration/vibration.dart';
 
 import 'package:patrimonio/app/providers/conferencia_provider.dart';
 import 'package:patrimonio/app/models/patrimonio.dart';
-import 'package:vibration/vibration.dart';
+import 'package:patrimonio/app/utils/help_dialog.dart' as help_dialog;
 
 class FormConferenciaPatrimonial extends StatefulWidget {
   const FormConferenciaPatrimonial({super.key});
@@ -289,6 +290,11 @@ class _PatrimonioReaderComponentState
                             padding: const EdgeInsets.symmetric(vertical: 8.0),
                             child: Card(
                               child: ListTile(
+                                onLongPress:
+                                    () => help_dialog.showDetalhesPatrimonio(
+                                      context,
+                                      patrimonio,
+                                    ),
                                 isThreeLine: true,
                                 selected:
                                     patrimonio.situacaoConferencia ==
