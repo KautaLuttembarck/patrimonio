@@ -7,6 +7,7 @@ import 'package:clarity_flutter/clarity_flutter.dart';
 
 import 'package:patrimonio/app/providers/conferencia_provider.dart';
 import 'package:patrimonio/app/models/patrimonio.dart';
+import 'package:vibration/vibration.dart';
 
 class FormConferenciaPatrimonial extends StatefulWidget {
   const FormConferenciaPatrimonial({super.key});
@@ -172,6 +173,9 @@ class _PatrimonioReaderComponentState
       situacao,
       patrimonio.patrimonio,
     );
+    if (await Vibration.hasVibrator()) {
+      Vibration.vibrate(duration: 50);
+    }
     Clarity.sendCustomEvent(
       "Marcom um patrimonio como $situacao por toque",
     );
@@ -186,9 +190,34 @@ class _PatrimonioReaderComponentState
         if (context.watch<ConferenciaProvider>().tamanhoLista > 0)
           Padding(
             padding: const EdgeInsets.only(bottom: 5.0),
-            child: Text(
-              "Patrimônios conferidos: ${context.watch<ConferenciaProvider>().patrimoniosConferidos} / ${context.watch<ConferenciaProvider>().tamanhoLista}",
-              style: Theme.of(context).textTheme.titleSmall,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Patrimônios conferidos: "
+                  "${context.watch<ConferenciaProvider>().patrimoniosConferidos} "
+                  "/ ${context.watch<ConferenciaProvider>().tamanhoLista}",
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
+
+                if (context
+                        .watch<ConferenciaProvider>()
+                        .patrimoniosConferidos ==
+                    context.watch<ConferenciaProvider>().tamanhoLista)
+                  Icon(
+                    Icons.check,
+                    color: Colors.green,
+                    size: 23,
+                  ).animate(
+                    delay: Duration(milliseconds: 50),
+                    effects: [
+                      ScaleEffect(
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.easeOutBack,
+                      ),
+                    ],
+                  ),
+              ],
             ),
           ),
 
