@@ -167,7 +167,15 @@ class _FormDigitaPatrimonioConferenciaState
             ),
           );
         }
-        Clarity.sendCustomEvent("Conferiu patrimonio digitando");
+        if (_useNAntigo) {
+          Clarity.sendCustomEvent(
+            "Conferiu patrimonio digitando o número ANTIGO",
+          );
+        } else {
+          Clarity.sendCustomEvent(
+            "Conferiu patrimonio digitando o número ATUAL",
+          );
+        }
         _patrimonioController.text = "";
         return;
       } else {
