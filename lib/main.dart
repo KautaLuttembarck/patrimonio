@@ -5,13 +5,14 @@ import 'package:patrimonio/app/app.dart';
 import 'package:patrimonio/app/providers/conferencia_provider.dart';
 import 'package:clarity_flutter/clarity_flutter.dart';
 
+import 'app/navigation/clarity_route_observer.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Configurações do Microsoft Clarity
   final config = ClarityConfig(
     projectId: "s9burb1bmp",
-    // Note: Use "LogLevel.Verbose" value while testing to debug initialization issues.
     logLevel: LogLevel.None,
   );
 
@@ -32,11 +33,16 @@ Future<void> main() async {
   final conferenciaProvider = ConferenciaProvider(localDatabaseService);
   await conferenciaProvider.carregarItens();
 
+  // Inicializa o Navigator Observer para uso com o Microsoft Clarity
+  // Usado para acompanhar e reportar as mudanças de rota
+  final clarityObserver = ClarityRouteObserver();
+
   runApp(
     ClarityWidget(
       app: App(
         localDatabaseService: localDatabaseService,
         conferenciaProvider: conferenciaProvider,
+        clarityObserver: clarityObserver,
       ),
       clarityConfig: config,
     ),
