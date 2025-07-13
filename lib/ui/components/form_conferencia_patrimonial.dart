@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+
 import 'package:provider/provider.dart';
-import 'package:patrimonio/app/providers/conferencia_provider.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import 'package:clarity_flutter/clarity_flutter.dart';
+
+import 'package:patrimonio/app/providers/conferencia_provider.dart';
+import 'package:patrimonio/app/models/patrimonio.dart';
 
 class FormConferenciaPatrimonial extends StatefulWidget {
   const FormConferenciaPatrimonial({super.key});
@@ -22,7 +25,6 @@ class _PatrimonioReaderComponentState
     FocusScope.of(context).unfocus();
 
     setState(() => _isLoading = true);
-
     // on success:
     Clarity.sendCustomEvent(
       "Enviou a conferência patrimonial para o SPMETRODF",
@@ -58,14 +60,14 @@ class _PatrimonioReaderComponentState
     super.dispose();
   }
 
-  // Realiza a leitura óptica do patrimônio e atualiza o status de conferência
-  // do patrimônio lido
-  Future<void> lerPatrimonio() async {
+  // Realiza a leitura óptica do patrimônio, atualiza o status de conferência
+  // para lido e registra a ação no Microsoft Clarity
+  Future<void> _lerPatrimonio() async {
     String? patrimonioLido = await SimpleBarcodeScanner.scanBarcode(
       context,
       cancelButtonText: "Cancelar",
       isShowFlashIcon: true,
-      delayMillis: 500,
+      // delayMillis: 500,
       cameraFace: CameraFace.back,
       scanFormat: ScanFormat.ONLY_BARCODE,
       lineColor: "#F29100",
@@ -158,6 +160,21 @@ class _PatrimonioReaderComponentState
         );
       }
     }
+  }
+
+  // Registra o status de conferência do patrimônio e envia a ação para o
+  // Microsoft Clarity
+  Future<void> _marcaComoConferido(Patrimonio patrimonio) async {
+    final String situacao =
+        patrimonio.situacaoConferencia == "pendente" ? "conferido" : "pendente";
+
+    await context.read<ConferenciaProvider>().atualizaStatusConferido(
+      situacao,
+      patrimonio.patrimonio,
+    );
+    Clarity.sendCustomEvent(
+      "Marcom um patrimonio como $situacao por toque",
+    );
   }
 
   @override
@@ -253,20 +270,6 @@ class _PatrimonioReaderComponentState
                                         : Theme.of(
                                           context,
                                         ).colorScheme.surfaceContainerHigh,
-                                onTap: () {
-                                  final String situacao =
-                                      patrimonio.situacaoConferencia ==
-                                              "pendente"
-                                          ? "conferido"
-                                          : "pendente";
-                                  context
-                                      .read<ConferenciaProvider>()
-                                      .atualizaStatusConferido(
-                                        situacao,
-                                        patrimonio.patrimonio,
-                                      );
-                                  // });
-                                },
                                 leading:
                                     patrimonio.situacaoConferencia == "pendente"
                                         ? Icon(Icons.check_box_outline_blank)
@@ -277,6 +280,7 @@ class _PatrimonioReaderComponentState
                                       : "Patrimônio: ${patrimonio.patrimonio}",
                                 ),
                                 subtitle: Text(patrimonio.descricao),
+                                onTap: () => _marcaComoConferido(patrimonio),
                               ),
                             ),
                           ),
@@ -297,7 +301,7 @@ class _PatrimonioReaderComponentState
                 bottom: 34,
                 right: 10,
                 child: FloatingActionButton(
-                  onPressed: lerPatrimonio,
+                  onPressed: _lerPatrimonio,
                   child: Icon(Icons.barcode_reader, size: 30),
                 ),
               ).animate(

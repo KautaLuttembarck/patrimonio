@@ -1,3 +1,4 @@
+import 'package:clarity_flutter/clarity_flutter.dart';
 import 'package:flutter/material.dart';
 
 class DrawerOption extends StatelessWidget {
@@ -17,6 +18,16 @@ class DrawerOption extends StatelessWidget {
     super.key,
   });
 
+  void _navigate(BuildContext ctx) {
+    if (popOnNavigate) {
+      Clarity.sendCustomEvent("Acionou $route usando o menu principal");
+      Navigator.of(ctx).pushReplacementNamed(route);
+    } else {
+      Clarity.sendCustomEvent("Acionou $route usando o menu principal");
+      Navigator.of(ctx).pushNamed(route);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return TextButton(
@@ -35,13 +46,7 @@ class DrawerOption extends StatelessWidget {
       onPressed:
           ModalRoute.of(context)?.settings.name == route
               ? null
-              : () {
-                if (popOnNavigate) {
-                  Navigator.of(context).pushReplacementNamed(route);
-                } else {
-                  Navigator.of(context).popAndPushNamed(route);
-                }
-              },
+              : () => _navigate(context),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
