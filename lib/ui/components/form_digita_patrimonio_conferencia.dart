@@ -58,18 +58,18 @@ class _FormDigitaPatrimonioConferenciaState
                             style: Theme.of(context).textTheme.bodySmall,
                             children: [
                               TextSpan(
-                                text: "UA: ",
+                                text: "Unidade Administrativa: ",
                                 style: Theme.of(context).textTheme.bodySmall
                                     ?.copyWith(fontWeight: FontWeight.bold),
                               ),
                               TextSpan(text: "${patrimonio.ua}\n"),
 
                               TextSpan(
-                                text: "UL: ",
+                                text: "Localização: ",
                                 style: Theme.of(context).textTheme.bodySmall
                                     ?.copyWith(fontWeight: FontWeight.bold),
                               ),
-                              TextSpan(text: "${patrimonio.localidade}\n"),
+                              TextSpan(text: "${patrimonio.localidade}\n\n"),
 
                               TextSpan(
                                 text: "Responsável: ",
