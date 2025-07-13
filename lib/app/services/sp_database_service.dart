@@ -29,14 +29,14 @@ class SpDatabaseService {
       } else {
         return jsonEncode({
           "login_result": false,
-          "Erro": "Falha de comunicação com o servidor!",
+          "Erro": "Falha no processamento de login pelo servidor!",
           "body": utf8.decode(response.bodyBytes),
         });
       }
     } catch (e) {
       return jsonEncode({
         "login_result": false,
-        "Erro": "Falha ao enviar a comunicação!",
+        "Erro": "Falha ao enviar a comunicação de login!",
         "body": e.toString(),
       });
     }
