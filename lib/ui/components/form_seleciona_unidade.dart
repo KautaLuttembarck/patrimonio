@@ -33,6 +33,9 @@ class _FormSelecionaUnidadeState extends State<FormSelecionaUnidade> {
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
+        Clarity.sendCustomEvent(
+          "Erro ao obter os dados patrimoniais na tela de Seleção de UL",
+        );
         setState(() => _isLoadingPatrimonios = false);
       } else {
         Clarity.sendCustomEvent(
