@@ -22,7 +22,7 @@ class _FormConfiguracoesState extends State<FormConfiguracoes> {
   String? _dataAtualizacao;
   String _situacaoTransferencia = "Transferindo dados patrimoniais";
 
-  void obtemDadosPatrimoniais() async {
+  void _obtemDadosPatrimoniais() async {
     setState(() {
       _situacaoTransferencia = "Transferindo dados patrimoniais";
       _downloadingData = true;
@@ -85,7 +85,7 @@ class _FormConfiguracoesState extends State<FormConfiguracoes> {
     }
   }
 
-  void limparBancoDeDados() async {
+  void _limparBancoDeDados() async {
     final bool result;
     result =
         await context.read<LocalDatabaseService>().esvaziaTabelaPatrimonios();
@@ -116,7 +116,7 @@ class _FormConfiguracoesState extends State<FormConfiguracoes> {
     }
   }
 
-  void limparBancoDeDadosConferencias() async {
+  void _limparBancoDeDadosConferencias() async {
     await context.read<ConferenciaProvider>().limparConferencia();
     Clarity.sendCustomEvent(
       "Cancelou uma conferência em andamento",
@@ -251,7 +251,7 @@ class _FormConfiguracoesState extends State<FormConfiguracoes> {
           onPressed:
               ((_downloadingData || (_downloadProgress > 0))
                   ? null
-                  : obtemDadosPatrimoniais),
+                  : _obtemDadosPatrimoniais),
           child: Row(
             spacing: 20,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -264,7 +264,7 @@ class _FormConfiguracoesState extends State<FormConfiguracoes> {
         // Remove os dados de conferência em andamento
         if (_conferenciaEmAndamento)
           ElevatedButton(
-            onPressed: limparBancoDeDadosConferencias,
+            onPressed: _limparBancoDeDadosConferencias,
             style: ButtonStyle(
               backgroundColor: WidgetStatePropertyAll(
                 Theme.of(context).colorScheme.error,
@@ -292,7 +292,7 @@ class _FormConfiguracoesState extends State<FormConfiguracoes> {
         //Remove os dados de patrimônio e conferência em andamento
         if (_dataAtualizacao != null)
           ElevatedButton(
-            onPressed: limparBancoDeDados,
+            onPressed: _limparBancoDeDados,
             style: ButtonStyle(
               backgroundColor: WidgetStatePropertyAll(
                 Theme.of(context).colorScheme.error,
