@@ -72,6 +72,9 @@ class _FormLoginState extends State<FormLogin> {
             ),
           );
         }
+        Clarity.sendCustomEvent(
+          loginStatus['Erro'],
+        );
       }
     }
   }
