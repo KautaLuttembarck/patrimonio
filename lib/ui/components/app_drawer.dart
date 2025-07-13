@@ -1,14 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:patrimonio/ui/components/app_drawer_action_list.dart';
 import 'package:patrimonio/ui/components/app_drawer_header.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
-class AppDrawer extends StatelessWidget {
+class AppDrawer extends StatefulWidget {
   const AppDrawer({super.key});
+
+  @override
+  State<AppDrawer> createState() => _AppDrawerState();
+}
+
+class _AppDrawerState extends State<AppDrawer> {
+  String _versao = '';
+
+  Future<void> _carregarVersao() async {
+    final info = await PackageInfo.fromPlatform();
+    setState(() {
+      _versao = info.version;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _carregarVersao();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      shape: Border.all(color: Colors.black.withAlpha(0)),
+      shape: Border.all(color: Colors.transparent),
       backgroundColor: Theme.of(context).primaryColor,
       child: SafeArea(
         child: Column(
@@ -18,9 +39,9 @@ class AppDrawer extends StatelessWidget {
             const AppDrawerHeader(),
 
             const AppDrawerActionList(),
-            Expanded(child: SizedBox()),
+            const Expanded(child: SizedBox()),
             Text(
-              "Versão: 1.0",
+              "Versão $_versao",
               textAlign: TextAlign.center,
               style: Theme.of(
                 context,
@@ -28,6 +49,7 @@ class AppDrawer extends StatelessWidget {
                 color: Colors.white54,
               ),
             ),
+            const SizedBox(),
           ],
         ),
       ),
