@@ -45,11 +45,11 @@ class _FormLoginState extends State<FormLogin> {
         Clarity.setCustomUserId(loginStatus['usuario']['matricula']);
         Clarity.setOnSessionStartedCallback((_) {
           Clarity.setCustomTag(
-            'UserLoggedIn',
+            'Usuário Logado',
             loginStatus['usuario']['matricula'],
           );
           Clarity.setCustomTag(
-            'UserPermission',
+            'Grupo de Permissão',
             loginStatus['usuario']['permissao'],
           );
         });
