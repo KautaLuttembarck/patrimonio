@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:vibration/vibration.dart';
+import 'package:clarity_flutter/clarity_flutter.dart';
 
 class ItemMenuPrincipal extends StatelessWidget {
   const ItemMenuPrincipal({
@@ -20,25 +21,27 @@ class ItemMenuPrincipal extends StatelessWidget {
   final String destino;
   final bool popOnNavigate;
 
+  void _navigate(BuildContext ctx) {
+    if (popOnNavigate) {
+      Clarity.sendCustomEvent("Acionou $destino usando o menu principal");
+      Navigator.of(ctx).pushReplacementNamed(destino);
+    } else {
+      Clarity.sendCustomEvent("Acionou $destino usando o menu principal");
+      Navigator.of(ctx).pushNamed(destino);
+    }
+  }
+
+  void _showHelp(BuildContext ctx) async {
+    if (await Vibration.hasVibrator()) {
+      Vibration.vibrate(duration: 50);
+    }
+    if (ctx.mounted) {
+      helpDialog(ctx);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    void navigate() {
-      if (popOnNavigate) {
-        Navigator.of(context).pushReplacementNamed(destino);
-      } else {
-        Navigator.of(context).pushNamed(destino);
-      }
-    }
-
-    void showHelp() async {
-      if (await Vibration.hasVibrator()) {
-        Vibration.vibrate(duration: 50);
-      }
-      if (context.mounted) {
-        helpDialog(context);
-      }
-    }
-
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Card(
@@ -47,8 +50,8 @@ class ItemMenuPrincipal extends StatelessWidget {
         child: ListTile(
           visualDensity: VisualDensity.comfortable,
           // tileColor: Theme.of(context).colorScheme.secondary,
-          onTap: navigate,
-          onLongPress: showHelp,
+          onTap: () => _navigate(context),
+          onLongPress: () => _showHelp(context),
           title: Text(
             acao,
             // style: TextStyle(color: Theme.of(context).colorScheme.primary),
