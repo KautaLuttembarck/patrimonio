@@ -92,11 +92,15 @@ class _FormLoginState extends State<FormLogin> {
             children: [
               SizedBox(),
 
-              Image.asset(
-                MediaQuery.of(context).platformBrightness == Brightness.dark
-                    ? "assets/images/logo_metro_horizontal_invertido_600x209.png"
-                    : 'assets/images/logo_metro_horizontal.png',
-                width: 220,
+              Hero(
+                tag:
+                    "assets/images/logo_metro_horizontal_invertido_600x209.png",
+                child: Image.asset(
+                  MediaQuery.of(context).platformBrightness == Brightness.dark
+                      ? "assets/images/logo_metro_horizontal_invertido_600x209.png"
+                      : 'assets/images/logo_metro_horizontal.png',
+                  width: 220,
+                ),
               ),
               SizedBox(),
               TextFormField(
