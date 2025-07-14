@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:patrimonio/app/navigation/app_routes.dart';
 
 import 'package:provider/provider.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
@@ -26,20 +27,68 @@ class _PatrimonioReaderComponentState
   Future<void> _submitData() async {
     FocusScope.of(context).unfocus();
 
-    setState(() => _isLoading = true);
-    // on success:
-    Clarity.sendCustomEvent(
-      "Enviou a conferência patrimonial para o SPMETRODF",
+    final continuar = await showDialog<bool>(
+      context: context,
+      builder:
+          (ctx) => AlertDialog(
+            icon: Icon(Icons.cloud_upload_outlined, size: 42),
+            iconColor: Theme.of(context).primaryColor,
+            title: Text("Finalizar a conferência?"),
+            content: Text(
+              "Deseja enviar o resultado da conferência ao SPMETRODF"
+              " e finalizar o processo?",
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop(true); // Retorna `true`
+                },
+                child: Text(
+                  "Finalizar",
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop(false); // Retorna `false`
+                },
+                child: Text("Voltar"),
+              ),
+            ],
+          ),
     );
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Supostamente foi enviado ao SPMETRODF"),
-          backgroundColor: Colors.green,
-          showCloseIcon: true,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+
+    if (continuar == true) {
+      setState(() => _isLoading = true);
+      bool? result = true;
+      // on success:
+
+      if (result) {
+        Clarity.sendCustomEvent(
+          "Enviou a conferência patrimonial para o SPMETRODF",
+        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                "Dados da conferência patrimonial encaminhados ao SPMETRODF",
+              ),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+        if (mounted) {
+          await context.read<ConferenciaProvider>().limparConferencia();
+        }
+        if (mounted) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            AppRoutes.menuInicial,
+            (Route<dynamic> route) => false,
+          );
+        }
+      }
+    } else {
+      // Usuário cancelou ou clicou fora do dialog
     }
 
     setState(() {
