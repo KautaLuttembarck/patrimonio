@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'auth_page.dart';
 import 'package:patrimonio/app/navigation/app_routes.dart';
+import 'package:flutter/services.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -10,107 +11,104 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
-
+class _SplashScreenState extends State<SplashScreen> {
+  double imageOpacity = 0;
+  int timeToAnimationInMilliseconds = 1500;
   @override
   void initState() {
     super.initState();
-
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 1500),
-      vsync: this,
-    );
-
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeInOut,
-      ),
-    );
-
-    _animationController.forward();
-
-    // Navigate to home screen after 3 seconds
-    Timer(const Duration(seconds: 3), () {
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          PageRouteBuilder(
-            settings: const RouteSettings(name: AppRoutes.authPage),
-            pageBuilder:
-                (context, animation, secondaryAnimation) => const AuthPage(),
-            transitionDuration: const Duration(milliseconds: 800),
-            transitionsBuilder: (
-              context,
-              animation,
-              secondaryAnimation,
-              child,
-            ) {
-              return FadeTransition(opacity: animation, child: child);
-            },
-          ),
-        );
-      }
-    });
+    // Modo imersivo completo: esconde status bar e barra de navegação
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    waitAndShow();
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
+    // Volta para o modo padrão (com barras)
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.primary,
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Theme.of(context).colorScheme.secondary,
-              Theme.of(context).colorScheme.primary,
-            ],
-          ),
-        ),
-        child: AnimatedBuilder(
-          animation: _fadeAnimation,
-          builder: (context, child) {
-            return Opacity(
-              opacity: _fadeAnimation.value,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    "assets/images/logo_metro_horizontal_invertido_600x209.png",
-                    width: 220,
-                  ),
-                  SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        Colors.white.withAlpha(178),
-                      ),
-                    ),
-                  ),
-                ],
+      backgroundColor: Color(0xFF1B3C72),
+      body: Center(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Image.asset(
+              "assets/images/native_splash/native_splash_logo.png",
+              width: 288,
+            ),
+            Positioned(
+              bottom: 50,
+              child: AnimatedOpacity(
+                duration: Duration(milliseconds: timeToAnimationInMilliseconds),
+                opacity: imageOpacity,
+                curve: Curves.ease,
+                child:
+                    MediaQuery.of(context).platformBrightness == Brightness.dark
+                        ? Hero(
+                          tag:
+                              "assets/images/logo_metro_horizontal_invertido_600x209.png",
+                          child: Image.asset(
+                            "assets/images/logo_metro_horizontal_invertido_600x209.png",
+                            width: 180,
+                          ),
+                        )
+                        : Image.asset(
+                          "assets/images/logo_metro_horizontal_invertido_600x209.png",
+                          width: 180,
+                        ),
               ),
-            );
-          },
+            ),
+          ],
         ),
       ),
     );
+  }
+
+  void waitAndShow() {
+    Future.delayed(const Duration(milliseconds: 700)).then((value) {
+      setState(() {
+        imageOpacity = 1;
+      });
+      waitAndNextScreen();
+    });
+  }
+
+  void waitAndNextScreen() {
+    Future.delayed(
+      Duration(milliseconds: timeToAnimationInMilliseconds + 300),
+    ).then((value) {
+      if (mounted) {
+        Navigator.of(context).pushReplacement(
+          PageRouteBuilder(
+            settings: RouteSettings(
+              name: AppRoutes.authPage,
+              arguments: "something",
+            ),
+            pageBuilder:
+                (context, animation, secondaryAnimation) => const AuthPage(),
+            transitionsBuilder: (
+              context,
+              animation,
+              secondaryAnimation,
+              child,
+            ) {
+              final curvedAnimation = animation.drive(
+                CurveTween(curve: Curves.easeInOut),
+              );
+              return FadeTransition(
+                opacity: curvedAnimation,
+                child: child,
+              );
+            },
+            transitionDuration: Duration(milliseconds: 1500),
+          ),
+        );
+      }
+    });
   }
 }
