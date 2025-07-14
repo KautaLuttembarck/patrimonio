@@ -79,6 +79,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/images/native_splash/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -189,7 +190,7 @@ flutter_native_splash:
 
   # The image parameter allows you to specify an image used in the splash screen.  It must be a
   # png file and should be sized for 4x pixel density.
-  image: assets/images/native_splash_logo.png
+  image: assets/images/native_splash/native_splash_logo.png
 
   # The branding property allows you to specify an image used as branding in the splash screen.
   # It must be a png file. It is supported for Android, iOS and the Web.  For Android 12,
@@ -227,7 +228,7 @@ flutter_native_splash:
   # 768 pixels in diameter.  To fit a 1152x1152 image within a circle with a 768 diameter, simply
   # ensure that the most important design elements of your image are placed within a circular area
   # with a 768 diameter at the center of the 1152x1152 canvas.
-    image: assets/images/native_splash_logo.png
+    image: assets/images/native_splash/native_splash_logo.png
 
   # Splash screen background color.
     color: "#1B3C72"
@@ -287,15 +288,15 @@ flutter_native_splash:
   # https://developer.android.com/reference/android/view/Gravity): bottom, center,
   # center_horizontal, center_vertical, clip_horizontal, clip_vertical, end, fill, fill_horizontal,
   # fill_vertical, left, right, start, or top. android_gravity can be combined using the | operator to achieve multiple effects.
-  # For example:
+  # For example,
   # `android_gravity: fill|clip_vertical` - This will fill the width while maintaining the image's vertical aspect ratio
-  #android_gravity: center
+  android_gravity: center
   #
   # ios_content_mode can be one of the following iOS UIView.ContentMode (see
   # https://developer.apple.com/documentation/uikit/uiview/contentmode): scaleToFill,
   # scaleAspectFit, scaleAspectFill, center, top, bottom, left, right, topLeft, topRight,
   # bottomLeft, or bottomRight.
-  #ios_content_mode: center
+  ios_content_mode: center
   #
   # web_image_mode can be one of the following modes: center, contain, stretch, and cover.
   #web_image_mode: center
