@@ -47,7 +47,7 @@ class _SplashScreenState extends State<SplashScreen> {
               width: 288,
             ),
             Positioned(
-              bottom: 50,
+              bottom: 75,
               child: AnimatedOpacity(
                 duration: Duration(milliseconds: timeToAnimationInMilliseconds),
                 opacity: imageOpacity,
@@ -64,7 +64,7 @@ class _SplashScreenState extends State<SplashScreen> {
                             Brightness.light
                         ? "assets/images/logo_metro_horizontal.png"
                         : "assets/images/logo_metro_horizontal_invertido_600x209.png",
-                    width: 180,
+                    width: 135,
                   ),
                 ),
               ),
