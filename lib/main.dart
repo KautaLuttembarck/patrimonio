@@ -17,10 +17,10 @@ Future<void> main() async {
   );
 
   // Devolve a barra de notificação para o iOS
-  SystemChrome.setEnabledSystemUIMode(
-    SystemUiMode.manual,
-    overlays: [SystemUiOverlay.bottom, SystemUiOverlay.top],
-  );
+  // SystemChrome.setEnabledSystemUIMode(
+  //   SystemUiMode.manual,
+  //   overlays: [SystemUiOverlay.bottom, SystemUiOverlay.top],
+  // );
 
   // Define a orientação
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);

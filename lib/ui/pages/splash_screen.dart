@@ -17,15 +17,19 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // Modo imersivo completo: esconde status bar e barra de navegação
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: [SystemUiOverlay.top],
+    );
     waitAndShow();
   }
 
   @override
   void dispose() {
-    // Volta para o modo padrão (com barras)
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: [SystemUiOverlay.bottom, SystemUiOverlay.top],
+    );
     super.dispose();
   }
 
@@ -47,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
               width: 288,
             ),
             Positioned(
-              bottom: 75,
+              bottom: 70,
               child: AnimatedOpacity(
                 duration: Duration(milliseconds: timeToAnimationInMilliseconds),
                 opacity: imageOpacity,
@@ -56,13 +60,13 @@ class _SplashScreenState extends State<SplashScreen> {
                   tag:
                       MediaQuery.of(context).platformBrightness ==
                               Brightness.light
-                          ? "assets/images/logo_metro_horizontal.png"
+                          ? "assets/images/logo_metro_horizontal_600x209.png"
                           : "assets/images/logo_metro_horizontal_invertido_600x209.png",
 
                   child: Image.asset(
                     MediaQuery.of(context).platformBrightness ==
                             Brightness.light
-                        ? "assets/images/logo_metro_horizontal.png"
+                        ? "assets/images/logo_metro_horizontal_600x209.png"
                         : "assets/images/logo_metro_horizontal_invertido_600x209.png",
                     width: 135,
                   ),
