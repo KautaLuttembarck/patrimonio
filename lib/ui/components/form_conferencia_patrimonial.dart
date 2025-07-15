@@ -347,6 +347,12 @@ class _PatrimonioReaderComponentState
                             ),
                           ),
                           key: ValueKey(patrimonio.patrimonio),
+
+                          confirmDismiss: (_) async {
+                            return await _confirmaDismiss(
+                              patrimonio.patrimonio,
+                            );
+                          },
                           onDismissed: (_) async {
                             final bool success = await context
                                 .read<ConferenciaProvider>()
