@@ -229,7 +229,7 @@ class _PatrimonioReaderComponentState
       Vibration.vibrate(duration: 50);
     }
     Clarity.sendCustomEvent(
-      "Marcom um patrimonio como $situacao por toque",
+      "Marcou um patrimonio como $situacao por toque",
     );
   }
 
