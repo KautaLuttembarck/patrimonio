@@ -235,32 +235,33 @@ class _PatrimonioReaderComponentState
 
   Future<bool> _confirmaDismiss(String patrimonio) async {
     return await showDialog(
-      context: context,
-      builder:
-          (ctx) => AlertDialog(
-            icon: Icon(Icons.delete_forever, size: 42),
-            iconColor: Theme.of(context).colorScheme.error,
-            title: Text(
-              "Remover o patrimônio $patrimonio da lista de conferência?",
-            ),
-
-            actions: [
-              TextButton(
-                style: ButtonStyle(
-                  foregroundColor: WidgetStatePropertyAll(
-                    Theme.of(context).colorScheme.error,
-                  ),
+          context: context,
+          builder:
+              (ctx) => AlertDialog(
+                icon: Icon(Icons.delete_forever, size: 42),
+                iconColor: Theme.of(context).colorScheme.error,
+                title: Text(
+                  "Remover o patrimônio $patrimonio da lista de conferência?",
                 ),
-                onPressed: () => Navigator.of(context).pop(true),
-                child: Text("Remover"),
+
+                actions: [
+                  TextButton(
+                    style: ButtonStyle(
+                      foregroundColor: WidgetStatePropertyAll(
+                        Theme.of(context).colorScheme.error,
+                      ),
+                    ),
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: Text("Remover"),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: Text("Voltar"),
+                  ),
+                ],
               ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: Text("Voltar"),
-              ),
-            ],
-          ),
-    );
+        ) ??
+        false;
   }
 
   @override
