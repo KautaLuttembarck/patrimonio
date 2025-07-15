@@ -350,7 +350,6 @@ class _PatrimonioReaderComponentState
                             ),
                           ),
                           key: ValueKey(patrimonio.patrimonio),
-
                           confirmDismiss: (_) async {
                             return await _confirmaDismiss(
                               patrimonio.patrimonio,
@@ -423,21 +422,22 @@ class _PatrimonioReaderComponentState
                   );
                 },
               ),
-              Positioned(
-                bottom: 34,
-                right: 10,
-                child: FloatingActionButton(
-                  onPressed: _lerPatrimonio,
-                  child: Icon(Icons.barcode_reader, size: 30),
-                ),
-              ).animate(
-                effects: [
-                  const FadeEffect(
-                    delay: Duration(milliseconds: 100),
-                    duration: Duration(milliseconds: 200),
+              if (context.watch<ConferenciaProvider>().tamanhoLista != 0)
+                Positioned(
+                  bottom: 34,
+                  right: 10,
+                  child: FloatingActionButton(
+                    onPressed: _lerPatrimonio,
+                    child: Icon(Icons.barcode_reader, size: 30),
                   ),
-                ],
-              ),
+                ).animate(
+                  effects: [
+                    const FadeEffect(
+                      delay: Duration(milliseconds: 100),
+                      duration: Duration(milliseconds: 200),
+                    ),
+                  ],
+                ),
 
               // Barra invisível para fazer o efeito de voltar ao topo
               Positioned(
@@ -460,33 +460,37 @@ class _PatrimonioReaderComponentState
             ],
           ),
         ),
-
-        ElevatedButton(
-          onPressed: _isLoading ? null : _submitData,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _isLoading
-                  ? CircularProgressIndicator(
-                    backgroundColor: Theme.of(context).colorScheme.onPrimary,
-                    constraints: BoxConstraints(
-                      maxWidth: 25,
-                      maxHeight: 25,
-                      minWidth: 25,
-                      minHeight: 25,
-                    ),
-                  )
-                  : Text("Enviar conferência"),
+        if (context.watch<ConferenciaProvider>().tamanhoLista != 0)
+          ElevatedButton(
+            onPressed:
+                (_isLoading ||
+                        context.watch<ConferenciaProvider>().tamanhoLista == 0)
+                    ? null
+                    : _submitData,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _isLoading
+                    ? CircularProgressIndicator(
+                      backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                      constraints: BoxConstraints(
+                        maxWidth: 25,
+                        maxHeight: 25,
+                        minWidth: 25,
+                        minHeight: 25,
+                      ),
+                    )
+                    : Text("Enviar conferência"),
+              ],
+            ),
+          ).animate(
+            effects: [
+              const FadeEffect(
+                delay: Duration(milliseconds: 100),
+                duration: Duration(milliseconds: 200),
+              ),
             ],
           ),
-        ).animate(
-          effects: [
-            const FadeEffect(
-              delay: Duration(milliseconds: 100),
-              duration: Duration(milliseconds: 200),
-            ),
-          ],
-        ),
       ],
     );
   }
