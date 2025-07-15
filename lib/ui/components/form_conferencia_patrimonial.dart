@@ -23,6 +23,7 @@ class _PatrimonioReaderComponentState
     extends State<FormConferenciaPatrimonial> {
   bool _isLoading = false;
   late ScrollController _scrollController;
+  bool _hasVibrator = false;
 
   Future<void> _submitData() async {
     FocusScope.of(context).unfocus();
@@ -100,6 +101,7 @@ class _PatrimonioReaderComponentState
   void initState() {
     super.initState();
     _scrollController = ScrollController();
+    Vibration.hasVibrator().then((value) => _hasVibrator = value);
     setState(() {
       context.read<ConferenciaProvider>().carregarItens();
     });
@@ -223,7 +225,7 @@ class _PatrimonioReaderComponentState
       situacao,
       patrimonio.patrimonio,
     );
-    if (await Vibration.hasVibrator()) {
+    if (_hasVibrator) {
       Vibration.vibrate(duration: 50);
     }
     Clarity.sendCustomEvent(
@@ -354,6 +356,9 @@ class _PatrimonioReaderComponentState
                             );
                           },
                           onDismissed: (_) async {
+                            if (_hasVibrator) {
+                              Vibration.vibrate(duration: 50);
+                            }
                             final bool success = await context
                                 .read<ConferenciaProvider>()
                                 .removerItem(patrimonio, index);
