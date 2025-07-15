@@ -35,14 +35,14 @@ Future<void> main() async {
 
   // Inicializa o Navigator Observer para uso com o Microsoft Clarity
   // Usado para acompanhar e reportar as mudanças de rota
-  final clarityObserver = ClarityRouteObserver();
+  final clarityRouteObserver = ClarityRouteObserver();
 
   runApp(
     ClarityWidget(
       app: App(
         localDatabaseService: localDatabaseService,
         conferenciaProvider: conferenciaProvider,
-        clarityObserver: clarityObserver,
+        clarityRouteObserver: clarityRouteObserver,
       ),
       clarityConfig: config,
     ),

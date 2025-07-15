@@ -17,13 +17,13 @@ import 'package:patrimonio/app/providers/user_provider.dart';
 class App extends StatelessWidget {
   final LocalDatabaseService localDatabaseService;
   final ConferenciaProvider conferenciaProvider;
-  final NavigatorObserver clarityObserver;
+  final NavigatorObserver clarityRouteObserver;
 
   const App({
     super.key,
     required this.localDatabaseService,
     required this.conferenciaProvider,
-    required this.clarityObserver,
+    required this.clarityRouteObserver,
   });
 
   @override
@@ -54,7 +54,7 @@ class App extends StatelessWidget {
           GlobalCupertinoLocalizations.delegate,
         ],
         // navigatorObserver criado para passar o nome das rotas ao Clarity
-        navigatorObservers: [clarityObserver],
+        navigatorObservers: [clarityRouteObserver],
         routes: {
           AppRoutes.splashScreen: (ctx) => SplashScreen(),
           AppRoutes.authPage: (ctx) => AuthPage(),
