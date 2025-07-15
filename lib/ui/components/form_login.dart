@@ -91,17 +91,22 @@ class _FormLoginState extends State<FormLogin> {
             spacing: 30,
             children: [
               SizedBox(),
-
-              Hero(
-                tag:
-                    "assets/images/logo_metro_horizontal_invertido_600x209.png",
-                child: Image.asset(
-                  MediaQuery.of(context).platformBrightness == Brightness.dark
-                      ? "assets/images/logo_metro_horizontal_invertido_600x209.png"
-                      : 'assets/images/logo_metro_horizontal.png',
-                  width: 220,
-                ),
-              ),
+              MediaQuery.of(context).platformBrightness == Brightness.dark
+                  ? Hero(
+                    tag:
+                        "assets/images/logo_metro_horizontal_invertido_600x209.png",
+                    child: Image.asset(
+                      "assets/images/logo_metro_horizontal_invertido_600x209.png",
+                      width: 220,
+                    ),
+                  )
+                  : Hero(
+                    tag: "assets/images/logo_metro_horizontal.png",
+                    child: Image.asset(
+                      'assets/images/logo_metro_horizontal.png',
+                      width: 220,
+                    ),
+                  ),
               SizedBox(),
               TextFormField(
                 controller: _matriculaController,
