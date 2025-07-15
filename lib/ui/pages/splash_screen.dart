@@ -32,13 +32,18 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF1B3C72),
+      backgroundColor:
+          MediaQuery.of(context).platformBrightness == Brightness.light
+              ? Color(0xFFFFFFFF)
+              : Color(0xFF1B3C72),
       body: Center(
         child: Stack(
           alignment: Alignment.center,
           children: [
             Image.asset(
-              "assets/images/native_splash/native_splash_logo.png",
+              MediaQuery.of(context).platformBrightness == Brightness.light
+                  ? "assets/images/native_splash/native_splash_logo_light.png"
+                  : "assets/images/native_splash/native_splash_logo_dark.png",
               width: 288,
             ),
             Positioned(
@@ -47,20 +52,21 @@ class _SplashScreenState extends State<SplashScreen> {
                 duration: Duration(milliseconds: timeToAnimationInMilliseconds),
                 opacity: imageOpacity,
                 curve: Curves.ease,
-                child:
-                    MediaQuery.of(context).platformBrightness == Brightness.dark
-                        ? Hero(
-                          tag:
-                              "assets/images/logo_metro_horizontal_invertido_600x209.png",
-                          child: Image.asset(
-                            "assets/images/logo_metro_horizontal_invertido_600x209.png",
-                            width: 180,
-                          ),
-                        )
-                        : Image.asset(
-                          "assets/images/logo_metro_horizontal_invertido_600x209.png",
-                          width: 180,
-                        ),
+                child: Hero(
+                  tag:
+                      MediaQuery.of(context).platformBrightness ==
+                              Brightness.light
+                          ? "assets/images/logo_metro_horizontal.png"
+                          : "assets/images/logo_metro_horizontal_invertido_600x209.png",
+
+                  child: Image.asset(
+                    MediaQuery.of(context).platformBrightness ==
+                            Brightness.light
+                        ? "assets/images/logo_metro_horizontal.png"
+                        : "assets/images/logo_metro_horizontal_invertido_600x209.png",
+                    width: 180,
+                  ),
+                ),
               ),
             ),
           ],
