@@ -295,8 +295,8 @@ class _PatrimonioReaderComponentState
                     delay: Duration(milliseconds: 50),
                     effects: [
                       ScaleEffect(
-                        duration: Duration(milliseconds: 300),
-                        curve: Curves.easeOutBack,
+                        duration: Duration(milliseconds: 900),
+                        curve: Curves.elasticOut,
                       ),
                     ],
                   ),
