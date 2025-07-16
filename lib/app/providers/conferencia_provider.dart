@@ -91,7 +91,6 @@ class ConferenciaProvider extends ChangeNotifier {
   // Remove um patrimônio da lista de conferência.
   // Retorna verdadeiro pra caso de remoção com sucesso e falso pra caso de falha
   Future<bool> removerItem(Patrimonio patrimonio) async {
-    print("Removendo item");
     // Busca o índice do elemento desejado na lista
     final index = _itens.indexWhere(
       (elemento) => elemento.patrimonio == patrimonio.patrimonio,

@@ -258,7 +258,6 @@ class _PatrimonioReaderComponentState
   }
 
   Future<bool> _confirmaDismiss(String patrimonio) async {
-    print("pediu conficma");
     return await showDialog(
           context: context,
           builder:
