@@ -116,6 +116,15 @@ class _FormLoginState extends State<FormLogin> {
                     borderRadius: BorderRadius.circular(6),
                   ),
                   labelText: 'Matrícula',
+                  labelStyle: TextStyle(
+                    color:
+                        MediaQuery.of(context).platformBrightness ==
+                                Brightness.dark
+                            ? Theme.of(
+                              context,
+                            ).colorScheme.onPrimary
+                            : Theme.of(context).colorScheme.primary,
+                  ),
                   suffixIcon: Icon(Icons.numbers_sharp),
                 ),
                 keyboardType: TextInputType.text,
@@ -150,6 +159,16 @@ class _FormLoginState extends State<FormLogin> {
                     borderRadius: BorderRadius.circular(6),
                   ),
                   labelText: 'Senha',
+
+                  labelStyle: TextStyle(
+                    color:
+                        MediaQuery.of(context).platformBrightness ==
+                                Brightness.dark
+                            ? Theme.of(
+                              context,
+                            ).colorScheme.onPrimary
+                            : Theme.of(context).colorScheme.primary,
+                  ),
                   suffixIcon: IconButton(
                     onPressed: toggleObscureText,
                     icon:

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-final Color _baseTextColor = Colors.black87;
+final Color _baseTextColor = Color(0xFF1B3C72);
 final Color _primaryTextButtonFontColor = Color(0xFF1B3C72);
 final Color _reverseTextColor = Colors.white;
 final Color _errorColor = Colors.red.shade900;
