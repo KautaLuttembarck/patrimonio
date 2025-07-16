@@ -161,9 +161,9 @@ class _FormConfiguracoesState extends State<FormConfiguracoes> {
     });
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
-      spacing: 20,
+      spacing: 18,
       children: [
-        SizedBox(height: 30),
+        SizedBox(height: 28),
         GestureDetector(
           onLongPress: () async {
             if (await Vibration.hasVibrator()) {
@@ -199,7 +199,7 @@ class _FormConfiguracoesState extends State<FormConfiguracoes> {
             effects: [RotateEffect(duration: Duration(seconds: 5))],
           ),
         ),
-        SizedBox(height: 20),
+        SizedBox(height: 18),
         Text(
           _dataAtualizacao != null
               ? "Dados patrimoniais atualizados pela última vez em $_dataAtualizacao"
@@ -259,7 +259,8 @@ class _FormConfiguracoesState extends State<FormConfiguracoes> {
           ),
         ),
 
-        Expanded(child: SizedBox()),
+        if (MediaQuery.of(context).size.height > 670)
+          Expanded(child: SizedBox()),
 
         // Remove os dados de conferência em andamento
         if (_conferenciaEmAndamento)
