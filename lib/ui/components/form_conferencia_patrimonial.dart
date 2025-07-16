@@ -24,6 +24,30 @@ class _PatrimonioReaderComponentState
   bool _isLoading = false;
   late ScrollController _scrollController;
   bool _hasVibrator = false;
+  double _searchFieldSize = 0;
+  final TextEditingController _searchFieldController = TextEditingController();
+  final FocusNode _searchFieldFocusNode = FocusNode();
+  final int _searchFieldAnimationDuration = 500;
+
+  void _showHideSearchField() {
+    if (_searchFieldSize > 0) {
+      setState(() {
+        _searchFieldSize = 0;
+        _searchFieldFocusNode.unfocus();
+        _searchFieldController.text = "";
+        context.read<ConferenciaProvider>().filtrarItens("");
+      });
+    } else {
+      setState(() {
+        _searchFieldSize = MediaQuery.of(context).size.width - 100;
+        FocusScope.of(
+          context,
+        ).requestFocus(_searchFieldFocusNode);
+        _searchFieldController.text = "";
+        context.read<ConferenciaProvider>().filtrarItens("");
+      });
+    }
+  }
 
   Future<void> _submitData() async {
     FocusScope.of(context).unfocus();
@@ -234,6 +258,7 @@ class _PatrimonioReaderComponentState
   }
 
   Future<bool> _confirmaDismiss(String patrimonio) async {
+    print("pediu conficma");
     return await showDialog(
           context: context,
           builder:
@@ -276,30 +301,108 @@ class _PatrimonioReaderComponentState
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  "Patrimônios conferidos: "
-                  "${context.watch<ConferenciaProvider>().patrimoniosConferidos} "
-                  "/ ${context.watch<ConferenciaProvider>().tamanhoLista}",
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Stack(
+                    alignment: Alignment.centerLeft,
+                    children: [
+                      Text(
+                        "Patrimônios conferidos: "
+                        "${context.watch<ConferenciaProvider>().patrimoniosConferidos} "
+                        "/ ${context.watch<ConferenciaProvider>().tamanhoLista}",
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                      AnimatedOpacity(
+                        opacity:
+                            (_searchFieldFocusNode.hasFocus ||
+                                    _searchFieldController.text != "")
+                                ? 1
+                                : 0,
+                        duration: Duration(
+                          milliseconds: _searchFieldAnimationDuration,
+                        ),
+                        // curve: Curves.easeInOutQuint,
+                        child: AnimatedContainer(
+                          duration: Duration(
+                            milliseconds: _searchFieldAnimationDuration,
+                          ),
 
-                if (context
-                        .watch<ConferenciaProvider>()
-                        .patrimoniosConferidos ==
-                    context.watch<ConferenciaProvider>().tamanhoLista)
-                  Icon(
-                    Icons.check,
-                    color: Colors.green,
-                    size: 23,
-                  ).animate(
-                    delay: Duration(milliseconds: 50),
-                    effects: [
-                      ScaleEffect(
-                        duration: Duration(milliseconds: 900),
-                        curve: Curves.elasticOut,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(6),
+                            color:
+                                Theme.of(
+                                  context,
+                                ).colorScheme.surface,
+                          ),
+                          width: _searchFieldSize,
+                          child: TextField(
+                            decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                icon: Icon(Icons.clear),
+                                onPressed: () {
+                                  _searchFieldController.text = "";
+                                  context
+                                      .read<ConferenciaProvider>()
+                                      .filtrarItens(
+                                        "",
+                                      );
+                                },
+                              ),
+                              border: OutlineInputBorder(
+                                borderSide:
+                                    (_searchFieldFocusNode.hasFocus ||
+                                            _searchFieldController.text != "")
+                                        ? BorderSide()
+                                        : BorderSide.none,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              label: Text(
+                                (_searchFieldFocusNode.hasFocus ||
+                                        _searchFieldController.text != "")
+                                    ? "Pesquisar"
+                                    : "",
+                              ),
+
+                              labelStyle: TextStyle(
+                                color:
+                                    MediaQuery.of(context).platformBrightness ==
+                                            Brightness.dark
+                                        ? Theme.of(
+                                          context,
+                                        ).colorScheme.onPrimary
+                                        : Theme.of(context).colorScheme.primary,
+                              ),
+                              // (opcional) remove o padding interno extra
+                              isCollapsed: true,
+                              contentPadding: EdgeInsets.all(
+                                12,
+                              ), // (opcional) ajuste de padding
+                            ),
+                            controller: _searchFieldController,
+                            focusNode: _searchFieldFocusNode,
+                            style: Theme.of(context).textTheme.bodyLarge,
+                            spellCheckConfiguration:
+                                SpellCheckConfiguration.disabled(),
+                            onChanged: (valorBuscado) {
+                              context.read<ConferenciaProvider>().filtrarItens(
+                                valorBuscado,
+                              );
+                            },
+                          ),
+                        ),
                       ),
                     ],
                   ),
+                ),
+                IconButton(
+                  icon: Icon(
+                    (_searchFieldFocusNode.hasFocus ||
+                            _searchFieldController.text != "")
+                        ? Icons.arrow_back
+                        : Icons.search,
+                  ),
+                  onPressed: _showHideSearchField,
+                ),
               ],
             ),
           ),
@@ -309,12 +412,24 @@ class _PatrimonioReaderComponentState
             children: [
               Consumer<ConferenciaProvider>(
                 builder: (context, provider, child) {
-                  final lista = provider.itens;
+                  late List<Patrimonio> lista;
+                  if (_searchFieldFocusNode.hasFocus ||
+                      _searchFieldController.text != "") {
+                    lista = provider.filteredItens;
+                  } else {
+                    lista = provider.itens;
+                  }
 
                   if (lista.isEmpty) {
                     return Center(
                       child: Text(
-                        'Nenhum patrimônio listado para conferência.',
+                        (_searchFieldFocusNode.hasFocus ||
+                                _searchFieldController.text != "")
+                            ? _searchFieldController.text == ""
+                                ? "Faça uma pesquisa para visualizar os patrimônios correspondentes"
+                                : "Nenhum patrimônio encontrado com o termo pesquisado."
+                            : 'Nenhum patrimônio listado para conferência.',
+                        textAlign: TextAlign.center,
                       ).animate(
                         effects: [
                           FadeEffect(
@@ -350,18 +465,24 @@ class _PatrimonioReaderComponentState
                             ),
                           ),
                           key: ValueKey(patrimonio.patrimonio),
+
                           confirmDismiss: (_) async {
+                            // if (!_searchFieldFocusNode.hasFocus) {
                             return await _confirmaDismiss(
                               patrimonio.patrimonio,
                             );
+                            // } else {
+                            //   return true;
+                            // }
                           },
+
                           onDismissed: (_) async {
                             if (_hasVibrator) {
                               Vibration.vibrate(duration: 50);
                             }
                             final bool success = await context
                                 .read<ConferenciaProvider>()
-                                .removerItem(patrimonio, index);
+                                .removerItem(patrimonio);
                             if (!success) {
                               if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -377,7 +498,9 @@ class _PatrimonioReaderComponentState
                             }
                           },
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 8.0,
+                            ),
                             child: Card(
                               child: ListTile(
                                 onLongPress:
@@ -422,7 +545,10 @@ class _PatrimonioReaderComponentState
                   );
                 },
               ),
-              if (context.watch<ConferenciaProvider>().tamanhoLista != 0)
+
+              if (context.watch<ConferenciaProvider>().tamanhoLista != 0 &&
+                  !_searchFieldFocusNode.hasFocus &&
+                  _searchFieldController.text == "")
                 Positioned(
                   bottom: 34,
                   right: 10,
@@ -460,7 +586,9 @@ class _PatrimonioReaderComponentState
             ],
           ),
         ),
-        if (context.watch<ConferenciaProvider>().tamanhoLista != 0)
+        if (context.watch<ConferenciaProvider>().tamanhoLista != 0 &&
+            !_searchFieldFocusNode.hasFocus &&
+            _searchFieldController.text == "")
           ElevatedButton(
             onPressed:
                 (_isLoading ||
