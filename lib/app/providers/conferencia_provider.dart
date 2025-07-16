@@ -1,3 +1,4 @@
+import 'package:clarity_flutter/clarity_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:patrimonio/app/models/patrimonio.dart';
 import 'package:patrimonio/app/services/local_database_service.dart';
@@ -5,6 +6,7 @@ import 'package:patrimonio/app/services/local_database_service.dart';
 class ConferenciaProvider extends ChangeNotifier {
   final LocalDatabaseService _db;
   List<Patrimonio> _itens = [];
+  List<Patrimonio> filteredItens = [];
   int _patrimoniosConferidos = 0;
 
   ConferenciaProvider(this._db);
@@ -16,6 +18,25 @@ class ConferenciaProvider extends ChangeNotifier {
   Future<void> carregarItens() async {
     _itens = await _db.getConferencia();
     _patrimoniosConferidos = await _db.getQuantidadePatrimoniosConferidos();
+    notifyListeners();
+  }
+
+  Future<void> filtrarItens(String filtro) async {
+    if (filtro != "") {
+      filteredItens =
+          _itens
+              .where(
+                (patrimonio) =>
+                    (patrimonio.patrimonio == filtro ||
+                        patrimonio.nAntigo == filtro ||
+                        patrimonio.descricao.toUpperCase().contains(
+                          filtro.toUpperCase(),
+                        )),
+              )
+              .toList();
+    } else {
+      filteredItens = [];
+    }
     notifyListeners();
   }
 
@@ -40,6 +61,12 @@ class ConferenciaProvider extends ChangeNotifier {
       situacaoConferencia,
       patrimonio,
     );
+    final index = filteredItens.indexWhere(
+      (patrimonioFiltrado) => patrimonioFiltrado.patrimonio == patrimonio,
+    );
+    if (index != -1) {
+      filteredItens[index].situacaoConferencia = situacaoConferencia;
+    }
     await carregarItens();
 
     return result > 0;
@@ -63,16 +90,42 @@ class ConferenciaProvider extends ChangeNotifier {
 
   // Remove um patrimônio da lista de conferência.
   // Retorna verdadeiro pra caso de remoção com sucesso e falso pra caso de falha
-  Future<bool> removerItem(Patrimonio patrimonio, int index) async {
-    _itens.removeAt(index);
+  Future<bool> removerItem(Patrimonio patrimonio) async {
+    print("Removendo item");
+    // Busca o índice do elemento desejado na lista
+    final index = _itens.indexWhere(
+      (elemento) => elemento.patrimonio == patrimonio.patrimonio,
+    );
+
+    // Remove o elemento caso tenha sido encontrado
+    if (index != -1) {
+      _itens.removeAt(index);
+    }
+
+    // Ajusta a contagem de conferidos, caso necessário
     if (patrimonio.situacaoConferencia == "conferido") {
       _patrimoniosConferidos--;
     }
+
+    // Busca o índice do elemento desejado na lista filtrada
+    final indexFiltro = filteredItens.indexWhere(
+      (patrimonioFiltrado) =>
+          patrimonioFiltrado.patrimonio == patrimonio.patrimonio,
+    );
+
+    // Remove o elemento caso tenha sido encontrado
+    if (indexFiltro != -1) {
+      filteredItens.removeAt(indexFiltro);
+    }
+
     notifyListeners();
     try {
       await _db.removePatrimonioDaConferencia(patrimonio.patrimonio);
       return true;
     } catch (e) {
+      Clarity.sendCustomEvent(
+        "Falha ao remover um patrimônio da lista de conferências no DB",
+      );
       // Se falhar, recarrega toda a lista
       await carregarItens(); // recarrega e notifica
       return false;
