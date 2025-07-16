@@ -419,129 +419,273 @@ class _PatrimonioReaderComponentState
                     lista = provider.itens;
                   }
 
-                  if (lista.isEmpty) {
-                    return Center(
-                      child: Text(
-                        (_searchFieldFocusNode.hasFocus ||
-                                _searchFieldController.text != "")
-                            ? _searchFieldController.text == ""
-                                ? "Faça uma pesquisa para visualizar os patrimônios correspondentes"
-                                : "Nenhum patrimônio encontrado com o termo pesquisado."
-                            : 'Nenhum patrimônio listado para conferência.',
-                        textAlign: TextAlign.center,
-                      ).animate(
-                        effects: [
-                          FadeEffect(
-                            delay: Duration(milliseconds: 100),
-                            duration: Duration(milliseconds: 800),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-
-                  return RawScrollbar(
-                    controller: _scrollController,
-                    radius: Radius.circular(10),
-                    interactive: true,
-                    scrollbarOrientation: ScrollbarOrientation.right,
-                    child: ListView.builder(
-                      controller: _scrollController,
-                      padding: const EdgeInsets.only(bottom: 60.0),
-                      itemCount: lista.length,
-                      itemBuilder: (context, index) {
-                        final patrimonio = lista[index];
-                        return Dismissible(
-                          direction: DismissDirection.endToStart,
-                          background: Container(
-                            padding: EdgeInsets.only(right: 30),
-                            margin: EdgeInsets.symmetric(vertical: 6),
-                            color: Theme.of(context).colorScheme.error,
-                            alignment: Alignment.centerRight,
-                            child: Icon(
-                              Icons.delete_forever,
-                              color: Colors.white,
-                            ),
-                          ),
-                          key: ValueKey(patrimonio.patrimonio),
-
-                          confirmDismiss: (_) async {
-                            // if (!_searchFieldFocusNode.hasFocus) {
-                            return await _confirmaDismiss(
-                              patrimonio.patrimonio,
-                            );
-                            // } else {
-                            //   return true;
-                            // }
-                          },
-
-                          onDismissed: (_) async {
-                            if (_hasVibrator) {
-                              Vibration.vibrate(duration: 50);
-                            }
-                            final bool success = await context
-                                .read<ConferenciaProvider>()
-                                .removerItem(patrimonio);
-                            if (!success) {
-                              if (context.mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      "Erro ao remover o patrimônio!",
-                                    ),
-                                    backgroundColor:
-                                        Theme.of(context).colorScheme.error,
+                  return AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    child:
+                        lista.isEmpty
+                            ? Center(
+                              key: ValueKey("ListaVazia"),
+                              child: Text(
+                                (_searchFieldFocusNode.hasFocus ||
+                                        _searchFieldController.text != "")
+                                    ? _searchFieldController.text == ""
+                                        ? "Faça uma pesquisa para visualizar os patrimônios correspondentes"
+                                        : "Nenhum patrimônio encontrado com o termo pesquisado."
+                                    : 'Nenhum patrimônio listado para conferência.',
+                                textAlign: TextAlign.center,
+                              ).animate(
+                                effects: [
+                                  FadeEffect(
+                                    delay: Duration(milliseconds: 100),
+                                    duration: Duration(milliseconds: 800),
                                   ),
-                                );
-                              }
-                            }
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 8.0,
-                            ),
-                            child: Card(
-                              child: ListTile(
-                                onLongPress:
-                                    () => help_dialog.showDetalhesPatrimonio(
-                                      context,
-                                      patrimonio,
+                                ],
+                              ),
+                            )
+                            : RawScrollbar(
+                              key: ValueKey("ListaCheia"),
+                              controller: _scrollController,
+                              radius: Radius.circular(10),
+                              interactive: true,
+                              scrollbarOrientation: ScrollbarOrientation.right,
+                              child: ListView.builder(
+                                controller: _scrollController,
+                                padding: const EdgeInsets.only(bottom: 60.0),
+                                itemCount: lista.length,
+                                itemBuilder: (context, index) {
+                                  final patrimonio = lista[index];
+                                  return Dismissible(
+                                    direction: DismissDirection.endToStart,
+                                    background: Container(
+                                      padding: EdgeInsets.only(right: 30),
+                                      margin: EdgeInsets.symmetric(vertical: 6),
+                                      color:
+                                          Theme.of(context).colorScheme.error,
+                                      alignment: Alignment.centerRight,
+                                      child: Icon(
+                                        Icons.delete_forever,
+                                        color: Colors.white,
+                                      ),
                                     ),
-                                isThreeLine: true,
-                                selected:
-                                    patrimonio.situacaoConferencia ==
-                                    "conferido",
-                                tileColor:
-                                    patrimonio.situacaoConferencia == "pendente"
-                                        ? null
-                                        : Theme.of(
-                                          context,
-                                        ).colorScheme.surfaceContainerHigh,
-                                leading:
-                                    patrimonio.situacaoConferencia == "pendente"
-                                        ? Icon(Icons.check_box_outline_blank)
-                                        : Icon(Icons.check_box),
-                                title: Text(
-                                  patrimonio.nAntigo != ""
-                                      ? "Patrimônio: ${patrimonio.patrimonio}\nNº Antigo: ${patrimonio.nAntigo}"
-                                      : "Patrimônio: ${patrimonio.patrimonio}",
-                                ),
-                                subtitle: Text(patrimonio.descricao),
-                                onTap: () => _marcaComoConferido(patrimonio),
+                                    key: ValueKey(patrimonio.patrimonio),
+
+                                    confirmDismiss: (_) async {
+                                      // if (!_searchFieldFocusNode.hasFocus) {
+                                      return await _confirmaDismiss(
+                                        patrimonio.patrimonio,
+                                      );
+                                      // } else {
+                                      //   return true;
+                                      // }
+                                    },
+
+                                    onDismissed: (_) async {
+                                      if (_hasVibrator) {
+                                        Vibration.vibrate(duration: 50);
+                                      }
+                                      final bool success = await context
+                                          .read<ConferenciaProvider>()
+                                          .removerItem(patrimonio);
+                                      if (!success) {
+                                        if (context.mounted) {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                "Erro ao remover o patrimônio!",
+                                              ),
+                                              backgroundColor:
+                                                  Theme.of(
+                                                    context,
+                                                  ).colorScheme.error,
+                                            ),
+                                          );
+                                        }
+                                      }
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 8.0,
+                                      ),
+                                      child: Card(
+                                        child: ListTile(
+                                          onLongPress:
+                                              () => help_dialog
+                                                  .showDetalhesPatrimonio(
+                                                    context,
+                                                    patrimonio,
+                                                  ),
+                                          isThreeLine: true,
+                                          selected:
+                                              patrimonio.situacaoConferencia ==
+                                              "conferido",
+                                          tileColor:
+                                              patrimonio.situacaoConferencia ==
+                                                      "pendente"
+                                                  ? null
+                                                  : Theme.of(
+                                                        context,
+                                                      )
+                                                      .colorScheme
+                                                      .surfaceContainerHigh,
+                                          leading:
+                                              patrimonio.situacaoConferencia ==
+                                                      "pendente"
+                                                  ? Icon(
+                                                    Icons
+                                                        .check_box_outline_blank,
+                                                  )
+                                                  : Icon(Icons.check_box),
+                                          title: Text(
+                                            patrimonio.nAntigo != ""
+                                                ? "Patrimônio: ${patrimonio.patrimonio}\nNº Antigo: ${patrimonio.nAntigo}"
+                                                : "Patrimônio: ${patrimonio.patrimonio}",
+                                          ),
+                                          subtitle: Text(patrimonio.descricao),
+                                          onTap:
+                                              () => _marcaComoConferido(
+                                                patrimonio,
+                                              ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ).animate(
+                                effects: [
+                                  const FadeEffect(
+                                    delay: Duration(milliseconds: 100),
+                                    duration: Duration(milliseconds: 300),
+                                  ),
+                                ],
                               ),
                             ),
-                          ),
-                        );
-                      },
-                    ).animate(
-                      effects: [
-                        const FadeEffect(
-                          delay: Duration(milliseconds: 100),
-                          duration: Duration(milliseconds: 300),
-                        ),
-                      ],
-                    ),
                   );
+
+                  // if (lista.isEmpty) {
+                  //   return Center(
+                  //     child: Text(
+                  //       (_searchFieldFocusNode.hasFocus ||
+                  //               _searchFieldController.text != "")
+                  //           ? _searchFieldController.text == ""
+                  //               ? "Faça uma pesquisa para visualizar os patrimônios correspondentes"
+                  //               : "Nenhum patrimônio encontrado com o termo pesquisado."
+                  //           : 'Nenhum patrimônio listado para conferência.',
+                  //       textAlign: TextAlign.center,
+                  //     ).animate(
+                  //       effects: [
+                  //         FadeEffect(
+                  //           delay: Duration(milliseconds: 100),
+                  //           duration: Duration(milliseconds: 800),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   );
+                  // }
+                  //
+                  // return RawScrollbar(
+                  //   controller: _scrollController,
+                  //   radius: Radius.circular(10),
+                  //   interactive: true,
+                  //   scrollbarOrientation: ScrollbarOrientation.right,
+                  //   child: ListView.builder(
+                  //     controller: _scrollController,
+                  //     padding: const EdgeInsets.only(bottom: 60.0),
+                  //     itemCount: lista.length,
+                  //     itemBuilder: (context, index) {
+                  //       final patrimonio = lista[index];
+                  //       return Dismissible(
+                  //         direction: DismissDirection.endToStart,
+                  //         background: Container(
+                  //           padding: EdgeInsets.only(right: 30),
+                  //           margin: EdgeInsets.symmetric(vertical: 6),
+                  //           color: Theme.of(context).colorScheme.error,
+                  //           alignment: Alignment.centerRight,
+                  //           child: Icon(
+                  //             Icons.delete_forever,
+                  //             color: Colors.white,
+                  //           ),
+                  //         ),
+                  //         key: ValueKey(patrimonio.patrimonio),
+                  //
+                  //         confirmDismiss: (_) async {
+                  //           // if (!_searchFieldFocusNode.hasFocus) {
+                  //           return await _confirmaDismiss(
+                  //             patrimonio.patrimonio,
+                  //           );
+                  //           // } else {
+                  //           //   return true;
+                  //           // }
+                  //         },
+                  //
+                  //         onDismissed: (_) async {
+                  //           if (_hasVibrator) {
+                  //             Vibration.vibrate(duration: 50);
+                  //           }
+                  //           final bool success = await context
+                  //               .read<ConferenciaProvider>()
+                  //               .removerItem(patrimonio);
+                  //           if (!success) {
+                  //             if (context.mounted) {
+                  //               ScaffoldMessenger.of(context).showSnackBar(
+                  //                 SnackBar(
+                  //                   content: Text(
+                  //                     "Erro ao remover o patrimônio!",
+                  //                   ),
+                  //                   backgroundColor:
+                  //                       Theme.of(context).colorScheme.error,
+                  //                 ),
+                  //               );
+                  //             }
+                  //           }
+                  //         },
+                  //         child: Padding(
+                  //           padding: const EdgeInsets.symmetric(
+                  //             vertical: 8.0,
+                  //           ),
+                  //           child: Card(
+                  //             child: ListTile(
+                  //               onLongPress:
+                  //                   () => help_dialog.showDetalhesPatrimonio(
+                  //                     context,
+                  //                     patrimonio,
+                  //                   ),
+                  //               isThreeLine: true,
+                  //               selected:
+                  //                   patrimonio.situacaoConferencia ==
+                  //                   "conferido",
+                  //               tileColor:
+                  //                   patrimonio.situacaoConferencia == "pendente"
+                  //                       ? null
+                  //                       : Theme.of(
+                  //                         context,
+                  //                       ).colorScheme.surfaceContainerHigh,
+                  //               leading:
+                  //                   patrimonio.situacaoConferencia == "pendente"
+                  //                       ? Icon(Icons.check_box_outline_blank)
+                  //                       : Icon(Icons.check_box),
+                  //               title: Text(
+                  //                 patrimonio.nAntigo != ""
+                  //                     ? "Patrimônio: ${patrimonio.patrimonio}\nNº Antigo: ${patrimonio.nAntigo}"
+                  //                     : "Patrimônio: ${patrimonio.patrimonio}",
+                  //               ),
+                  //               subtitle: Text(patrimonio.descricao),
+                  //               onTap: () => _marcaComoConferido(patrimonio),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       );
+                  //     },
+                  //   ).animate(
+                  //     effects: [
+                  //       const FadeEffect(
+                  //         delay: Duration(milliseconds: 100),
+                  //         duration: Duration(milliseconds: 300),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // );
                 },
               ),
 
