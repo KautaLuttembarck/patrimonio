@@ -363,15 +363,7 @@ class _PatrimonioReaderComponentState
                                     : "",
                               ),
 
-                              labelStyle: TextStyle(
-                                color:
-                                    MediaQuery.of(context).platformBrightness ==
-                                            Brightness.dark
-                                        ? Theme.of(
-                                          context,
-                                        ).colorScheme.onPrimary
-                                        : Theme.of(context).colorScheme.primary,
-                              ),
+                              labelStyle: Theme.of(context).textTheme.bodyLarge,
                               // (opcional) remove o padding interno extra
                               isCollapsed: true,
                               contentPadding: EdgeInsets.all(

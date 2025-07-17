@@ -264,6 +264,7 @@ class _FormDigitaPatrimonioConferenciaState
                                 borderRadius: BorderRadius.circular(6),
                               ),
                               labelText: 'Número do patrimônio',
+                              labelStyle: Theme.of(context).textTheme.bodyLarge,
                               suffixIcon: Icon(Icons.numbers_sharp),
                             ),
                             keyboardType: TextInputType.number,
