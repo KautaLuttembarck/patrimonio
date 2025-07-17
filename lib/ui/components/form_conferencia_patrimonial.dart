@@ -543,13 +543,9 @@ class _PatrimonioReaderComponentState
                                     key: ValueKey(patrimonio.patrimonio),
 
                                     confirmDismiss: (_) async {
-                                      // if (!_searchFieldFocusNode.hasFocus) {
                                       return await _confirmaDismiss(
                                         patrimonio.patrimonio,
                                       );
-                                      // } else {
-                                      //   return true;
-                                      // }
                                     },
 
                                     onDismissed: (_) async {
