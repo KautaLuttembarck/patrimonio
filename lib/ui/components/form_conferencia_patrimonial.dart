@@ -35,6 +35,9 @@ class _PatrimonioReaderComponentState
         _searchFieldSize = 0;
         _searchFieldFocusNode.unfocus();
         _searchFieldController.text = "";
+        Clarity.sendCustomEvent(
+          "Mostrou o campo de busca na tela de conferência patrimonial",
+        );
         context.read<ConferenciaProvider>().filtrarItens("");
       });
     } else {

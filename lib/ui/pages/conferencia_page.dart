@@ -1,3 +1,4 @@
+import 'package:clarity_flutter/clarity_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:patrimonio/ui/components/form_conferencia_patrimonial.dart';
 import 'package:patrimonio/ui/components/form_digita_patrimonio_conferencia.dart';
@@ -13,6 +14,9 @@ class _ConferenciaPageState extends State<ConferenciaPage> {
   // Abre uma modal para preencher os dados de patrimônio
   // Se o valor existir, será gravado como conferido no bd
   void _openBottomSheet() {
+    Clarity.sendCustomEvent(
+      "Abriu a modal de conferência de patrimônio por digitação",
+    );
     showModalBottomSheet(
       context: context,
       isScrollControlled: true, // permite altura maior

@@ -42,12 +42,16 @@ class ConferenciaProvider extends ChangeNotifier {
 
   Future<void> adicionarItem(Patrimonio p) async {
     await _db.inserirNaConferencia(p);
-    await carregarItens(); // recarrega e notifica
+    await carregarItens();
+    Clarity.sendCustomEvent("Adicionou um elemento na lista de conferência");
   }
 
   Future<void> limparConferencia() async {
     await _db.limparTabelaConferencia();
     await carregarItens();
+    Clarity.sendCustomEvent(
+      "Cancelou uma conferência em andamento (Tabela de conferência patrimonial limpa)",
+    );
   }
 
   // Atualiza o status de conferido de um patrimonio
@@ -120,6 +124,7 @@ class ConferenciaProvider extends ChangeNotifier {
     notifyListeners();
     try {
       await _db.removePatrimonioDaConferencia(patrimonio.patrimonio);
+      Clarity.sendCustomEvent("Removido um patrimônio da lista de conferência");
       return true;
     } catch (e) {
       Clarity.sendCustomEvent(
