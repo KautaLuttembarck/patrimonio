@@ -469,14 +469,82 @@ class _PatrimonioReaderComponentState
                                   return Dismissible(
                                     direction: DismissDirection.endToStart,
                                     background: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color:
+                                            Theme.of(context).colorScheme.error,
+                                      ),
                                       padding: EdgeInsets.only(right: 30),
-                                      margin: EdgeInsets.symmetric(vertical: 6),
-                                      color:
-                                          Theme.of(context).colorScheme.error,
-                                      alignment: Alignment.centerRight,
-                                      child: Icon(
-                                        Icons.delete_forever,
-                                        color: Colors.white,
+                                      margin: EdgeInsets.symmetric(
+                                        vertical: 11,
+                                      ),
+
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          Icon(
+                                            Icons.touch_app,
+                                            size: 40,
+                                          ).animate(
+                                            effects: [
+                                              FadeEffect(
+                                                delay: Duration(
+                                                  milliseconds: 500,
+                                                ),
+                                                duration: Duration(
+                                                  milliseconds: 500,
+                                                ),
+                                              ),
+                                              ShakeEffect(
+                                                delay: Duration(
+                                                  milliseconds: 1000,
+                                                ),
+                                                duration: Duration(
+                                                  milliseconds: 1000,
+                                                ),
+                                                offset: Offset(10, 0),
+                                                hz: 2,
+                                              ),
+
+                                              FadeEffect(
+                                                delay: Duration(
+                                                  milliseconds: 2000,
+                                                ),
+                                                duration: Duration(
+                                                  milliseconds: 500,
+                                                ),
+                                                begin: 1,
+                                                end: 0,
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(width: 15),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Icon(
+                                                Icons.delete_forever,
+                                                color: Colors.white,
+                                                size: 35,
+                                              ),
+                                              Text(
+                                                "Arraste para\napagar",
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ).animate(
+                                        effects: [
+                                          ScaleEffect(
+                                            curve: Curves.easeOutQuart,
+                                            duration: Duration(
+                                              milliseconds: 600,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                     key: ValueKey(patrimonio.patrimonio),
@@ -560,6 +628,18 @@ class _PatrimonioReaderComponentState
                                                 patrimonio,
                                               ),
                                         ),
+                                      ).animate(
+                                        target:
+                                            patrimonio.situacaoConferencia ==
+                                                    'conferido'
+                                                ? 1
+                                                : 0,
+                                        effects: [
+                                          ShakeEffect(
+                                            duration: 300.ms,
+                                            rotation: 0.01,
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   );
