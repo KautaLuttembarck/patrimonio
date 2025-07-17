@@ -1,3 +1,4 @@
+import 'package:clarity_flutter/clarity_flutter.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter/material.dart';
@@ -205,6 +206,7 @@ class LocalDatabaseService {
       debugPrint('Erro ao esvaziar o banco $e');
       return false;
     }
+    Clarity.sendCustomEvent("Limpou o banco de dados local");
     // Registra na tabela acoes
     inserirAcaoRealizada("esvaziaTabelaPatrimonios");
     return true;
