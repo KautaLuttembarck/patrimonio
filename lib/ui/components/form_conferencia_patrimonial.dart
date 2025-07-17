@@ -393,14 +393,26 @@ class _PatrimonioReaderComponentState
                     ],
                   ),
                 ),
-                IconButton(
-                  icon: Icon(
-                    (_searchFieldFocusNode.hasFocus ||
-                            _searchFieldController.text != "")
-                        ? Icons.arrow_back
-                        : Icons.search,
-                  ),
-                  onPressed: _showHideSearchField,
+                AnimatedSwitcher(
+                  switchInCurve: Curves.easeInOutBack,
+                  duration: Duration(milliseconds: 500),
+                  child:
+                      (_searchFieldFocusNode.hasFocus ||
+                              _searchFieldController.text != "")
+                          ? IconButton(
+                            key: ValueKey("arrow_back"),
+                            onPressed: _showHideSearchField,
+                            icon: Icon(
+                              Icons.arrow_back,
+                            ),
+                          )
+                          : IconButton(
+                            key: ValueKey("search"),
+                            onPressed: _showHideSearchField,
+                            icon: Icon(
+                              Icons.search,
+                            ),
+                          ),
                 ),
               ],
             ),
