@@ -212,8 +212,8 @@ class _FormSelecionaUnidadeState extends State<FormSelecionaUnidade> {
                           ? Center(
                             child: Text(
                               _precisaAtualizar
-                                  ? "Baixe ou atualize os dados locais para visualizar os patrimônios associados a esta UL"
-                                  : "Não existem patrimônios associados a esta UL",
+                                  ? "Baixe ou atualize os dados locais para visualizar os patrimônios associados a esta Localização (UL)"
+                                  : "Não existem patrimônios associados a esta Localização (UL)",
                               textAlign: TextAlign.center,
                             ),
                           )
