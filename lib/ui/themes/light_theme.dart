@@ -5,12 +5,19 @@ final Color _primaryTextButtonFontColor = Color(0xFF1B3C72);
 final Color _reverseTextColor = Colors.white;
 final Color _errorColor = Colors.red.shade900;
 final Color _baseBackgroundColor = Color(0xFF1B3C72);
+final Color _themeSelectedFontColor = Colors.blue;
 final Color _baseOverlayColor = Colors.black12;
 final double _baseElevation = 5;
 
 final ThemeData lightTheme = ThemeData(
   useMaterial3: true,
   primaryColor: _baseBackgroundColor,
+
+  dividerTheme: DividerThemeData(
+    color: Colors.white,
+    thickness: 0,
+    space: 0,
+  ),
 
   scaffoldBackgroundColor: Colors.white,
 
@@ -32,6 +39,8 @@ final ThemeData lightTheme = ThemeData(
     surfaceContainerHighest: Colors.grey,
     surfaceBright: Colors.blue,
 
+    shadow: Colors.black87,
+
     outline: Colors.grey,
   ),
 
@@ -45,7 +54,7 @@ final ThemeData lightTheme = ThemeData(
     textColor: _primaryTextButtonFontColor,
     tileColor: Colors.white,
     selectedTileColor: Color(0xFFE3F2FD),
-    selectedColor: Colors.blue,
+    selectedColor: _themeSelectedFontColor,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(10),
     ),
