@@ -36,7 +36,7 @@ class _AppDrawerState extends State<AppDrawer> {
           spacing: 25,
           children: [
             const SizedBox(height: 20),
-            const AppDrawerHeader(),
+            AppDrawerHeader(),
 
             const AppDrawerActionList(),
             const Expanded(child: SizedBox()),
