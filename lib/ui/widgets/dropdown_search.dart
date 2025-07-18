@@ -36,7 +36,8 @@ class DropdownSearch extends StatefulWidget {
   State<DropdownSearch> createState() => _DropdownSearchState();
 }
 
-class _DropdownSearchState extends State<DropdownSearch> {
+class _DropdownSearchState extends State<DropdownSearch>
+    with TickerProviderStateMixin {
   DropdownItem? _selectedItem;
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
@@ -45,12 +46,44 @@ class _DropdownSearchState extends State<DropdownSearch> {
   List<DropdownItem> _filteredItems = [];
   bool _isOpen = false;
 
+  // AnimationController para controlar a animação do overlay
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+  bool _isClosing = false;
+
   @override
   void initState() {
     super.initState();
     _selectedItem = widget.value;
     _filteredItems = List.from(widget.items);
     _focusNode.addListener(_onFocusChange);
+
+    // Inicializar o AnimationController
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeInOut,
+      ),
+    );
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, -0.1),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeOutCubic,
+      ),
+    );
   }
 
   @override
@@ -70,6 +103,7 @@ class _DropdownSearchState extends State<DropdownSearch> {
     _searchController.dispose();
     _focusNode.removeListener(_onFocusChange);
     _focusNode.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -82,25 +116,42 @@ class _DropdownSearchState extends State<DropdownSearch> {
   void _toggleDropdown() {
     if (!widget.isEnabled) return;
 
-    setState(() {
-      _isOpen = !_isOpen;
-    });
-
     if (_isOpen) {
-      _showOverlay();
-      _searchController.clear();
-      _filteredItems = List.from(widget.items);
+      _closeDropdown();
     } else {
-      _removeOverlay();
+      _openDropdown();
     }
   }
 
-  void _closeDropdown() {
-    if (_isOpen) {
+  void _openDropdown() {
+    setState(() {
+      _isOpen = true;
+      _isClosing = false;
+    });
+
+    _showOverlay();
+    _searchController.clear();
+    _filteredItems = List.from(widget.items);
+    _animationController.forward();
+  }
+
+  void _closeDropdown() async {
+    if (_isOpen && !_isClosing) {
       setState(() {
-        _isOpen = false;
+        _isClosing = true;
       });
-      _removeOverlay();
+
+      // Executar animação de fade out
+      await _animationController.reverse();
+
+      // Só remover o overlay após a animação terminar
+      if (mounted) {
+        setState(() {
+          _isOpen = false;
+          _isClosing = false;
+        });
+        _removeOverlay();
+      }
     }
   }
 
@@ -129,189 +180,209 @@ class _DropdownSearchState extends State<DropdownSearch> {
                     0.0,
                     size.height + 2.0,
                   ),
-                  child: Material(
-                    elevation: 4.0,
-                    borderRadius: BorderRadius.circular(12),
-                    clipBehavior: Clip.antiAlias,
-                    color: Theme.of(context).colorScheme.surface,
-                    shadowColor:
-                        Theme.of(
-                          context,
-                        ).colorScheme.shadow,
-                    child: Animate(
-                      effects: const [
-                        FadeEffect(duration: Duration(milliseconds: 150)),
-                        SlideEffect(
-                          begin: Offset(0, -0.1),
-                          end: Offset.zero,
-                          duration: Duration(milliseconds: 200),
-                        ),
-                      ],
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxHeight: MediaQuery.of(context).size.height * 0.5,
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            if (widget.showSearchBox && widget.items.length > 4)
-                              Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: TextField(
-                                  controller: _searchController,
-                                  decoration: InputDecoration(
-                                    hintText: widget.searchHint,
-                                    prefixIcon: Icon(
-                                      Icons.search,
-                                      color:
-                                          Theme.of(context).colorScheme.primary,
-                                    ),
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 16.0,
-                                      vertical: 12.0,
-                                    ),
-                                    filled: true,
-                                    fillColor: Theme.of(context)
-                                        .colorScheme
-                                        .surfaceContainerHighest
-                                        .withValues(alpha: 0.2),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      borderSide: BorderSide(
-                                        color:
-                                            Theme.of(
-                                              context,
-                                            ).colorScheme.primary,
-                                        width: 1.5,
-                                      ),
-                                    ),
-                                  ),
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                  onChanged: _filterItems,
-                                ),
+                  child: AnimatedBuilder(
+                    animation: _animationController,
+                    builder: (context, child) {
+                      return FadeTransition(
+                        opacity: _fadeAnimation,
+                        child: SlideTransition(
+                          position: _slideAnimation,
+                          child: Material(
+                            elevation: 4.0,
+                            borderRadius: BorderRadius.circular(12),
+                            clipBehavior: Clip.antiAlias,
+                            color: Theme.of(context).colorScheme.surface,
+                            shadowColor: Theme.of(context).colorScheme.shadow,
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxHeight:
+                                    MediaQuery.of(context).size.height * 0.5,
                               ),
-                            Flexible(
-                              child:
-                                  _filteredItems.isEmpty
-                                      ? Center(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(16.0),
-                                          child: Text(
-                                            'Nenhum resultado encontrado',
-                                            style: Theme.of(
-                                              context,
-                                            ).textTheme.bodyMedium?.copyWith(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (widget.showSearchBox &&
+                                      widget.items.length > 4)
+                                    Padding(
+                                      padding: const EdgeInsets.all(12.0),
+                                      child: TextField(
+                                        controller: _searchController,
+                                        decoration: InputDecoration(
+                                          hintText: widget.searchHint,
+                                          prefixIcon: Icon(
+                                            Icons.search,
+                                            color:
+                                                Theme.of(
+                                                  context,
+                                                ).colorScheme.primary,
+                                          ),
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                horizontal: 16.0,
+                                                vertical: 12.0,
+                                              ),
+                                          filled: true,
+                                          fillColor: Theme.of(context)
+                                              .colorScheme
+                                              .surfaceContainerHighest
+                                              .withValues(alpha: 0.2),
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              8.0,
+                                            ),
+                                            borderSide: BorderSide.none,
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              8.0,
+                                            ),
+                                            borderSide: BorderSide.none,
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              8.0,
+                                            ),
+                                            borderSide: BorderSide(
                                               color:
                                                   Theme.of(
-                                                        context,
-                                                      )
-                                                      .colorScheme
-                                                      .onSurfaceVariant,
+                                                    context,
+                                                  ).colorScheme.primary,
+                                              width: 1.5,
                                             ),
                                           ),
                                         ),
-                                      )
-                                      : ListView.builder(
-                                        shrinkWrap: true,
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 4.0,
-                                        ),
-                                        itemCount: _filteredItems.length,
-                                        itemBuilder: (context, index) {
-                                          final item = _filteredItems[index];
-                                          final bool isSelected =
-                                              _selectedItem?.id == item.id;
-
-                                          return Material(
-                                            color: Colors.transparent,
-                                            child: InkWell(
-                                              onTap: () => _selectItem(item),
+                                        style:
+                                            Theme.of(
+                                              context,
+                                            ).textTheme.bodyMedium,
+                                        onChanged: _filterItems,
+                                      ),
+                                    ),
+                                  Flexible(
+                                    child:
+                                        _filteredItems.isEmpty
+                                            ? Center(
                                               child: Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                      horizontal: 16.0,
-                                                      vertical: 12.0,
-                                                    ),
-                                                child: Row(
-                                                  children: [
-                                                    Expanded(
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
+                                                padding: const EdgeInsets.all(
+                                                  16.0,
+                                                ),
+                                                child: Text(
+                                                  'Nenhum resultado encontrado',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium
+                                                      ?.copyWith(
+                                                        color:
+                                                            Theme.of(context)
+                                                                .colorScheme
+                                                                .onSurfaceVariant,
+                                                      ),
+                                                ),
+                                              ),
+                                            )
+                                            : ListView.builder(
+                                              shrinkWrap: true,
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    vertical: 4.0,
+                                                  ),
+                                              itemCount: _filteredItems.length,
+                                              itemBuilder: (context, index) {
+                                                final item =
+                                                    _filteredItems[index];
+                                                final bool isSelected =
+                                                    _selectedItem?.id ==
+                                                    item.id;
+
+                                                return Material(
+                                                  color: Colors.transparent,
+                                                  child: InkWell(
+                                                    onTap:
+                                                        () => _selectItem(item),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.symmetric(
+                                                            horizontal: 16.0,
+                                                            vertical: 12.0,
+                                                          ),
+                                                      child: Row(
                                                         children: [
-                                                          Text(
-                                                            item.name,
-                                                            style: Theme.of(
-                                                              context,
-                                                            ).textTheme.bodyLarge?.copyWith(
-                                                              color:
-                                                                  isSelected
-                                                                      ? Theme.of(
-                                                                        context,
-                                                                      ).colorScheme.primary
-                                                                      : Theme.of(
-                                                                        context,
-                                                                      ).colorScheme.onSurface,
-                                                              fontWeight:
-                                                                  isSelected
-                                                                      ? FontWeight
-                                                                          .bold
-                                                                      : FontWeight
-                                                                          .normal,
+                                                          Expanded(
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .min,
+                                                              children: [
+                                                                Text(
+                                                                  item.name,
+                                                                  style: Theme.of(
+                                                                    context,
+                                                                  ).textTheme.bodyLarge?.copyWith(
+                                                                    color:
+                                                                        isSelected
+                                                                            ? Theme.of(
+                                                                              context,
+                                                                            ).colorScheme.primary
+                                                                            : Theme.of(
+                                                                              context,
+                                                                            ).colorScheme.onSurface,
+                                                                    fontWeight:
+                                                                        isSelected
+                                                                            ? FontWeight.bold
+                                                                            : FontWeight.normal,
+                                                                  ),
+                                                                ),
+                                                                if (item.description !=
+                                                                    null)
+                                                                  Text(
+                                                                    item.description!,
+                                                                    style: Theme.of(
+                                                                      context,
+                                                                    ).textTheme.bodySmall?.copyWith(
+                                                                      color:
+                                                                          Theme.of(
+                                                                            context,
+                                                                          ).colorScheme.onSurfaceVariant,
+                                                                    ),
+                                                                  ),
+                                                              ],
                                                             ),
                                                           ),
-                                                          if (item.description !=
-                                                              null)
-                                                            Text(
-                                                              item.description!,
-                                                              style: Theme.of(
-                                                                    context,
-                                                                  )
-                                                                  .textTheme
-                                                                  .bodySmall
-                                                                  ?.copyWith(
-                                                                    color:
-                                                                        Theme.of(
-                                                                          context,
-                                                                        ).colorScheme.onSurfaceVariant,
-                                                                  ),
+                                                          if (isSelected)
+                                                            Icon(
+                                                              Icons
+                                                                  .check_circle,
+                                                              color:
+                                                                  Theme.of(
+                                                                        context,
+                                                                      )
+                                                                      .colorScheme
+                                                                      .primary,
                                                             ),
                                                         ],
                                                       ),
                                                     ),
-                                                    if (isSelected)
-                                                      Icon(
-                                                        Icons.check_circle,
-                                                        color:
-                                                            Theme.of(
-                                                                  context,
-                                                                )
-                                                                .colorScheme
-                                                                .primary,
-                                                      ),
-                                                  ],
-                                                ),
-                                              ),
+                                                  ),
+                                                );
+                                              },
                                             ),
-                                          );
-                                        },
-                                      ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ],
+                          ).animate(
+                            effects: [
+                              FadeEffect(
+                                duration: Duration(milliseconds: 300),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
                 ),
               ),
@@ -342,10 +413,9 @@ class _DropdownSearchState extends State<DropdownSearch> {
   void _selectItem(DropdownItem item) {
     setState(() {
       _selectedItem = item;
-      _isOpen = false;
     });
     widget.onChanged?.call(item);
-    _removeOverlay();
+    _closeDropdown();
   }
 
   @override
