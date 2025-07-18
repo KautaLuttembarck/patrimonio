@@ -10,6 +10,30 @@
 		<string>Patrimônio</string>
 		<key>NSCameraUsageDescription</key>
 		<string>O uso da câmera é necessário para a leitura óptica dos patrimônios.</string>
+
+    <!-- Permissões de uso de rede - confirmar a necessidade de uso
+        <key>NSLocalNetworkUsageDescription</key>
+        <string>Nosso aplicativo precisa de acesso à rede para carregar conteúdo e se comunicar com nossos servidores de imagem.</string>
+        <key>NSBonjourServices</key>
+        <array>
+            <string>_dartobservatory._tcp</string>
+        </array>
+
+        <key>NSAppTransportSecurity</key>
+        <dict>
+            <key>NSExceptionDomains</key>
+            <dict>
+                <key>sgradsv.metro.df.gov.br</key>
+                <dict>
+                    <key>NSExceptionAllowsInsecureHTTPLoads</key>
+                    <true/>
+                    <key>NSExceptionRequiresForwardSecrecy</key>
+                    <false/>
+                </dict>
+            </dict>
+        </dict>
+    -->
+
 		<key>CFBundleExecutable</key>
 		<string>$(EXECUTABLE_NAME)</string>
 		<key>CFBundleIdentifier</key>
