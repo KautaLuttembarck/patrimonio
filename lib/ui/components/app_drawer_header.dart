@@ -4,8 +4,8 @@ import 'package:patrimonio/app/providers/user_provider.dart';
 import 'package:clarity_flutter/clarity_flutter.dart';
 
 class AppDrawerHeader extends StatefulWidget {
-  AppDrawerHeader({super.key});
-  static const String _placeholderImage = "assets/images/empregado_250x250.png";
+  const AppDrawerHeader({super.key});
+  static const String _placeholderImage = "assets/images/empregado.png";
 
   @override
   State<AppDrawerHeader> createState() => _AppDrawerHeaderState();
@@ -36,13 +36,15 @@ class _AppDrawerHeaderState extends State<AppDrawerHeader> {
             shape: BoxShape.circle,
             border: Border.all(color: Colors.white, width: 2),
           ),
-          child: ClarityUnmask(
+          child: ClarityMask(
             child: CircleAvatar(
               radius: 40,
               backgroundColor: Colors.grey,
               child: ClipOval(
                 // Busca o formato JPEG
                 child: Image.network(
+                  cacheWidth:
+                      (80 * MediaQuery.of(context).devicePixelRatio).round(),
                   'http://sgradsv.metro.df.gov.br:9666/$_userImage.jpeg',
                   width: 80,
                   height: 80,
@@ -52,12 +54,18 @@ class _AppDrawerHeaderState extends State<AppDrawerHeader> {
                       'http://sgradsv.metro.df.gov.br:9666/$_userImage.jpg',
                       width: 80,
                       height: 80,
+                      cacheWidth:
+                          (80 * MediaQuery.of(context).devicePixelRatio)
+                              .round(),
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         // Em caso de erro, retorna uma imagem local
                         return Image.asset(
                           AppDrawerHeader._placeholderImage,
                           width: 80,
+                          cacheWidth:
+                              (80 * MediaQuery.of(context).devicePixelRatio)
+                                  .round(),
                           height: 80,
                           fit: BoxFit.cover,
                         );
@@ -82,7 +90,7 @@ class _AppDrawerHeaderState extends State<AppDrawerHeader> {
           ),
         ),
         const SizedBox(height: 20),
-        ClarityUnmask(
+        ClarityMask(
           child: Text(
             context.watch<UserProvider>().nome,
             textAlign: TextAlign.center,
