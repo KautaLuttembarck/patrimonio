@@ -277,7 +277,6 @@ class _FormSelecionaUnidadeState extends State<FormSelecionaUnidade> {
                                   if (context.mounted) {
                                     Navigator.of(context).pushNamed(
                                       AppRoutes.conferenciaPage,
-                                      arguments: {'idUl': idUlSelecionada!},
                                     );
                                   }
                                 });
