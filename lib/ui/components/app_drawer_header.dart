@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:patrimonio/app/providers/user_provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:clarity_flutter/clarity_flutter.dart';
 
 class AppDrawerHeader extends StatefulWidget {
@@ -30,61 +31,59 @@ class _AppDrawerHeaderState extends State<AppDrawerHeader> {
     return Column(
       children: [
         Container(
-          width: 84,
-          height: 84,
+          padding: const EdgeInsets.all(2),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: Colors.white, width: 2),
+            color: Colors.white,
           ),
-          child: ClarityMask(
-            child: CircleAvatar(
-              radius: 40,
-              backgroundColor: Colors.grey,
-              child: ClipOval(
-                // Busca o formato JPEG
-                child: Image.network(
-                  cacheWidth:
-                      (80 * MediaQuery.of(context).devicePixelRatio).round(),
-                  'http://sgradsv.metro.df.gov.br:9666/$_userImage.jpeg',
-                  width: 80,
-                  height: 80,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Image.network(
-                      'http://sgradsv.metro.df.gov.br:9666/$_userImage.jpg',
-                      width: 80,
-                      height: 80,
-                      cacheWidth:
-                          (80 * MediaQuery.of(context).devicePixelRatio)
-                              .round(),
+          child: ClipOval(
+            child: Container(
+              width: 84,
+              height: 84,
+              color: Colors.grey[300],
+              child: CachedNetworkImage(
+                imageUrl:
+                    "http://sgradsv.metro.df.gov.br:9666/$_userImage.jpeg",
+                fit: BoxFit.cover,
+                placeholder:
+                    (_, _) => Stack(
+                      children: [
+                        Image.asset(AppDrawerHeader._placeholderImage),
+                        const Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 4,
+                            constraints: BoxConstraints(
+                              minHeight: 84,
+                              minWidth: 84,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                errorWidget:
+                    (_, _, _) => CachedNetworkImage(
+                      imageUrl:
+                          "http://sgradsv.metro.df.gov.br:9666/$_userImage.jpg",
                       fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        // Em caso de erro, retorna uma imagem local
-                        return Image.asset(
-                          AppDrawerHeader._placeholderImage,
-                          width: 80,
-                          cacheWidth:
-                              (80 * MediaQuery.of(context).devicePixelRatio)
-                                  .round(),
-                          height: 80,
-                          fit: BoxFit.cover,
-                        );
-                      },
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      },
-                    );
-                  },
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  },
-                ),
+                      placeholder:
+                          (_, _) => Stack(
+                            children: [
+                              Image.asset(AppDrawerHeader._placeholderImage),
+                              const Center(
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 4,
+                                  constraints: BoxConstraints(
+                                    minHeight: 84,
+                                    minWidth: 84,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                      errorWidget:
+                          (_, _, _) =>
+                              Image.asset(AppDrawerHeader._placeholderImage),
+                    ),
               ),
             ),
           ),
