@@ -110,8 +110,11 @@ class _FormLoginState extends State<FormLogin> {
                   child: Image.asset(
                     "assets/images/logo_metro_horizontal.png",
                     width: 220,
+                    height: 55,
                     cacheWidth:
                         (220 * MediaQuery.of(context).devicePixelRatio).round(),
+                    cacheHeight:
+                        (55 * MediaQuery.of(context).devicePixelRatio).round(),
                   ),
                 ),
               SizedBox(),

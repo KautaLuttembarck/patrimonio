@@ -57,8 +57,11 @@ class _SplashScreenState extends State<SplashScreen> {
                         ? "assets/images/logo_metro_horizontal.png"
                         : "assets/images/logo_metro_horizontal_invertido.png",
                     width: 135,
+                    height: 35,
                     cacheWidth:
                         (135 * MediaQuery.of(context).devicePixelRatio).round(),
+                    cacheHeight:
+                        (35 * MediaQuery.of(context).devicePixelRatio).round(),
                   ),
                 ),
               ),
