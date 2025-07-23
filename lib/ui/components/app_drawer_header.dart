@@ -14,6 +14,7 @@ class AppDrawerHeader extends StatefulWidget {
 
 class _AppDrawerHeaderState extends State<AppDrawerHeader> {
   late final String _userImage;
+  static const double _imageSize = 84;
 
   String _nomeFoto(String matricula) {
     return matricula.substring(matricula.length - 7);
@@ -38,23 +39,32 @@ class _AppDrawerHeaderState extends State<AppDrawerHeader> {
           ),
           child: ClipOval(
             child: Container(
-              width: 84,
-              height: 84,
+              width: _imageSize,
+              height: _imageSize,
               color: Colors.grey[300],
               child: CachedNetworkImage(
                 imageUrl:
                     "http://sgradsv.metro.df.gov.br:9666/$_userImage.jpeg",
+                memCacheWidth:
+                    (_imageSize * MediaQuery.of(context).devicePixelRatio)
+                        .round(),
                 fit: BoxFit.cover,
                 placeholder:
                     (_, _) => Stack(
                       children: [
-                        Image.asset(AppDrawerHeader._placeholderImage),
+                        Image.asset(
+                          AppDrawerHeader._placeholderImage,
+                          cacheWidth:
+                              (_imageSize *
+                                      MediaQuery.of(context).devicePixelRatio)
+                                  .round(),
+                        ),
                         const Center(
                           child: CircularProgressIndicator(
-                            strokeWidth: 4,
+                            strokeWidth: 10,
                             constraints: BoxConstraints(
-                              minHeight: 84,
-                              minWidth: 84,
+                              minHeight: _imageSize,
+                              minWidth: _imageSize,
                             ),
                           ),
                         ),
@@ -64,6 +74,9 @@ class _AppDrawerHeaderState extends State<AppDrawerHeader> {
                     (_, _, _) => CachedNetworkImage(
                       imageUrl:
                           "http://sgradsv.metro.df.gov.br:9666/$_userImage.jpg",
+                      memCacheWidth:
+                          (_imageSize * MediaQuery.of(context).devicePixelRatio)
+                              .round(),
                       fit: BoxFit.cover,
                       placeholder:
                           (_, _) => Stack(
@@ -71,18 +84,23 @@ class _AppDrawerHeaderState extends State<AppDrawerHeader> {
                               Image.asset(AppDrawerHeader._placeholderImage),
                               const Center(
                                 child: CircularProgressIndicator(
-                                  strokeWidth: 4,
+                                  strokeWidth: 10,
                                   constraints: BoxConstraints(
-                                    minHeight: 84,
-                                    minWidth: 84,
+                                    minHeight: _imageSize,
+                                    minWidth: _imageSize,
                                   ),
                                 ),
                               ),
                             ],
                           ),
                       errorWidget:
-                          (_, _, _) =>
-                              Image.asset(AppDrawerHeader._placeholderImage),
+                          (_, _, _) => Image.asset(
+                            AppDrawerHeader._placeholderImage,
+                            cacheWidth:
+                                (_imageSize *
+                                        MediaQuery.of(context).devicePixelRatio)
+                                    .round(),
+                          ),
                     ),
               ),
             ),
