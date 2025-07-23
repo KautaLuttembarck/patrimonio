@@ -26,6 +26,8 @@ class _PatrimonioReaderComponentState
   bool _hasVibrator = false;
   final TextEditingController _searchFieldController = TextEditingController();
   final FocusNode _searchFieldFocusNode = FocusNode();
+  final GlobalKey _stackKey = GlobalKey();
+  Offset _buttonPosition = Offset(3000, 3000);
 
   Future<void> _submitData() async {
     FocusScope.of(context).unfocus();
@@ -104,6 +106,23 @@ class _PatrimonioReaderComponentState
     super.initState();
     _scrollController = ScrollController();
     Vibration.hasVibrator().then((value) => _hasVibrator = value);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final RenderBox renderBox =
+          _stackKey.currentContext!.findRenderObject() as RenderBox;
+      final Size size = renderBox.size;
+
+      const double buttonSize = 56; // tamanho padrão do FAB
+      const double padding = 16;
+
+      setState(() {
+        _buttonPosition = Offset(
+          size.width - buttonSize - padding,
+          size.height - buttonSize - padding - 70,
+        );
+      });
+    });
+
     setState(() {
       context.read<ConferenciaProvider>().carregarItens();
     });
@@ -271,415 +290,413 @@ class _PatrimonioReaderComponentState
     return GestureDetector(
       onTap: () => _searchFieldFocusNode.unfocus(),
       behavior: HitTestBehavior.translucent,
-      child: Column(
-        spacing: 10,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
+        key: _stackKey,
         children: [
-          if (context.watch<ConferenciaProvider>().tamanhoLista > 0)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5.0),
-              child: Column(
-                spacing: 10,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Column(
+            spacing: 10,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (context.watch<ConferenciaProvider>().tamanhoLista > 0)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                  child: Column(
+                    spacing: 10,
                     children: [
-                      Text(
-                        "Patrimônios conferidos: "
-                        "${context.watch<ConferenciaProvider>().patrimoniosConferidos} "
-                        "/ ${context.watch<ConferenciaProvider>().tamanhoLista}",
-                        style: Theme.of(context).textTheme.titleSmall,
-                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Patrimônios conferidos: "
+                            "${context.watch<ConferenciaProvider>().patrimoniosConferidos} "
+                            "/ ${context.watch<ConferenciaProvider>().tamanhoLista}",
+                            style: Theme.of(context).textTheme.titleSmall,
+                          ),
 
-                      Icon(
-                        Icons.check,
-                        size: 30,
-                        color: Colors.green,
-                      ).animate(
-                        target:
-                            context
-                                        .watch<ConferenciaProvider>()
-                                        .patrimoniosConferidos ==
-                                    context
-                                        .watch<ConferenciaProvider>()
-                                        .tamanhoLista
-                                ? 1
-                                : 0,
-                        effects: [
-                          ScaleEffect(
-                            duration: Duration(milliseconds: 300),
-                            curve: Curves.easeOutBack,
+                          Icon(
+                            Icons.check,
+                            size: 30,
+                            color: Colors.green,
+                          ).animate(
+                            target:
+                                context
+                                            .watch<ConferenciaProvider>()
+                                            .patrimoniosConferidos ==
+                                        context
+                                            .watch<ConferenciaProvider>()
+                                            .tamanhoLista
+                                    ? 1
+                                    : 0,
+                            effects: [
+                              ScaleEffect(
+                                duration: Duration(milliseconds: 300),
+                                curve: Curves.easeOutBack,
+                              ),
+                            ],
                           ),
                         ],
                       ),
+
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(6),
+                          color: Theme.of(context).colorScheme.surface,
+                        ),
+                        width: double.infinity,
+                        child: TextField(
+                          autocorrect: false,
+                          decoration: InputDecoration(
+                            suffixIcon: AnimatedSwitcher(
+                              switchInCurve: Curves.easeInOutBack,
+                              duration: Duration(milliseconds: 200),
+                              child:
+                                  _searchFieldController.text != ""
+                                      ? IconButton(
+                                        key: ValueKey("Limpar"),
+                                        icon: Icon(Icons.clear),
+                                        onPressed: () {
+                                          _searchFieldController.text = "";
+                                          context
+                                              .read<ConferenciaProvider>()
+                                              .filtrarItens(
+                                                "",
+                                              );
+                                        },
+                                      )
+                                      : Icon(
+                                        Icons.search,
+                                        key: ValueKey("search"),
+                                      ),
+                            ),
+
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            label: Text("Pesquisar"),
+
+                            labelStyle: Theme.of(context).textTheme.bodyLarge,
+
+                            contentPadding: EdgeInsets.all(
+                              12,
+                            ), // (opcional) ajuste de padding
+                          ),
+                          controller: _searchFieldController,
+                          focusNode: _searchFieldFocusNode,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                          spellCheckConfiguration:
+                              SpellCheckConfiguration.disabled(),
+                          onChanged: (valorBuscado) {
+                            context.read<ConferenciaProvider>().filtrarItens(
+                              valorBuscado,
+                            );
+                          },
+                        ),
+                      ),
                     ],
                   ),
+                ),
 
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(6),
-                      color: Theme.of(context).colorScheme.surface,
-                    ),
-                    width: double.infinity,
-                    child: TextField(
-                      autocorrect: false,
-                      decoration: InputDecoration(
-                        suffixIcon: AnimatedSwitcher(
-                          switchInCurve: Curves.easeInOutBack,
-                          duration: Duration(milliseconds: 200),
+              Expanded(
+                child: Stack(
+                  children: [
+                    Consumer<ConferenciaProvider>(
+                      builder: (context, provider, child) {
+                        late List<Patrimonio> lista;
+                        if (_searchFieldFocusNode.hasFocus ||
+                            _searchFieldController.text != "") {
+                          lista = provider.filteredItens;
+                        } else {
+                          lista = provider.itens;
+                        }
+
+                        return AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 300),
                           child:
-                              _searchFieldController.text != ""
-                                  ? IconButton(
-                                    key: ValueKey("Limpar"),
-                                    icon: Icon(Icons.clear),
-                                    onPressed: () {
-                                      _searchFieldController.text = "";
-                                      context
-                                          .read<ConferenciaProvider>()
-                                          .filtrarItens(
-                                            "",
-                                          );
-                                    },
+                              lista.isEmpty
+                                  ? Center(
+                                    key: ValueKey("ListaVazia"),
+                                    child: Text(
+                                      _searchFieldController.text == ""
+                                          ? 'Nenhum patrimônio listado para conferência.'
+                                          : "Nenhum patrimônio encontrado com o termo pesquisado.",
+                                      textAlign: TextAlign.center,
+                                    ).animate(
+                                      effects: [
+                                        FadeEffect(
+                                          delay: Duration(milliseconds: 100),
+                                          duration: Duration(milliseconds: 800),
+                                        ),
+                                      ],
+                                    ),
                                   )
-                                  : Icon(
-                                    Icons.search,
-                                    key: ValueKey("search"),
+                                  : RawScrollbar(
+                                    key: ValueKey("ListaCheia"),
+                                    controller: _scrollController,
+                                    radius: Radius.circular(10),
+                                    interactive: true,
+                                    scrollbarOrientation:
+                                        ScrollbarOrientation.right,
+                                    child: ListView.builder(
+                                      controller: _scrollController,
+                                      padding: const EdgeInsets.only(
+                                        bottom: 60.0,
+                                      ),
+                                      itemCount: lista.length,
+                                      itemBuilder: (context, index) {
+                                        final patrimonio = lista[index];
+                                        return Dismissible(
+                                          direction:
+                                              DismissDirection.endToStart,
+                                          background: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                    10,
+                                                  ),
+                                              color:
+                                                  Theme.of(
+                                                    context,
+                                                  ).colorScheme.error,
+                                            ),
+                                            padding: EdgeInsets.only(right: 30),
+                                            margin: EdgeInsets.symmetric(
+                                              vertical: 11,
+                                            ),
+
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.delete_forever,
+                                                      color: Colors.white,
+                                                      size: 35,
+                                                    ),
+                                                    Text(
+                                                      "Arraste para\napagar",
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyMedium
+                                                          ?.copyWith(
+                                                            color: Colors.white,
+                                                          ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ).animate(
+                                              effects: [
+                                                ScaleEffect(
+                                                  curve: Curves.easeOutQuart,
+                                                  duration: Duration(
+                                                    milliseconds: 600,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          key: ValueKey(patrimonio.patrimonio),
+
+                                          confirmDismiss: (_) async {
+                                            return await _confirmaDismiss(
+                                              patrimonio.patrimonio,
+                                            );
+                                          },
+
+                                          onDismissed: (_) async {
+                                            if (_hasVibrator) {
+                                              Vibration.vibrate(duration: 50);
+                                            }
+                                            final bool success = await context
+                                                .read<ConferenciaProvider>()
+                                                .removerItem(patrimonio);
+                                            if (!success) {
+                                              if (context.mounted) {
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      "Erro ao remover o patrimônio!",
+                                                    ),
+                                                    backgroundColor:
+                                                        Theme.of(
+                                                          context,
+                                                        ).colorScheme.error,
+                                                  ),
+                                                );
+                                              }
+                                            }
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 8.0,
+                                            ),
+                                            child: Card(
+                                              child: ListTile(
+                                                onLongPress:
+                                                    () => help_dialog
+                                                        .showDetalhesPatrimonio(
+                                                          context,
+                                                          patrimonio,
+                                                        ),
+                                                isThreeLine: true,
+                                                selected:
+                                                    patrimonio
+                                                        .situacaoConferencia ==
+                                                    "conferido",
+                                                tileColor:
+                                                    patrimonio.situacaoConferencia ==
+                                                            "pendente"
+                                                        ? null
+                                                        : Theme.of(
+                                                              context,
+                                                            )
+                                                            .colorScheme
+                                                            .surfaceContainerHigh,
+                                                leading:
+                                                    patrimonio.situacaoConferencia ==
+                                                            "pendente"
+                                                        ? Icon(
+                                                          Icons
+                                                              .check_box_outline_blank,
+                                                        )
+                                                        : Icon(Icons.check_box),
+                                                title: Text(
+                                                  patrimonio.nAntigo != ""
+                                                      ? "Patrimônio: ${patrimonio.patrimonio}\nNº Antigo: ${patrimonio.nAntigo}"
+                                                      : "Patrimônio: ${patrimonio.patrimonio}",
+                                                ),
+                                                subtitle: Text(
+                                                  patrimonio.descricao,
+                                                ),
+                                                onTap:
+                                                    () => _marcaComoConferido(
+                                                      patrimonio,
+                                                    ),
+                                              ),
+                                            ).animate(
+                                              target:
+                                                  patrimonio.situacaoConferencia ==
+                                                          'conferido'
+                                                      ? 1
+                                                      : 0,
+                                              effects: [
+                                                ShakeEffect(
+                                                  duration: 300.ms,
+                                                  rotation: 0.01,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ).animate(
+                                      effects: [
+                                        const FadeEffect(
+                                          delay: Duration(milliseconds: 100),
+                                          duration: Duration(milliseconds: 300),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                        ),
-
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        label: Text("Pesquisar"),
-
-                        labelStyle: Theme.of(context).textTheme.bodyLarge,
-
-                        contentPadding: EdgeInsets.all(
-                          12,
-                        ), // (opcional) ajuste de padding
-                      ),
-                      controller: _searchFieldController,
-                      focusNode: _searchFieldFocusNode,
-                      style: Theme.of(context).textTheme.bodyLarge,
-                      spellCheckConfiguration:
-                          SpellCheckConfiguration.disabled(),
-                      onChanged: (valorBuscado) {
-                        context.read<ConferenciaProvider>().filtrarItens(
-                          valorBuscado,
                         );
                       },
                     ),
-                  ),
-                ],
-              ),
-            ),
 
-          Expanded(
-            child: Stack(
-              children: [
-                Consumer<ConferenciaProvider>(
-                  builder: (context, provider, child) {
-                    late List<Patrimonio> lista;
-                    if (_searchFieldFocusNode.hasFocus ||
-                        _searchFieldController.text != "") {
-                      lista = provider.filteredItens;
-                    } else {
-                      lista = provider.itens;
-                    }
-
-                    return AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 300),
-                      child:
-                          lista.isEmpty
-                              ? Center(
-                                key: ValueKey("ListaVazia"),
-                                child: Text(
-                                  _searchFieldController.text == ""
-                                      ? 'Nenhum patrimônio listado para conferência.'
-                                      : "Nenhum patrimônio encontrado com o termo pesquisado.",
-                                  textAlign: TextAlign.center,
-                                ).animate(
-                                  effects: [
-                                    FadeEffect(
-                                      delay: Duration(milliseconds: 100),
-                                      duration: Duration(milliseconds: 800),
-                                    ),
-                                  ],
-                                ),
-                              )
-                              : RawScrollbar(
-                                key: ValueKey("ListaCheia"),
-                                controller: _scrollController,
-                                radius: Radius.circular(10),
-                                interactive: true,
-                                scrollbarOrientation:
-                                    ScrollbarOrientation.right,
-                                child: ListView.builder(
-                                  controller: _scrollController,
-                                  padding: const EdgeInsets.only(bottom: 60.0),
-                                  itemCount: lista.length,
-                                  itemBuilder: (context, index) {
-                                    final patrimonio = lista[index];
-                                    return Dismissible(
-                                      direction: DismissDirection.endToStart,
-                                      background: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            10,
-                                          ),
-                                          color:
-                                              Theme.of(
-                                                context,
-                                              ).colorScheme.error,
-                                        ),
-                                        padding: EdgeInsets.only(right: 30),
-                                        margin: EdgeInsets.symmetric(
-                                          vertical: 11,
-                                        ),
-
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            Icon(
-                                              Icons.touch_app,
-                                              size: 40,
-                                            ).animate(
-                                              effects: [
-                                                FadeEffect(
-                                                  delay: Duration(
-                                                    milliseconds: 500,
-                                                  ),
-                                                  duration: Duration(
-                                                    milliseconds: 500,
-                                                  ),
-                                                ),
-                                                ShakeEffect(
-                                                  delay: Duration(
-                                                    milliseconds: 1000,
-                                                  ),
-                                                  duration: Duration(
-                                                    milliseconds: 1000,
-                                                  ),
-                                                  offset: Offset(10, 0),
-                                                  hz: 2,
-                                                ),
-
-                                                FadeEffect(
-                                                  delay: Duration(
-                                                    milliseconds: 2000,
-                                                  ),
-                                                  duration: Duration(
-                                                    milliseconds: 500,
-                                                  ),
-                                                  begin: 1,
-                                                  end: 0,
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(width: 15),
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Icon(
-                                                  Icons.delete_forever,
-                                                  color: Colors.white,
-                                                  size: 35,
-                                                ),
-                                                Text(
-                                                  "Arraste para\napagar",
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ).animate(
-                                          effects: [
-                                            ScaleEffect(
-                                              curve: Curves.easeOutQuart,
-                                              duration: Duration(
-                                                milliseconds: 600,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      key: ValueKey(patrimonio.patrimonio),
-
-                                      confirmDismiss: (_) async {
-                                        return await _confirmaDismiss(
-                                          patrimonio.patrimonio,
-                                        );
-                                      },
-
-                                      onDismissed: (_) async {
-                                        if (_hasVibrator) {
-                                          Vibration.vibrate(duration: 50);
-                                        }
-                                        final bool success = await context
-                                            .read<ConferenciaProvider>()
-                                            .removerItem(patrimonio);
-                                        if (!success) {
-                                          if (context.mounted) {
-                                            ScaffoldMessenger.of(
-                                              context,
-                                            ).showSnackBar(
-                                              SnackBar(
-                                                content: Text(
-                                                  "Erro ao remover o patrimônio!",
-                                                ),
-                                                backgroundColor:
-                                                    Theme.of(
-                                                      context,
-                                                    ).colorScheme.error,
-                                              ),
-                                            );
-                                          }
-                                        }
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 8.0,
-                                        ),
-                                        child: Card(
-                                          child: ListTile(
-                                            onLongPress:
-                                                () => help_dialog
-                                                    .showDetalhesPatrimonio(
-                                                      context,
-                                                      patrimonio,
-                                                    ),
-                                            isThreeLine: true,
-                                            selected:
-                                                patrimonio
-                                                    .situacaoConferencia ==
-                                                "conferido",
-                                            tileColor:
-                                                patrimonio.situacaoConferencia ==
-                                                        "pendente"
-                                                    ? null
-                                                    : Theme.of(
-                                                          context,
-                                                        )
-                                                        .colorScheme
-                                                        .surfaceContainerHigh,
-                                            leading:
-                                                patrimonio.situacaoConferencia ==
-                                                        "pendente"
-                                                    ? Icon(
-                                                      Icons
-                                                          .check_box_outline_blank,
-                                                    )
-                                                    : Icon(Icons.check_box),
-                                            title: Text(
-                                              patrimonio.nAntigo != ""
-                                                  ? "Patrimônio: ${patrimonio.patrimonio}\nNº Antigo: ${patrimonio.nAntigo}"
-                                                  : "Patrimônio: ${patrimonio.patrimonio}",
-                                            ),
-                                            subtitle: Text(
-                                              patrimonio.descricao,
-                                            ),
-                                            onTap:
-                                                () => _marcaComoConferido(
-                                                  patrimonio,
-                                                ),
-                                          ),
-                                        ).animate(
-                                          target:
-                                              patrimonio.situacaoConferencia ==
-                                                      'conferido'
-                                                  ? 1
-                                                  : 0,
-                                          effects: [
-                                            ShakeEffect(
-                                              duration: 300.ms,
-                                              rotation: 0.01,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ).animate(
-                                  effects: [
-                                    const FadeEffect(
-                                      delay: Duration(milliseconds: 100),
-                                      duration: Duration(milliseconds: 300),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                    );
-                  },
-                ),
-
-                if (context.watch<ConferenciaProvider>().tamanhoLista != 0 &&
-                    !_searchFieldFocusNode.hasFocus &&
-                    _searchFieldController.text == "")
-                  Positioned(
-                    bottom: 34,
-                    right: 10,
-                    child: FloatingActionButton(
-                      onPressed: _lerPatrimonio,
-                      child: Icon(Icons.barcode_reader, size: 30),
-                    ),
-                  ).animate(
-                    effects: [
-                      const FadeEffect(
-                        delay: Duration(milliseconds: 100),
-                        duration: Duration(milliseconds: 200),
+                    // Barra invisível para fazer o efeito de voltar ao topo
+                    Positioned(
+                      top: 0,
+                      child: GestureDetector(
+                        onTap: () {
+                          _scrollController.animateTo(
+                            _scrollController.position.minScrollExtent,
+                            duration: const Duration(milliseconds: 500),
+                            curve: Curves.easeOut,
+                          );
+                        },
+                        child: SizedBox(
+                          height: 20,
+                          width: MediaQuery.of(context).size.width - 60,
+                          child: Text(""),
+                        ),
                       ),
+                    ),
+                  ],
+                ),
+              ),
+              if (context.watch<ConferenciaProvider>().tamanhoLista != 0 &&
+                  !_searchFieldFocusNode.hasFocus &&
+                  _searchFieldController.text == "")
+                ElevatedButton(
+                  onPressed:
+                      (_isLoading ||
+                              context
+                                      .watch<ConferenciaProvider>()
+                                      .tamanhoLista ==
+                                  0)
+                          ? null
+                          : _submitData,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _isLoading
+                          ? CircularProgressIndicator(
+                            backgroundColor:
+                                Theme.of(context).colorScheme.onPrimary,
+                            constraints: BoxConstraints(
+                              maxWidth: 25,
+                              maxHeight: 25,
+                              minWidth: 25,
+                              minHeight: 25,
+                            ),
+                          )
+                          : Text("Enviar conferência"),
                     ],
                   ),
-
-                // Barra invisível para fazer o efeito de voltar ao topo
-                Positioned(
-                  top: 0,
-                  child: GestureDetector(
-                    onTap: () {
-                      _scrollController.animateTo(
-                        _scrollController.position.minScrollExtent,
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.easeOut,
-                      );
-                    },
-                    child: SizedBox(
-                      height: 20,
-                      width: MediaQuery.of(context).size.width - 60,
-                      child: Text(""),
+                ).animate(
+                  effects: [
+                    const FadeEffect(
+                      delay: Duration(milliseconds: 100),
+                      duration: Duration(milliseconds: 200),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
+            ],
           ),
+
           if (context.watch<ConferenciaProvider>().tamanhoLista != 0 &&
               !_searchFieldFocusNode.hasFocus &&
               _searchFieldController.text == "")
-            ElevatedButton(
-              onPressed:
-                  (_isLoading ||
-                          context.watch<ConferenciaProvider>().tamanhoLista ==
-                              0)
-                      ? null
-                      : _submitData,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _isLoading
-                      ? CircularProgressIndicator(
-                        backgroundColor:
-                            Theme.of(context).colorScheme.onPrimary,
-                        constraints: BoxConstraints(
-                          maxWidth: 25,
-                          maxHeight: 25,
-                          minWidth: 25,
-                          minHeight: 25,
-                        ),
-                      )
-                      : Text("Enviar conferência"),
-                ],
+            Positioned(
+              left: _buttonPosition.dx,
+              top: _buttonPosition.dy,
+              child: Draggable(
+                childWhenDragging: SizedBox(),
+                feedback: FloatingActionButton(
+                  onPressed: _lerPatrimonio,
+                  child: Icon(Icons.barcode_reader, size: 30),
+                ),
+                onDragEnd: (details) {
+                  final RenderBox renderBox =
+                      _stackKey.currentContext!.findRenderObject() as RenderBox;
+                  final Offset localOffset = renderBox.globalToLocal(
+                    details.offset,
+                  );
+                  setState(() {
+                    _buttonPosition = localOffset;
+                  });
+                },
+                child: FloatingActionButton(
+                  onPressed: _lerPatrimonio,
+                  child: Icon(Icons.barcode_reader, size: 30),
+                ),
               ),
             ).animate(
               effects: [
