@@ -97,11 +97,12 @@ class _FormLoginState extends State<FormLogin> {
                   child: Image.asset(
                     "assets/images/logo_metro_horizontal_invertido.png",
                     width: 203,
-                    height: 76,
+                    height: 31.95,
                     cacheWidth:
                         (203 * MediaQuery.of(context).devicePixelRatio).round(),
                     cacheHeight:
-                        (76 * MediaQuery.of(context).devicePixelRatio).round(),
+                        (31.95 * MediaQuery.of(context).devicePixelRatio)
+                            .round(),
                   ),
                 ),
               if (MediaQuery.of(context).platformBrightness == Brightness.light)
@@ -109,12 +110,13 @@ class _FormLoginState extends State<FormLogin> {
                   tag: "assets/images/logo_metro_horizontal.png",
                   child: Image.asset(
                     "assets/images/logo_metro_horizontal.png",
-                    width: 220,
-                    height: 55,
+                    width: 203,
+                    height: 31.95,
                     cacheWidth:
-                        (220 * MediaQuery.of(context).devicePixelRatio).round(),
+                        (203 * MediaQuery.of(context).devicePixelRatio).round(),
                     cacheHeight:
-                        (55 * MediaQuery.of(context).devicePixelRatio).round(),
+                        (31.95 * MediaQuery.of(context).devicePixelRatio)
+                            .round(),
                   ),
                 ),
               SizedBox(),

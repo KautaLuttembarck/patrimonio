@@ -39,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   (288 * MediaQuery.of(context).devicePixelRatio).round(),
             ),
             Positioned(
-              bottom: 70,
+              bottom: 80,
               child: AnimatedOpacity(
                 duration: Duration(milliseconds: timeToAnimationInMilliseconds),
                 opacity: imageOpacity,
@@ -56,12 +56,13 @@ class _SplashScreenState extends State<SplashScreen> {
                             Brightness.light
                         ? "assets/images/logo_metro_horizontal.png"
                         : "assets/images/logo_metro_horizontal_invertido.png",
-                    width: 135,
-                    height: 35,
+                    width: 130,
+                    height: 20.5,
                     cacheWidth:
-                        (135 * MediaQuery.of(context).devicePixelRatio).round(),
+                        (130 * MediaQuery.of(context).devicePixelRatio).round(),
                     cacheHeight:
-                        (35 * MediaQuery.of(context).devicePixelRatio).round(),
+                        (20.5 * MediaQuery.of(context).devicePixelRatio)
+                            .round(),
                   ),
                 ),
               ),

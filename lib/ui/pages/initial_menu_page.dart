@@ -11,8 +11,8 @@ class InitialMenuPage extends StatelessWidget {
       appBar: AppBar(
         title: Image.asset(
           "assets/images/logo_metro_horizontal_invertido.png",
-          height: 50,
-          cacheHeight: (50 * MediaQuery.of(context).devicePixelRatio).round(),
+          height: 20,
+          cacheHeight: (20 * MediaQuery.of(context).devicePixelRatio).round(),
         ),
       ),
       drawer: AppDrawer(),
