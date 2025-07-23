@@ -22,21 +22,17 @@ class ConferenciaProvider extends ChangeNotifier {
   }
 
   Future<void> filtrarItens(String filtro) async {
-    if (filtro != "") {
-      filteredItens =
-          _itens
-              .where(
-                (patrimonio) =>
-                    (patrimonio.patrimonio == filtro ||
-                        patrimonio.nAntigo == filtro ||
-                        patrimonio.descricao.toUpperCase().contains(
-                          filtro.toUpperCase(),
-                        )),
-              )
-              .toList();
-    } else {
-      filteredItens = [];
-    }
+    filteredItens =
+        _itens
+            .where(
+              (patrimonio) =>
+                  (patrimonio.patrimonio == filtro ||
+                      patrimonio.nAntigo == filtro ||
+                      patrimonio.descricao.toUpperCase().contains(
+                        filtro.toUpperCase(),
+                      )),
+            )
+            .toList();
     notifyListeners();
   }
 
