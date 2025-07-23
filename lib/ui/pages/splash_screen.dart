@@ -35,6 +35,8 @@ class _SplashScreenState extends State<SplashScreen> {
                   ? "assets/images/native_splash/native_splash_logo_light.png"
                   : "assets/images/native_splash/native_splash_logo_dark.png",
               width: 288,
+              cacheWidth:
+                  (288 * MediaQuery.of(context).devicePixelRatio).round(),
             ),
             Positioned(
               bottom: 70,
@@ -46,15 +48,17 @@ class _SplashScreenState extends State<SplashScreen> {
                   tag:
                       MediaQuery.of(context).platformBrightness ==
                               Brightness.light
-                          ? "assets/images/logo_metro_horizontal_600x209.png"
-                          : "assets/images/logo_metro_horizontal_invertido_600x209.png",
+                          ? "assets/images/logo_metro_horizontal.png"
+                          : "assets/images/logo_metro_horizontal_invertido.png",
 
                   child: Image.asset(
                     MediaQuery.of(context).platformBrightness ==
                             Brightness.light
-                        ? "assets/images/logo_metro_horizontal_600x209.png"
-                        : "assets/images/logo_metro_horizontal_invertido_600x209.png",
+                        ? "assets/images/logo_metro_horizontal.png"
+                        : "assets/images/logo_metro_horizontal_invertido.png",
                     width: 135,
+                    cacheWidth:
+                        (135 * MediaQuery.of(context).devicePixelRatio).round(),
                   ),
                 ),
               ),

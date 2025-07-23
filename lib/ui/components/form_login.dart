@@ -93,19 +93,25 @@ class _FormLoginState extends State<FormLogin> {
               SizedBox(),
               if (MediaQuery.of(context).platformBrightness == Brightness.dark)
                 Hero(
-                  tag:
-                      "assets/images/logo_metro_horizontal_invertido_600x209.png",
+                  tag: "assets/images/logo_metro_horizontal_invertido.png",
                   child: Image.asset(
-                    "assets/images/logo_metro_horizontal_invertido_600x209.png",
-                    width: 220,
+                    "assets/images/logo_metro_horizontal_invertido.png",
+                    width: 203,
+                    height: 76,
+                    cacheWidth:
+                        (203 * MediaQuery.of(context).devicePixelRatio).round(),
+                    cacheHeight:
+                        (76 * MediaQuery.of(context).devicePixelRatio).round(),
                   ),
                 ),
               if (MediaQuery.of(context).platformBrightness == Brightness.light)
                 Hero(
-                  tag: "assets/images/logo_metro_horizontal_600x209.png",
+                  tag: "assets/images/logo_metro_horizontal.png",
                   child: Image.asset(
-                    "assets/images/logo_metro_horizontal_600x209.png",
+                    "assets/images/logo_metro_horizontal.png",
                     width: 220,
+                    cacheWidth:
+                        (220 * MediaQuery.of(context).devicePixelRatio).round(),
                   ),
                 ),
               SizedBox(),
