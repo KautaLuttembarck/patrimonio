@@ -55,6 +55,13 @@ class _FormSelecionaUnidadeState extends State<FormSelecionaUnidade> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _conferenciaAndamento =
+        context.watch<ConferenciaProvider>().tamanhoLista > 0;
+  }
+
+  @override
   void initState() {
     super.initState();
     SpDatabaseService().getListaUa().then((data) {
@@ -69,6 +76,8 @@ class _FormSelecionaUnidadeState extends State<FormSelecionaUnidade> {
       (precisa) => setState(() => _precisaAtualizar = precisa),
     );
   }
+
+  late bool _conferenciaAndamento;
 
   List<DropdownItem> uaDropdownList = [];
   List<DropdownItem> ulDropdownList = [];
@@ -87,261 +96,257 @@ class _FormSelecionaUnidadeState extends State<FormSelecionaUnidade> {
 
   @override
   Widget build(BuildContext context) {
-    bool conferenciaAndamento =
-        context.watch<ConferenciaProvider>().tamanhoLista > 0;
-    return Form(
-      child: Column(
-        spacing: 25,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Seletor da Unidade Administrativa (UA)
-          AnimatedSwitcher(
-            duration: Duration(milliseconds: 300),
-            child:
-                _isLoadingListaUa
-                    ? Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 20.0),
-                        child: CircularProgressIndicator(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.onPrimary,
-                        ),
+    return Column(
+      spacing: 25,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Seletor da Unidade Administrativa (UA)
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          child:
+              _isLoadingListaUa
+                  ? Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: CircularProgressIndicator(
+                        backgroundColor:
+                            Theme.of(context).colorScheme.onPrimary,
                       ),
-                    )
-                    : DropdownSearch(
-                      isEnabled: !conferenciaAndamento,
-                      label: 'Unidade Administrativa (UA)',
-                      hint: 'Selecione a Unidade Administrativa',
-                      searchHint: 'Pesquisar UA...',
-                      items: uaDropdownList,
-                      value: _selectedUa,
-                      isRequired: true,
-                      prefixIcon: Icon(
-                        Icons.maps_home_work_rounded,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedUa = value;
-                          idUaSelecionada = int.parse(value?.id ?? '0');
-                          _selectedUl = null;
-                          idUlSelecionada = null;
-                          _isLoadingListaUl = true;
-                          _listagemPatrimonial = [];
-                        });
-                        SpDatabaseService().getListaUl(idUaSelecionada!).then((
-                          data,
-                        ) {
-                          final List<dynamic> decodedList = jsonDecode(data);
-                          setState(() {
-                            ulDropdownList =
-                                decodedList
-                                    .map(
-                                      (item) => DropdownItem.fromUlJson(item),
-                                    )
-                                    .toList();
-                            _isLoadingListaUl = false;
-                          });
-                        });
-                      },
                     ),
-          ),
+                  )
+                  : DropdownSearch(
+                    isEnabled: !_conferenciaAndamento,
+                    label: 'Unidade Administrativa (UA)',
+                    hint: 'Selecione a Unidade Administrativa',
+                    searchHint: 'Pesquisar UA...',
+                    items: uaDropdownList,
+                    value: _selectedUa,
+                    isRequired: true,
+                    prefixIcon: Icon(
+                      Icons.maps_home_work_rounded,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedUa = value;
+                        idUaSelecionada = int.parse(value?.id ?? '0');
+                        _selectedUl = null;
+                        idUlSelecionada = null;
+                        _isLoadingListaUl = true;
+                        _listagemPatrimonial = [];
+                      });
+                      SpDatabaseService().getListaUl(idUaSelecionada!).then((
+                        data,
+                      ) {
+                        final List<dynamic> decodedList = jsonDecode(data);
+                        setState(() {
+                          ulDropdownList =
+                              decodedList
+                                  .map(
+                                    (item) => DropdownItem.fromUlJson(item),
+                                  )
+                                  .toList();
+                          _isLoadingListaUl = false;
+                        });
+                      });
+                    },
+                  ),
+        ),
 
-          // Seletor da Unidade de Localização (UL)
-          // e consequente responsável
-          AnimatedSwitcher(
-            duration: Duration(milliseconds: 300),
+        // Seletor da Unidade de Localização (UL)
+        // e consequente responsável
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          child:
+              _isLoadingListaUl
+                  ? Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: CircularProgressIndicator(
+                        backgroundColor:
+                            Theme.of(context).colorScheme.onPrimary,
+                      ),
+                    ),
+                  )
+                  : DropdownSearch(
+                    isEnabled: !_conferenciaAndamento,
+                    label: 'Unidade de Localização (UL)',
+                    hint: 'Selecione a Unidade Localização',
+                    searchHint: 'Pesquisar UL...',
+                    items: ulDropdownList,
+                    value: _selectedUl,
+                    isRequired: true,
+                    errorText: null,
+                    prefixIcon: Icon(
+                      Icons.place,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    onChanged: (value) async {
+                      setState(() {
+                        _selectedUl = value;
+                        idUlSelecionada = int.parse(value?.id ?? '0');
+                      });
+
+                      final patrimonios = await context
+                          .read<LocalDatabaseService>()
+                          .getPatrimoniosDaUl(idUlSelecionada!);
+
+                      setState(() => _listagemPatrimonial = patrimonios);
+                    },
+                  ),
+        ).animate(
+          target: (idUaSelecionada != null) ? 1 : 0,
+          effects: [
+            const FadeEffect(
+              delay: Duration(milliseconds: 200),
+              duration: Duration(milliseconds: 200),
+            ),
+          ],
+        ),
+
+        // Listview dos patrimônios
+        if (idUaSelecionada != null && idUlSelecionada != null)
+          Expanded(
             child:
-                _isLoadingListaUl
+                _listagemPatrimonial.isEmpty
                     ? Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 20.0),
-                        child: CircularProgressIndicator(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.onPrimary,
-                        ),
+                      child: Text(
+                        _precisaAtualizar
+                            ? "Baixe ou atualize os dados locais para visualizar os patrimônios associados a esta Localização (UL)"
+                            : "Não existem patrimônios para conferência nesta Localização (UL)",
+                        textAlign: TextAlign.center,
                       ),
                     )
-                    : DropdownSearch(
-                      isEnabled: !conferenciaAndamento,
-                      label: 'Unidade de Localização (UL)',
-                      hint: 'Selecione a Unidade Localização',
-                      searchHint: 'Pesquisar UL...',
-                      items: ulDropdownList,
-                      value: _selectedUl,
-                      isRequired: true,
-                      errorText: null,
-                      prefixIcon: Icon(
-                        Icons.place,
-                        color: Theme.of(context).colorScheme.primary,
+                    : Center(
+                      child: Text(
+                        _listagemPatrimonial.length > 1
+                            ? "Existem ${_listagemPatrimonial.length} patrimônios para conferência nesta localização (UL)"
+                            : "Existe ${_listagemPatrimonial.length} patrimônio para conferência nesta localização (UL)",
+                        textAlign: TextAlign.center,
                       ),
-                      onChanged: (value) async {
-                        setState(() {
-                          _selectedUl = value;
-                          idUlSelecionada = int.parse(value?.id ?? '0');
-                        });
-
-                        final patrimonios = await context
-                            .read<LocalDatabaseService>()
-                            .getPatrimoniosDaUl(idUlSelecionada!);
-
-                        setState(() => _listagemPatrimonial = patrimonios);
-                      },
                     ),
           ).animate(
-            target: (idUaSelecionada != null) ? 1 : 0,
             effects: [
-              FadeEffect(
-                delay: const Duration(milliseconds: 200),
-                duration: const Duration(milliseconds: 200),
+              const FadeEffect(
+                delay: Duration(milliseconds: 100),
+                duration: Duration(milliseconds: 300),
               ),
             ],
           ),
 
-          // Listview dos patrimônios
-          if (idUaSelecionada != null && idUlSelecionada != null)
-            Expanded(
-              child:
+        // Botão para iniciar a conferência patrimonial
+        if (!_precisaAtualizar &&
+            idUaSelecionada != null &&
+            idUlSelecionada != null &&
+            !_conferenciaAndamento)
+          ElevatedButton(
+            onPressed:
+                _listagemPatrimonial.isEmpty
+                    ? null
+                    : () {
+                      context
+                          .read<LocalDatabaseService>()
+                          .copiarParaConferenciaPorUl(idUlSelecionada!)
+                          .then((_) {
+                            if (context.mounted) {
+                              Navigator.of(context).pushNamed(
+                                AppRoutes.conferenciaPage,
+                              );
+                            }
+                          });
+                    },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
                   _listagemPatrimonial.isEmpty
-                      ? Center(
-                        child: Text(
-                          _precisaAtualizar
-                              ? "Baixe ou atualize os dados locais para visualizar os patrimônios associados a esta Localização (UL)"
-                              : "Não existem patrimônios para conferência nesta Localização (UL)",
-                          textAlign: TextAlign.center,
-                        ),
-                      )
-                      : Center(
-                        child: Text(
-                          _listagemPatrimonial.length > 1
-                              ? "Existem ${_listagemPatrimonial.length} patrimônios para conferência nesta localização (UL)"
-                              : "Existe ${_listagemPatrimonial.length} patrimônio para conferência nesta localização (UL)",
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-            ).animate(
-              effects: [
-                FadeEffect(
-                  delay: Duration(milliseconds: 100),
-                  duration: const Duration(milliseconds: 300),
+                      ? "Selecione uma UL com patrimônios"
+                      : "Iniciar a conferência Patrimonial",
                 ),
               ],
             ),
-
-          // Botão para iniciar a conferência patrimonial
-          if (!_precisaAtualizar &&
-              idUaSelecionada != null &&
-              idUlSelecionada != null &&
-              !conferenciaAndamento)
-            ElevatedButton(
-              onPressed:
-                  _listagemPatrimonial.isEmpty
-                      ? null
-                      : () {
-                        context
-                            .read<LocalDatabaseService>()
-                            .copiarParaConferenciaPorUl(idUlSelecionada!)
-                            .then((_) {
-                              if (context.mounted) {
-                                Navigator.of(context).pushNamed(
-                                  AppRoutes.conferenciaPage,
-                                );
-                              }
-                            });
-                      },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    _listagemPatrimonial.isEmpty
-                        ? "Selecione uma UL com patrimônios"
-                        : "Iniciar a conferência Patrimonial",
-                  ),
-                ],
+          ).animate(
+            target:
+                (!_precisaAtualizar &&
+                        idUaSelecionada != null &&
+                        idUlSelecionada != null &&
+                        !_conferenciaAndamento)
+                    ? 1
+                    : 0,
+            effects: [
+              const ScaleEffect(
+                curve: Curves.easeInOutBack,
+                delay: Duration(milliseconds: 100),
+                duration: Duration(milliseconds: 300),
               ),
-            ).animate(
-              target:
-                  (!_precisaAtualizar &&
-                          idUaSelecionada != null &&
-                          idUlSelecionada != null &&
-                          !conferenciaAndamento)
-                      ? 1
-                      : 0,
-              effects: [
-                const ScaleEffect(
-                  curve: Curves.easeInOutBack,
-                  delay: Duration(milliseconds: 100),
-                  duration: Duration(milliseconds: 300),
-                ),
-              ],
-            ),
+            ],
+          ),
 
-          if (conferenciaAndamento)
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed(AppRoutes.conferenciaPage);
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [Text("Continuar a conferência Patrimonial")],
+        if (_conferenciaAndamento)
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(AppRoutes.conferenciaPage);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [Text("Continuar a conferência Patrimonial")],
+            ),
+          ).animate(
+            target: _conferenciaAndamento ? 1 : 0,
+            effects: [
+              const ScaleEffect(
+                curve: Curves.easeInOutBack,
+                delay: Duration(milliseconds: 200),
+                duration: Duration(milliseconds: 300),
               ),
-            ).animate(
-              target: conferenciaAndamento ? 1 : 0,
-              effects: [
-                const ScaleEffect(
-                  curve: Curves.easeInOutBack,
-                  delay: Duration(milliseconds: 200),
-                  duration: Duration(milliseconds: 300),
-                ),
-              ],
-            ),
+            ],
+          ),
 
-          if (idUaSelecionada != null &&
-              idUlSelecionada != null &&
-              _precisaAtualizar)
-            OutlinedButton(
-              onPressed: _isLoadingPatrimonios ? null : obtemDadosPatrimoniais,
-              child:
-                  _isLoadingPatrimonios
-                      ? Center(
-                        child: CircularProgressIndicator(
-                          constraints: BoxConstraints(
-                            maxWidth: 25,
-                            maxHeight: 25,
-                            minWidth: 25,
-                            minHeight: 25,
-                          ),
-                        ).animate(
-                          effects: [
-                            FadeEffect(
-                              delay: Duration(milliseconds: 30),
-                              duration: const Duration(milliseconds: 200),
-                            ),
-                          ],
+        if (idUaSelecionada != null &&
+            idUlSelecionada != null &&
+            _precisaAtualizar)
+          OutlinedButton(
+            onPressed: _isLoadingPatrimonios ? null : obtemDadosPatrimoniais,
+            child:
+                _isLoadingPatrimonios
+                    ? Center(
+                      child: CircularProgressIndicator(
+                        constraints: BoxConstraints(
+                          maxWidth: 25,
+                          maxHeight: 25,
+                          minWidth: 25,
+                          minHeight: 25,
                         ),
-                      )
-                      : Row(
-                        spacing: 20,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.security_update),
-                          Text(
-                            _precisaAtualizar
-                                ? "Atualizar dados"
-                                : "Baixar Patrimônios",
+                      ).animate(
+                        effects: [
+                          FadeEffect(
+                            delay: Duration(milliseconds: 30),
+                            duration: const Duration(milliseconds: 200),
                           ),
                         ],
                       ),
-            ).animate(
-              effects: [
-                FadeEffect(
-                  delay: Duration(milliseconds: 30),
-                  duration: const Duration(milliseconds: 200),
-                ),
-              ],
-            ),
-        ],
-      ),
+                    )
+                    : Row(
+                      spacing: 20,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.security_update),
+                        Text(
+                          _precisaAtualizar
+                              ? "Atualizar dados"
+                              : "Baixar Patrimônios",
+                        ),
+                      ],
+                    ),
+          ).animate(
+            effects: [
+              FadeEffect(
+                delay: Duration(milliseconds: 30),
+                duration: const Duration(milliseconds: 200),
+              ),
+            ],
+          ),
+      ],
     );
   }
 }
