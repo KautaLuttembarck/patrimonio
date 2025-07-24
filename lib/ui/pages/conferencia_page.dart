@@ -11,12 +11,19 @@ class ConferenciaPage extends StatefulWidget {
 }
 
 class _ConferenciaPageState extends State<ConferenciaPage> {
+  // Controller do campo de pesquisa que será usado no formulário
+  final TextEditingController searchFieldController = TextEditingController();
+
   // Abre uma modal para preencher os dados de patrimônio
   // Se o valor existir, será gravado como conferido no bd
   void _openBottomSheet() {
     Clarity.sendCustomEvent(
       "Abriu a modal de conferência de patrimônio por digitação",
     );
+    setState(() {
+      searchFieldController.text = "";
+    });
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true, // permite altura maior
@@ -44,7 +51,9 @@ class _ConferenciaPageState extends State<ConferenciaPage> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: const FormConferenciaPatrimonial(),
+          child: FormConferenciaPatrimonial(
+            searchFieldController: searchFieldController,
+          ),
         ),
       ),
     );
