@@ -28,6 +28,7 @@ class _PatrimonioReaderComponentState
   late ScrollController _scrollController;
   bool _hasVibrator = false;
   final FocusNode _searchFieldFocusNode = FocusNode();
+  bool _searchFieldFocused = false;
   final GlobalKey _stackKey = GlobalKey();
   Offset _buttonPosition = Offset(3000, 3000);
 
@@ -109,6 +110,10 @@ class _PatrimonioReaderComponentState
     _scrollController = ScrollController();
     Vibration.hasVibrator().then((value) => _hasVibrator = value);
 
+    _searchFieldFocusNode.addListener(() {
+      setState(() => _searchFieldFocused = _searchFieldFocusNode.hasFocus);
+    });
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final RenderBox renderBox =
           _stackKey.currentContext!.findRenderObject() as RenderBox;
@@ -133,6 +138,7 @@ class _PatrimonioReaderComponentState
   @override
   void dispose() {
     _scrollController.dispose();
+    _searchFieldFocusNode.dispose();
     super.dispose();
   }
 
@@ -321,7 +327,7 @@ class _PatrimonioReaderComponentState
                               CircularProgressIndicator(
                                 backgroundColor:
                                     Theme.of(context).colorScheme.onPrimary,
-                                strokeAlign: 1.0,
+                                // strokeAlign: 1.0,
                                 value:
                                     context
                                         .watch<ConferenciaProvider>()
@@ -330,8 +336,8 @@ class _PatrimonioReaderComponentState
                                         .watch<ConferenciaProvider>()
                                         .tamanhoLista,
                                 constraints: BoxConstraints(
-                                  minHeight: 30,
-                                  minWidth: 30,
+                                  minHeight: 25,
+                                  minWidth: 25,
                                 ),
                               ),
 
@@ -427,7 +433,7 @@ class _PatrimonioReaderComponentState
                     Consumer<ConferenciaProvider>(
                       builder: (context, provider, child) {
                         late List<Patrimonio> lista;
-                        if (_searchFieldFocusNode.hasFocus ||
+                        if (_searchFieldFocused ||
                             widget.searchFieldController.text != "") {
                           lista = provider.filteredItens;
                         } else {
@@ -657,7 +663,7 @@ class _PatrimonioReaderComponentState
                 ),
               ),
               if (context.watch<ConferenciaProvider>().tamanhoLista != 0 &&
-                  !_searchFieldFocusNode.hasFocus &&
+                  !_searchFieldFocused &&
                   widget.searchFieldController.text == "")
                 ElevatedButton(
                   onPressed:
@@ -696,41 +702,48 @@ class _PatrimonioReaderComponentState
             ],
           ),
 
-          if (context.watch<ConferenciaProvider>().tamanhoLista != 0 &&
-              !_searchFieldFocusNode.hasFocus &&
-              widget.searchFieldController.text == "")
-            Positioned(
-              left: _buttonPosition.dx,
-              top: _buttonPosition.dy,
-              child: Draggable(
-                childWhenDragging: SizedBox(),
-                feedback: FloatingActionButton(
-                  onPressed: _lerPatrimonio,
-                  child: Icon(Icons.barcode_reader, size: 30),
-                ),
-                onDragEnd: (details) {
-                  final RenderBox renderBox =
-                      _stackKey.currentContext!.findRenderObject() as RenderBox;
-                  final Offset localOffset = renderBox.globalToLocal(
-                    details.offset,
-                  );
-                  setState(() {
-                    _buttonPosition = localOffset;
-                  });
-                },
-                child: FloatingActionButton(
-                  onPressed: _lerPatrimonio,
-                  child: Icon(Icons.barcode_reader, size: 30),
-                ),
+          // if (context.watch<ConferenciaProvider>().tamanhoLista != 0 &&
+          //     !_searchFieldFocusNode.hasFocus &&
+          //     widget.searchFieldController.text == "")
+          Positioned(
+            left: _buttonPosition.dx,
+            top: _buttonPosition.dy,
+            child: Draggable(
+              childWhenDragging: SizedBox(),
+              feedback: FloatingActionButton(
+                onPressed: _lerPatrimonio,
+                child: Icon(Icons.barcode_reader, size: 30),
               ),
-            ).animate(
-              effects: [
-                const FadeEffect(
-                  delay: Duration(milliseconds: 100),
-                  duration: Duration(milliseconds: 200),
-                ),
-              ],
+              onDragEnd: (details) {
+                final RenderBox renderBox =
+                    _stackKey.currentContext!.findRenderObject() as RenderBox;
+                final Offset localOffset = renderBox.globalToLocal(
+                  details.offset,
+                );
+                setState(() {
+                  _buttonPosition = localOffset;
+                });
+              },
+              child: FloatingActionButton(
+                onPressed: _lerPatrimonio,
+                child: Icon(Icons.barcode_reader, size: 30),
+              ),
             ),
+          ).animate(
+            target:
+                (context.watch<ConferenciaProvider>().tamanhoLista != 0 &&
+                        !_searchFieldFocused &&
+                        widget.searchFieldController.text.isEmpty)
+                    ? 1
+                    : 0,
+            effects: [
+              const ScaleEffect(
+                curve: Curves.easeInOutBack,
+                delay: Duration(milliseconds: 100),
+                duration: Duration(milliseconds: 300),
+              ),
+            ],
+          ),
         ],
       ),
     );
