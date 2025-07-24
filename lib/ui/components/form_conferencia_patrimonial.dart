@@ -12,8 +12,11 @@ import 'package:patrimonio/app/models/patrimonio.dart';
 import 'package:patrimonio/app/utils/help_dialog.dart' as help_dialog;
 
 class FormConferenciaPatrimonial extends StatefulWidget {
-  const FormConferenciaPatrimonial({super.key});
-
+  const FormConferenciaPatrimonial({
+    super.key,
+    required this.searchFieldController,
+  });
+  final TextEditingController searchFieldController;
   @override
   State<FormConferenciaPatrimonial> createState() =>
       _PatrimonioReaderComponentState();
@@ -24,7 +27,6 @@ class _PatrimonioReaderComponentState
   bool _isLoading = false;
   late ScrollController _scrollController;
   bool _hasVibrator = false;
-  final TextEditingController _searchFieldController = TextEditingController();
   final FocusNode _searchFieldFocusNode = FocusNode();
   final GlobalKey _stackKey = GlobalKey();
   Offset _buttonPosition = Offset(3000, 3000);
@@ -317,6 +319,8 @@ class _PatrimonioReaderComponentState
                             alignment: Alignment.center,
                             children: [
                               CircularProgressIndicator(
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.onPrimary,
                                 strokeAlign: 1.0,
                                 value:
                                     context
@@ -370,12 +374,13 @@ class _PatrimonioReaderComponentState
                               switchInCurve: Curves.easeInOutBack,
                               duration: Duration(milliseconds: 200),
                               child:
-                                  _searchFieldController.text != ""
+                                  widget.searchFieldController.text != ""
                                       ? IconButton(
                                         key: ValueKey("Limpar"),
                                         icon: Icon(Icons.clear),
                                         onPressed: () {
-                                          _searchFieldController.text = "";
+                                          widget.searchFieldController.text =
+                                              "";
                                           context
                                               .read<ConferenciaProvider>()
                                               .filtrarItens(
@@ -400,7 +405,7 @@ class _PatrimonioReaderComponentState
                               12,
                             ), // (opcional) ajuste de padding
                           ),
-                          controller: _searchFieldController,
+                          controller: widget.searchFieldController,
                           focusNode: _searchFieldFocusNode,
                           style: Theme.of(context).textTheme.bodyLarge,
                           spellCheckConfiguration:
@@ -423,7 +428,7 @@ class _PatrimonioReaderComponentState
                       builder: (context, provider, child) {
                         late List<Patrimonio> lista;
                         if (_searchFieldFocusNode.hasFocus ||
-                            _searchFieldController.text != "") {
+                            widget.searchFieldController.text != "") {
                           lista = provider.filteredItens;
                         } else {
                           lista = provider.itens;
@@ -436,7 +441,7 @@ class _PatrimonioReaderComponentState
                                   ? Center(
                                     key: ValueKey("ListaVazia"),
                                     child: Text(
-                                      _searchFieldController.text == ""
+                                      widget.searchFieldController.text == ""
                                           ? 'Nenhum patrimônio listado para conferência.'
                                           : "Nenhum patrimônio encontrado com o termo pesquisado.",
                                       textAlign: TextAlign.center,
@@ -653,7 +658,7 @@ class _PatrimonioReaderComponentState
               ),
               if (context.watch<ConferenciaProvider>().tamanhoLista != 0 &&
                   !_searchFieldFocusNode.hasFocus &&
-                  _searchFieldController.text == "")
+                  widget.searchFieldController.text == "")
                 ElevatedButton(
                   onPressed:
                       (_isLoading ||
@@ -693,7 +698,7 @@ class _PatrimonioReaderComponentState
 
           if (context.watch<ConferenciaProvider>().tamanhoLista != 0 &&
               !_searchFieldFocusNode.hasFocus &&
-              _searchFieldController.text == "")
+              widget.searchFieldController.text == "")
             Positioned(
               left: _buttonPosition.dx,
               top: _buttonPosition.dy,
