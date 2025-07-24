@@ -124,8 +124,15 @@ class _FormDigitaPatrimonioConferenciaState
   }
 
   Future<List<Patrimonio>> _obtemPatrimonioForaDaConferencia(
-    String patrimonio,
+    String patrimonioInformado,
   ) async {
+    late final String patrimonio;
+    try {
+      patrimonio = int.parse(patrimonioInformado.trim()).toString();
+    } catch (e) {
+      patrimonio = "";
+    }
+
     late final List<Patrimonio> resultado;
     if (!_useNAntigo) {
       resultado = await context.read<LocalDatabaseService>().getPatrimonio(
