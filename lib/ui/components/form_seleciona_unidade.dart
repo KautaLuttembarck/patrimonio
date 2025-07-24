@@ -213,7 +213,9 @@ class _FormSelecionaUnidadeState extends State<FormSelecionaUnidade> {
                       )
                       : Center(
                         child: Text(
-                          "Existem ${_listagemPatrimonial.length} patrimônios para conferência nesta localização (UL)",
+                          _listagemPatrimonial.length > 1
+                              ? "Existem ${_listagemPatrimonial.length} patrimônios para conferência nesta localização (UL)"
+                              : "Existe ${_listagemPatrimonial.length} patrimônio para conferência nesta localização (UL)",
                           textAlign: TextAlign.center,
                         ),
                       ),
