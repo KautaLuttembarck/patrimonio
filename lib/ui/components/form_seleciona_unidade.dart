@@ -46,7 +46,7 @@ class _FormSelecionaUnidadeState extends State<FormSelecionaUnidade> {
             .getPatrimoniosDaUl(idUlSelecionada!);
 
         setState(() {
-          listagemPatrimonial = patrimonios;
+          _listagemPatrimonial = patrimonios;
           _precisaAtualizar = false;
           _isLoadingPatrimonios = false;
         });
@@ -57,26 +57,17 @@ class _FormSelecionaUnidadeState extends State<FormSelecionaUnidade> {
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController();
     SpDatabaseService().getListaUa().then((data) {
       final List<dynamic> decodedList = jsonDecode(data);
 
       uaDropdownList =
           decodedList.map((item) => DropdownItem.fromUaJson(item)).toList();
 
-      setState(() {
-        _isLoadingListaUa = false;
-      });
+      setState(() => _isLoadingListaUa = false);
     });
     context.read<LocalDatabaseService>().precisaAtualizar().then(
       (precisa) => setState(() => _precisaAtualizar = precisa),
     );
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
   }
 
   List<DropdownItem> uaDropdownList = [];
@@ -89,13 +80,10 @@ class _FormSelecionaUnidadeState extends State<FormSelecionaUnidade> {
 
   int? idUaSelecionada;
   int? idUlSelecionada;
-  String? idResponsavelSelecionado;
 
-  List<Patrimonio> listagemPatrimonial = [];
-  late ScrollController _scrollController;
+  List<Patrimonio> _listagemPatrimonial = [];
   DropdownItem? _selectedUa;
   DropdownItem? _selectedUl;
-  String? _errorTextUl;
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +127,7 @@ class _FormSelecionaUnidadeState extends State<FormSelecionaUnidade> {
                           _selectedUl = null;
                           idUlSelecionada = null;
                           _isLoadingListaUl = true;
-                          listagemPatrimonial = [];
+                          _listagemPatrimonial = [];
                         });
                         SpDatabaseService().getListaUl(idUaSelecionada!).then((
                           data,
@@ -182,7 +170,7 @@ class _FormSelecionaUnidadeState extends State<FormSelecionaUnidade> {
                       items: ulDropdownList,
                       value: _selectedUl,
                       isRequired: true,
-                      errorText: _errorTextUl,
+                      errorText: null,
                       prefixIcon: Icon(
                         Icons.place,
                         color: Theme.of(context).colorScheme.primary,
@@ -190,7 +178,6 @@ class _FormSelecionaUnidadeState extends State<FormSelecionaUnidade> {
                       onChanged: (value) async {
                         setState(() {
                           _selectedUl = value;
-                          _errorTextUl = null;
                           idUlSelecionada = int.parse(value?.id ?? '0');
                         });
 
@@ -198,7 +185,7 @@ class _FormSelecionaUnidadeState extends State<FormSelecionaUnidade> {
                             .read<LocalDatabaseService>()
                             .getPatrimoniosDaUl(idUlSelecionada!);
 
-                        setState(() => listagemPatrimonial = patrimonios);
+                        setState(() => _listagemPatrimonial = patrimonios);
                       },
                     ),
           ).animate(
@@ -215,47 +202,19 @@ class _FormSelecionaUnidadeState extends State<FormSelecionaUnidade> {
           if (idUaSelecionada != null && idUlSelecionada != null)
             Expanded(
               child:
-                  listagemPatrimonial.isEmpty
+                  _listagemPatrimonial.isEmpty
                       ? Center(
                         child: Text(
                           _precisaAtualizar
                               ? "Baixe ou atualize os dados locais para visualizar os patrimônios associados a esta Localização (UL)"
-                              : "Não existem patrimônios associados a esta Localização (UL)",
+                              : "Não existem patrimônios para conferência nesta Localização (UL)",
                           textAlign: TextAlign.center,
                         ),
                       )
-                      : RawScrollbar(
-                        controller: _scrollController,
-                        radius: Radius.circular(10),
-                        interactive: true,
-                        scrollbarOrientation: ScrollbarOrientation.right,
-                        child: ListView.builder(
-                          controller: _scrollController,
-                          itemCount: listagemPatrimonial.length,
-                          itemBuilder: (context, index) {
-                            return Material(
-                              color: Colors.transparent,
-                              child: ListTile(
-                                tileColor: Colors.transparent,
-                                title: Text(
-                                  listagemPatrimonial[index].nAntigo != ""
-                                      ? "Patrimônio: ${listagemPatrimonial[index].patrimonio}\nNº Antigo: ${listagemPatrimonial[index].nAntigo}"
-                                      : "Patrimônio: ${listagemPatrimonial[index].patrimonio}",
-                                ),
-                                dense: true,
-                                subtitle: Text(
-                                  listagemPatrimonial[index].descricao,
-                                ),
-                              ),
-                            );
-                          },
-                        ).animate(
-                          effects: [
-                            FadeEffect(
-                              delay: Duration(milliseconds: 100),
-                              duration: const Duration(milliseconds: 300),
-                            ),
-                          ],
+                      : Center(
+                        child: Text(
+                          "Existem ${_listagemPatrimonial.length} patrimônios para conferência nesta localização (UL)",
+                          textAlign: TextAlign.center,
                         ),
                       ),
             ).animate(
@@ -274,7 +233,7 @@ class _FormSelecionaUnidadeState extends State<FormSelecionaUnidade> {
               !conferenciaAndamento)
             ElevatedButton(
               onPressed:
-                  listagemPatrimonial.isEmpty
+                  _listagemPatrimonial.isEmpty
                       ? null
                       : () {
                         context
@@ -292,17 +251,25 @@ class _FormSelecionaUnidadeState extends State<FormSelecionaUnidade> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    listagemPatrimonial.isEmpty
+                    _listagemPatrimonial.isEmpty
                         ? "Selecione uma UL com patrimônios"
                         : "Iniciar a conferência Patrimonial",
                   ),
                 ],
               ),
             ).animate(
+              target:
+                  (!_precisaAtualizar &&
+                          idUaSelecionada != null &&
+                          idUlSelecionada != null &&
+                          !conferenciaAndamento)
+                      ? 1
+                      : 0,
               effects: [
-                FadeEffect(
+                const ScaleEffect(
+                  curve: Curves.easeInOutBack,
                   delay: Duration(milliseconds: 100),
-                  duration: const Duration(milliseconds: 300),
+                  duration: Duration(milliseconds: 300),
                 ),
               ],
             ),
@@ -317,10 +284,12 @@ class _FormSelecionaUnidadeState extends State<FormSelecionaUnidade> {
                 children: [Text("Continuar a conferência Patrimonial")],
               ),
             ).animate(
+              target: conferenciaAndamento ? 1 : 0,
               effects: [
-                FadeEffect(
-                  delay: Duration(milliseconds: 100),
-                  duration: const Duration(milliseconds: 300),
+                const ScaleEffect(
+                  curve: Curves.easeInOutBack,
+                  delay: Duration(milliseconds: 200),
+                  duration: Duration(milliseconds: 300),
                 ),
               ],
             ),
