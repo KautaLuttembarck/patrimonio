@@ -313,24 +313,44 @@ class _PatrimonioReaderComponentState
                             style: Theme.of(context).textTheme.titleSmall,
                           ),
 
-                          Icon(
-                            Icons.check,
-                            size: 30,
-                            color: Colors.green,
-                          ).animate(
-                            target:
-                                context
-                                            .watch<ConferenciaProvider>()
-                                            .patrimoniosConferidos ==
-                                        context
-                                            .watch<ConferenciaProvider>()
-                                            .tamanhoLista
-                                    ? 1
-                                    : 0,
-                            effects: [
-                              ScaleEffect(
-                                duration: Duration(milliseconds: 300),
-                                curve: Curves.easeOutBack,
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              CircularProgressIndicator(
+                                strokeAlign: 1.0,
+                                value:
+                                    context
+                                        .watch<ConferenciaProvider>()
+                                        .patrimoniosConferidos /
+                                    context
+                                        .watch<ConferenciaProvider>()
+                                        .tamanhoLista,
+                                constraints: BoxConstraints(
+                                  minHeight: 30,
+                                  minWidth: 30,
+                                ),
+                              ),
+
+                              Icon(
+                                Icons.check,
+                                size: 30,
+                                color: Colors.green,
+                              ).animate(
+                                target:
+                                    context
+                                                .watch<ConferenciaProvider>()
+                                                .patrimoniosConferidos ==
+                                            context
+                                                .watch<ConferenciaProvider>()
+                                                .tamanhoLista
+                                        ? 1
+                                        : 0,
+                                effects: [
+                                  ScaleEffect(
+                                    duration: Duration(milliseconds: 300),
+                                    curve: Curves.easeOutBack,
+                                  ),
+                                ],
                               ),
                             ],
                           ),
