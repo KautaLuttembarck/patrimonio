@@ -16,8 +16,10 @@ class ConferenciaExecutorWidget extends StatefulWidget {
   const ConferenciaExecutorWidget({
     super.key,
     required this.searchFieldController,
+    required this.primaryScrollController,
   });
   final TextEditingController searchFieldController;
+  final ScrollController primaryScrollController;
   @override
   State<ConferenciaExecutorWidget> createState() =>
       _PatrimonioReaderComponentState();
@@ -25,7 +27,6 @@ class ConferenciaExecutorWidget extends StatefulWidget {
 
 class _PatrimonioReaderComponentState extends State<ConferenciaExecutorWidget> {
   bool _isLoading = false;
-  late ScrollController _scrollController;
   bool _hasVibrator = false;
   final FocusNode _searchFieldFocusNode = FocusNode();
   bool _searchFieldFocused = false;
@@ -110,7 +111,6 @@ class _PatrimonioReaderComponentState extends State<ConferenciaExecutorWidget> {
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController();
     Vibration.hasVibrator().then((value) => _hasVibrator = value);
 
     _searchFieldFocusNode.addListener(() {
@@ -164,7 +164,6 @@ class _PatrimonioReaderComponentState extends State<ConferenciaExecutorWidget> {
 
   @override
   void dispose() {
-    _scrollController.dispose();
     _searchFieldFocusNode.dispose();
     super.dispose();
   }
@@ -475,13 +474,14 @@ class _PatrimonioReaderComponentState extends State<ConferenciaExecutorWidget> {
                                   )
                                   : RawScrollbar(
                                     key: ValueKey("ListaCheia"),
-                                    controller: _scrollController,
+                                    controller: widget.primaryScrollController,
                                     radius: Radius.circular(10),
                                     interactive: true,
                                     scrollbarOrientation:
                                         ScrollbarOrientation.right,
                                     child: ListView.builder(
-                                      controller: _scrollController,
+                                      controller:
+                                          widget.primaryScrollController,
                                       padding: const EdgeInsets.only(
                                         bottom: 60.0,
                                       ),
@@ -655,23 +655,23 @@ class _PatrimonioReaderComponentState extends State<ConferenciaExecutorWidget> {
                     ),
 
                     // Barra invisível para fazer o efeito de voltar ao topo
-                    Positioned(
-                      top: 0,
-                      child: GestureDetector(
-                        onTap: () {
-                          _scrollController.animateTo(
-                            _scrollController.position.minScrollExtent,
-                            duration: const Duration(milliseconds: 500),
-                            curve: Curves.easeOut,
-                          );
-                        },
-                        child: SizedBox(
-                          height: 20,
-                          width: MediaQuery.of(context).size.width - 60,
-                          child: Text(""),
-                        ),
-                      ),
-                    ),
+                    // Positioned(
+                    //   top: 0,
+                    //   child: GestureDetector(
+                    //     onTap: () {
+                    //       _scrollController.animateTo(
+                    //         _scrollController.position.minScrollExtent,
+                    //         duration: const Duration(milliseconds: 500),
+                    //         curve: Curves.easeOut,
+                    //       );
+                    //     },
+                    //     child: SizedBox(
+                    //       height: 20,
+                    //       width: MediaQuery.of(context).size.width - 60,
+                    //       child: Text(""),
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
