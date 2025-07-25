@@ -22,7 +22,7 @@ class _FormDigitaPatrimonioConferenciaState
   final _patrimonioFocus = FocusNode();
   bool _useNAntigo = false;
   static const double _tamanhoMaximo = 0.90;
-  static const int _alturaElementos = 310; // Altura dos elementos apresentados
+  static const int _alturaElementos = 350; // Altura dos elementos apresentados
 
   @override
   void initState() {
