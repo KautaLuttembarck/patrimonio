@@ -340,7 +340,7 @@ class _PatrimonioReaderComponentState
                     spacing: 10,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(top: 4.0),
+                        padding: const EdgeInsets.only(top: 15.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -679,50 +679,53 @@ class _PatrimonioReaderComponentState
               if (_tamanhoDaLista != 0 &&
                   !_searchFieldFocused &&
                   widget.searchFieldController.text == "")
-                ElevatedButton(
-                  onPressed:
-                      (_isLoading ||
-                              context
-                                      .watch<ConferenciaProvider>()
-                                      .tamanhoLista ==
-                                  0)
-                          ? null
-                          : _submitData,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _isLoading
-                          ? CircularProgressIndicator(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.onPrimary,
-                            constraints: BoxConstraints(
-                              maxWidth: 25,
-                              maxHeight: 25,
-                              minWidth: 25,
-                              minHeight: 25,
-                            ),
-                          )
-                          : Text("Enviar conferência"),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: ElevatedButton(
+                    onPressed:
+                        (_isLoading ||
+                                context
+                                        .watch<ConferenciaProvider>()
+                                        .tamanhoLista ==
+                                    0)
+                            ? null
+                            : _submitData,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _isLoading
+                            ? CircularProgressIndicator(
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.onPrimary,
+                              constraints: BoxConstraints(
+                                maxWidth: 25,
+                                maxHeight: 25,
+                                minWidth: 25,
+                                minHeight: 25,
+                              ),
+                            )
+                            : Text("Enviar conferência"),
+                      ],
+                    ),
+                  ).animate(
+                    effects: [
+                      const FadeEffect(
+                        delay: Duration(milliseconds: 100),
+                        duration: Duration(milliseconds: 200),
+                      ),
                     ],
                   ),
-                ).animate(
-                  effects: [
-                    const FadeEffect(
-                      delay: Duration(milliseconds: 100),
-                      duration: Duration(milliseconds: 200),
-                    ),
-                  ],
                 ),
             ],
           ),
 
           if (_showCongratulations)
             Positioned(
-              // bottom: 0,
+              bottom: 0,
               child: IgnorePointer(
                 ignoring: true,
                 child: Lottie.asset(
-                  'assets/lotties/party_mood_on.json',
+                  'assets/lotties/congratulation.json',
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,
                   repeat: false,
@@ -731,9 +734,6 @@ class _PatrimonioReaderComponentState
               ),
             ),
 
-          // if (_tamanhoDaLista != 0 &&
-          //     !_searchFieldFocusNode.hasFocus &&
-          //     widget.searchFieldController.text == "")
           Positioned(
             left: _buttonPosition.dx,
             top: _buttonPosition.dy,
