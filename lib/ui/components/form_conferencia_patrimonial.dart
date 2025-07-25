@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import 'package:clarity_flutter/clarity_flutter.dart';
 import 'package:vibration/vibration.dart';
+import 'package:lottie/lottie.dart';
 
 import 'package:patrimonio/app/providers/conferencia_provider.dart';
 import 'package:patrimonio/app/models/patrimonio.dart';
@@ -31,6 +32,9 @@ class _PatrimonioReaderComponentState
   bool _searchFieldFocused = false;
   final GlobalKey _stackKey = GlobalKey();
   Offset _buttonPosition = Offset(3000, 3000);
+  bool _showCongratulations = false;
+  late int _tamanhoDaLista;
+  late int _patrimoniosConferidos;
 
   Future<void> _submitData() async {
     FocusScope.of(context).unfocus();
@@ -132,6 +136,30 @@ class _PatrimonioReaderComponentState
 
     setState(() {
       context.read<ConferenciaProvider>().carregarItens();
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Quantidade de patrimonios conferidos
+    final conferidos =
+        context.watch<ConferenciaProvider>().patrimoniosConferidos;
+
+    // Quantidade de patrimônios para conferir
+    final total = context.watch<ConferenciaProvider>().tamanhoLista;
+
+    // Verifica se tudo foi conferido para mostrar a animação
+    if (conferidos == total) {
+      setState(() => _showCongratulations = true);
+    } else {
+      setState(() => _showCongratulations = false);
+    }
+
+    // Atualiza o tamanho e a conferência da lista
+    setState(() {
+      _tamanhoDaLista = total;
+      _patrimoniosConferidos = conferidos;
     });
   }
 
@@ -305,66 +333,52 @@ class _PatrimonioReaderComponentState
             spacing: 10,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (context.watch<ConferenciaProvider>().tamanhoLista > 0)
+              if (_tamanhoDaLista > 0)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 5.0),
                   child: Column(
                     spacing: 10,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Patrimônios conferidos: "
-                            "${context.watch<ConferenciaProvider>().patrimoniosConferidos} "
-                            "/ ${context.watch<ConferenciaProvider>().tamanhoLista}",
-                            style: Theme.of(context).textTheme.titleSmall,
-                          ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Patrimônios conferidos: "
+                              "$_patrimoniosConferidos / $_tamanhoDaLista",
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
 
-                          Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              CircularProgressIndicator(
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.onPrimary,
-                                // strokeAlign: 1.0,
-                                value:
-                                    context
-                                        .watch<ConferenciaProvider>()
-                                        .patrimoniosConferidos /
-                                    context
-                                        .watch<ConferenciaProvider>()
-                                        .tamanhoLista,
-                                constraints: BoxConstraints(
-                                  minHeight: 25,
-                                  minWidth: 25,
-                                ),
-                              ),
-
-                              Icon(
-                                Icons.check,
-                                size: 30,
-                                color: Colors.green,
-                              ).animate(
-                                target:
-                                    context
-                                                .watch<ConferenciaProvider>()
-                                                .patrimoniosConferidos ==
-                                            context
-                                                .watch<ConferenciaProvider>()
-                                                .tamanhoLista
-                                        ? 1
-                                        : 0,
-                                effects: [
-                                  ScaleEffect(
-                                    duration: Duration(milliseconds: 300),
-                                    curve: Curves.easeOutBack,
+                            Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                CircularProgressIndicator(
+                                  backgroundColor:
+                                      Theme.of(context).colorScheme.onPrimary,
+                                  value:
+                                      context
+                                          .watch<ConferenciaProvider>()
+                                          .patrimoniosConferidos /
+                                      context
+                                          .watch<ConferenciaProvider>()
+                                          .tamanhoLista,
+                                  constraints: BoxConstraints(
+                                    minHeight: 25,
+                                    minWidth: 25,
                                   ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
+                                ),
+
+                                if (_showCongratulations)
+                                  Lottie.asset(
+                                    'assets/lotties/success_check_green_transparent.json',
+                                    height: 25,
+                                    repeat: false,
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
 
                       Container(
@@ -662,7 +676,7 @@ class _PatrimonioReaderComponentState
                   ],
                 ),
               ),
-              if (context.watch<ConferenciaProvider>().tamanhoLista != 0 &&
+              if (_tamanhoDaLista != 0 &&
                   !_searchFieldFocused &&
                   widget.searchFieldController.text == "")
                 ElevatedButton(
@@ -702,7 +716,22 @@ class _PatrimonioReaderComponentState
             ],
           ),
 
-          // if (context.watch<ConferenciaProvider>().tamanhoLista != 0 &&
+          if (_showCongratulations)
+            Positioned(
+              // bottom: 0,
+              child: IgnorePointer(
+                ignoring: true,
+                child: Lottie.asset(
+                  'assets/lotties/party_mood_on.json',
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  repeat: false,
+                  fit: BoxFit.fill,
+                ),
+              ),
+            ),
+
+          // if (_tamanhoDaLista != 0 &&
           //     !_searchFieldFocusNode.hasFocus &&
           //     widget.searchFieldController.text == "")
           Positioned(
@@ -731,7 +760,7 @@ class _PatrimonioReaderComponentState
             ),
           ).animate(
             target:
-                (context.watch<ConferenciaProvider>().tamanhoLista != 0 &&
+                (_tamanhoDaLista != 0 &&
                         !_searchFieldFocused &&
                         widget.searchFieldController.text.isEmpty)
                     ? 1
