@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:clarity_flutter/clarity_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:patrimonio/ui/components/conferencia_executor_widget.dart';
+import 'package:patrimonio/ui/components/conferencia_widget.dart';
 import 'package:patrimonio/ui/components/forms/form_digita_patrimonio_conferencia.dart';
 
 class ConferenciaPage extends StatefulWidget {
@@ -89,7 +89,7 @@ class _ConferenciaPageState extends State<ConferenciaPage> {
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: ConferenciaExecutorWidget(
+            child: ConferenciaWidget(
               searchFieldController: searchFieldController,
               primaryScrollController: _scrollController,
             ),

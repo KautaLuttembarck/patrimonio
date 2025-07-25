@@ -12,8 +12,8 @@ import 'package:patrimonio/app/providers/conferencia_provider.dart';
 import 'package:patrimonio/app/models/patrimonio.dart';
 import 'package:patrimonio/app/utils/help_dialog.dart' as help_dialog;
 
-class ConferenciaExecutorWidget extends StatefulWidget {
-  const ConferenciaExecutorWidget({
+class ConferenciaWidget extends StatefulWidget {
+  const ConferenciaWidget({
     super.key,
     required this.searchFieldController,
     required this.primaryScrollController,
@@ -21,11 +21,10 @@ class ConferenciaExecutorWidget extends StatefulWidget {
   final TextEditingController searchFieldController;
   final ScrollController primaryScrollController;
   @override
-  State<ConferenciaExecutorWidget> createState() =>
-      _PatrimonioReaderComponentState();
+  State<ConferenciaWidget> createState() => _PatrimonioReaderComponentState();
 }
 
-class _PatrimonioReaderComponentState extends State<ConferenciaExecutorWidget> {
+class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
   bool _isLoading = false;
   bool _hasVibrator = false;
   final FocusNode _searchFieldFocusNode = FocusNode();
@@ -653,25 +652,6 @@ class _PatrimonioReaderComponentState extends State<ConferenciaExecutorWidget> {
                         );
                       },
                     ),
-
-                    // Barra invisível para fazer o efeito de voltar ao topo
-                    // Positioned(
-                    //   top: 0,
-                    //   child: GestureDetector(
-                    //     onTap: () {
-                    //       _scrollController.animateTo(
-                    //         _scrollController.position.minScrollExtent,
-                    //         duration: const Duration(milliseconds: 500),
-                    //         curve: Curves.easeOut,
-                    //       );
-                    //     },
-                    //     child: SizedBox(
-                    //       height: 20,
-                    //       width: MediaQuery.of(context).size.width - 60,
-                    //       child: Text(""),
-                    //     ),
-                    //   ),
-                    // ),
                   ],
                 ),
               ),
