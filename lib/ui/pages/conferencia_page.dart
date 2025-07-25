@@ -50,7 +50,7 @@ class _ConferenciaPageState extends State<ConferenciaPage> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: FormConferenciaPatrimonial(
             searchFieldController: searchFieldController,
           ),
