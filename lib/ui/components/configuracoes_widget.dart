@@ -8,14 +8,14 @@ import 'package:intl/intl.dart';
 import 'package:vibration/vibration.dart';
 import 'package:clarity_flutter/clarity_flutter.dart';
 
-class FormConfiguracoes extends StatefulWidget {
-  const FormConfiguracoes({super.key});
+class ConfiguracoesWidget extends StatefulWidget {
+  const ConfiguracoesWidget({super.key});
 
   @override
-  State<FormConfiguracoes> createState() => _FormConfiguracoesState();
+  State<ConfiguracoesWidget> createState() => _ConfiguracoesWidgetState();
 }
 
-class _FormConfiguracoesState extends State<FormConfiguracoes> {
+class _ConfiguracoesWidgetState extends State<ConfiguracoesWidget> {
   bool _downloadingData = false;
   bool _conferenciaEmAndamento = false;
   double _downloadProgress = 0;

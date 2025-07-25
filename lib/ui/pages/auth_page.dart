@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:patrimonio/ui/components/form_login.dart';
+import 'package:patrimonio/ui/components/forms/form_login.dart';
 import 'package:patrimonio/app/utils/help_dialog.dart';
 
 class AuthPage extends StatefulWidget {

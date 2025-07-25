@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:patrimonio/ui/components/app_drawer.dart';
-import 'package:patrimonio/ui/components/form_configuracoes.dart';
+import 'package:patrimonio/ui/components/configuracoes_widget.dart';
 
 class ConfiguracoesPage extends StatefulWidget {
   const ConfiguracoesPage({super.key});
@@ -18,7 +18,7 @@ class _ConfiguracoesPageState extends State<ConfiguracoesPage> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: const FormConfiguracoes(),
+          child: const ConfiguracoesWidget(),
         ),
       ),
     );

@@ -12,19 +12,18 @@ import 'package:patrimonio/app/providers/conferencia_provider.dart';
 import 'package:patrimonio/app/models/patrimonio.dart';
 import 'package:patrimonio/app/utils/help_dialog.dart' as help_dialog;
 
-class FormConferenciaPatrimonial extends StatefulWidget {
-  const FormConferenciaPatrimonial({
+class ConferenciaExecutorWidget extends StatefulWidget {
+  const ConferenciaExecutorWidget({
     super.key,
     required this.searchFieldController,
   });
   final TextEditingController searchFieldController;
   @override
-  State<FormConferenciaPatrimonial> createState() =>
+  State<ConferenciaExecutorWidget> createState() =>
       _PatrimonioReaderComponentState();
 }
 
-class _PatrimonioReaderComponentState
-    extends State<FormConferenciaPatrimonial> {
+class _PatrimonioReaderComponentState extends State<ConferenciaExecutorWidget> {
   bool _isLoading = false;
   late ScrollController _scrollController;
   bool _hasVibrator = false;

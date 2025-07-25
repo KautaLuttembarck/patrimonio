@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:patrimonio/ui/components/app_drawer.dart';
-import 'package:patrimonio/ui/components/form_seleciona_unidade.dart';
+import 'package:patrimonio/ui/components/seleciona_unidade_widget.dart';
 
 class SelecionaUnidadePage extends StatefulWidget {
   const SelecionaUnidadePage({super.key});
@@ -23,7 +23,7 @@ class _SelecionaUnidadeState extends State<SelecionaUnidadePage> {
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
-            child: FormSelecionaUnidade(),
+            child: SelecionaUnidadeWidget(),
           ),
         ),
       ),

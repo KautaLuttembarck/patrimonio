@@ -14,14 +14,14 @@ import 'package:patrimonio/ui/widgets/dropdown_search.dart';
 import 'package:patrimonio/app/services/local_database_service.dart';
 import 'package:patrimonio/app/providers/conferencia_provider.dart';
 
-class FormSelecionaUnidade extends StatefulWidget {
-  const FormSelecionaUnidade({super.key});
+class SelecionaUnidadeWidget extends StatefulWidget {
+  const SelecionaUnidadeWidget({super.key});
 
   @override
-  State<FormSelecionaUnidade> createState() => _FormSelecionaUnidadeState();
+  State<SelecionaUnidadeWidget> createState() => _SelecionaUnidadeWidgetState();
 }
 
-class _FormSelecionaUnidadeState extends State<FormSelecionaUnidade> {
+class _SelecionaUnidadeWidgetState extends State<SelecionaUnidadeWidget> {
   void obtemDadosPatrimoniais() async {
     setState(() => _isLoadingPatrimonios = true);
     bool result = await SpDatabaseService().getListaPatrimonios(context);
