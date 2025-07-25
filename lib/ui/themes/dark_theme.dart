@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 
 final Color _baseTextColor = Colors.white;
@@ -11,6 +12,18 @@ final double _baseElevation = 5;
 
 final ThemeData darkTheme = ThemeData(
   useMaterial3: true,
+
+  pageTransitionsTheme: const PageTransitionsTheme(
+    builders: {
+      TargetPlatform.android: SharedAxisPageTransitionsBuilder(
+        transitionType: SharedAxisTransitionType.horizontal,
+      ),
+      TargetPlatform.iOS: SharedAxisPageTransitionsBuilder(
+        transitionType: SharedAxisTransitionType.horizontal,
+      ),
+    },
+  ),
+
   primaryColor: _baseBackgroundColor,
 
   dividerTheme: DividerThemeData(
