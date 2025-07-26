@@ -15,6 +15,9 @@ class ConferenciaProvider extends ChangeNotifier {
   int get tamanhoLista => _itens.length;
   int get patrimoniosConferidos => _patrimoniosConferidos;
 
+  // Disponibilzia para consumo:
+  // Todos os patrimônios da tabela conferência
+  // A quantidade de patrimonios conferidos.
   Future<void> carregarItens() async {
     _itens = await _db.getConferencia();
     _patrimoniosConferidos = await _db.getQuantidadePatrimoniosConferidos();
