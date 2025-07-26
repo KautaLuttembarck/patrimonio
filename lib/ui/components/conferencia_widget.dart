@@ -204,8 +204,8 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
 
     // Separa as coordenadas do stack
     // Subtrai das coordenadas obtidas o tamanho do botão e do padding interno
-    final double maxX = renderBox.size.width - 60;
-    final double maxY = renderBox.size.height - 60;
+    final double maxX = renderBox.size.width - 70;
+    final double maxY = renderBox.size.height - 70;
 
     final Offset localOffset = renderBox.globalToLocal(
       details.offset,
