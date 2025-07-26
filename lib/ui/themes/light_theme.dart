@@ -1,4 +1,3 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 
 final Color _baseTextColor = Color(0xFF1B3C72);
@@ -15,12 +14,8 @@ final ThemeData lightTheme = ThemeData(
 
   pageTransitionsTheme: const PageTransitionsTheme(
     builders: {
-      TargetPlatform.android: SharedAxisPageTransitionsBuilder(
-        transitionType: SharedAxisTransitionType.horizontal,
-      ),
-      TargetPlatform.iOS: SharedAxisPageTransitionsBuilder(
-        transitionType: SharedAxisTransitionType.horizontal,
-      ),
+      TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+      TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
     },
   ),
 
