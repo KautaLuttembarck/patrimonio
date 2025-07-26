@@ -198,18 +198,21 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
 
   // Controla o drag do botão de leitura óptica de patrimônios
   void _botaoLeituraOpticaDragController(DraggableDetails details) {
+    // Obtém as dimensões do stack na tela
     final RenderBox renderBox =
         _stackKey.currentContext!.findRenderObject() as RenderBox;
 
-    final double maxX = renderBox.size.width - 56; // 56 = tamanho do botão
-    final double maxY = renderBox.size.height - 56;
+    // Separa as coordenadas do stack
+    // Subtrai das coordenadas obtidas o tamanho do botão e do padding interno
+    final double maxX = renderBox.size.width - 60;
+    final double maxY = renderBox.size.height - 60;
 
     final Offset localOffset = renderBox.globalToLocal(
       details.offset,
     );
-    // 14 compensa o padding interno da página que envolve o widget
-    final double dx = localOffset.dx.clamp(0.0, maxX - 14);
-    final double dy = localOffset.dy.clamp(0.0, maxY - 14);
+
+    final double dx = localOffset.dx.clamp(0.0, maxX);
+    final double dy = localOffset.dy.clamp(0.0, maxY);
 
     setState(() {
       _buttonPosition = Offset(dx, dy);
