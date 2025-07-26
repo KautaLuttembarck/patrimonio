@@ -34,78 +34,7 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
   bool _showCongratulations = false;
   late int _tamanhoDaLista;
   late int _patrimoniosConferidos;
-
-  Future<void> _submitData() async {
-    FocusScope.of(context).unfocus();
-
-    final continuar = await showDialog<bool>(
-      context: context,
-      builder:
-          (ctx) => AlertDialog(
-            icon: Icon(Icons.cloud_upload_outlined, size: 42),
-            iconColor: Theme.of(context).primaryColor,
-            title: Text("Finalizar a conferência?"),
-            content: Text(
-              "Deseja enviar o resultado da conferência ao SPMETRODF"
-              " e finalizar o processo?",
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(ctx).pop(true); // Retorna `true`
-                },
-                child: Text(
-                  "Finalizar",
-                  style: TextStyle(color: Theme.of(context).colorScheme.error),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(ctx).pop(false); // Retorna `false`
-                },
-                child: Text("Voltar"),
-              ),
-            ],
-          ),
-    );
-
-    if (continuar == true) {
-      setState(() => _isLoading = true);
-      bool? result = true;
-      // on success:
-
-      if (result) {
-        Clarity.sendCustomEvent(
-          "Enviou a conferência patrimonial para o SPMETRODF",
-        );
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                "Dados da conferência patrimonial encaminhados ao SPMETRODF",
-              ),
-              backgroundColor: Colors.green,
-            ),
-          );
-        }
-        if (mounted) {
-          await context.read<ConferenciaProvider>().limparConferencia();
-        }
-        if (mounted) {
-          Navigator.of(context).pushNamedAndRemoveUntil(
-            AppRoutes.menuInicial,
-            (Route<dynamic> route) => false,
-          );
-        }
-      }
-    } else {
-      // Usuário cancelou ou clicou fora do dialog
-    }
-
-    setState(() {
-      _isLoading = false;
-    });
-  }
+  late final Widget _botaoLeituraOptica;
 
   @override
   void initState() {
