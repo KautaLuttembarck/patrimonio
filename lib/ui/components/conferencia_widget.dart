@@ -41,16 +41,23 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
     super.initState();
     Vibration.hasVibrator().then((value) => _hasVibrator = value);
 
+    _botaoLeituraOptica = FloatingActionButton(
+      onPressed: _lerPatrimonio,
+      child: const Icon(Icons.barcode_reader, size: 30),
+    );
+
     _searchFieldFocusNode.addListener(() {
       setState(() => _searchFieldFocused = _searchFieldFocusNode.hasFocus);
     });
 
+    // função para ser executada após a renderização inicial do frame, permitindo
+    // controlar o posicionamento do FAB.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final RenderBox renderBox =
           _stackKey.currentContext!.findRenderObject() as RenderBox;
       final Size size = renderBox.size;
 
-      const double buttonSize = 56; // tamanho padrão do FAB
+      const double buttonSize = 56;
       const double padding = 16;
 
       setState(() {
@@ -94,6 +101,119 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
   void dispose() {
     _searchFieldFocusNode.dispose();
     super.dispose();
+  }
+
+  // Envia os dados da conferência ao SPMETRODF
+  Future<void> _submitData() async {
+    FocusScope.of(context).unfocus();
+
+    final continuar = await showDialog<bool>(
+      context: context,
+      builder:
+          (ctx) => AlertDialog(
+            icon: Icon(Icons.cloud_upload_outlined, size: 42),
+            iconColor: Theme.of(context).primaryColor,
+            title: Text("Finalizar a conferência?"),
+            content: Text(
+              "Deseja enviar o resultado da conferência ao SPMETRODF"
+              " e finalizar o processo?",
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop(true); // Retorna `true`
+                },
+                child: Text(
+                  "Finalizar",
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop(false); // Retorna `false`
+                },
+                child: Text("Voltar"),
+              ),
+            ],
+          ),
+    );
+
+    if (continuar == true) {
+      setState(() => _isLoading = true);
+      bool? result = true;
+      // on success:
+
+      if (result) {
+        Clarity.sendCustomEvent(
+          "Enviou a conferência patrimonial para o SPMETRODF",
+        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                "Dados da conferência patrimonial encaminhados ao SPMETRODF",
+              ),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+        if (mounted) {
+          await context.read<ConferenciaProvider>().limparConferencia();
+        }
+        if (mounted) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            AppRoutes.menuInicial,
+            (Route<dynamic> route) => false,
+          );
+        }
+      }
+    } else {
+      // Usuário cancelou ou clicou fora do dialog
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  // Remove o patrimonio ao executar o dismiss
+  void _dismissPatrimonio(Patrimonio patrimonio) async {
+    if (_hasVibrator) {
+      Vibration.vibrate(duration: 50);
+    }
+    final bool success = await context.read<ConferenciaProvider>().removerItem(
+      patrimonio,
+    );
+    if (!success) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text("Erro ao remover o patrimônio!"),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    }
+  }
+
+  // Controla o drag do botão de leitura óptica de patrimônios
+  void _botaoLeituraOpticaDragController(DraggableDetails details) {
+    final RenderBox renderBox =
+        _stackKey.currentContext!.findRenderObject() as RenderBox;
+
+    final double maxX = renderBox.size.width - 56; // 56 = tamanho do botão
+    final double maxY = renderBox.size.height - 56;
+
+    final Offset localOffset = renderBox.globalToLocal(
+      details.offset,
+    );
+    // 14 compensa o padding interno da página que envolve o widget
+    final double dx = localOffset.dx.clamp(0.0, maxX - 14);
+    final double dy = localOffset.dy.clamp(0.0, maxY - 14);
+
+    setState(() {
+      _buttonPosition = Offset(dx, dy);
+    });
   }
 
   // Realiza a leitura óptica do patrimônio, atualiza o status de conferência
@@ -385,14 +505,14 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
                           child:
                               lista.isEmpty
                                   ? Center(
-                                    key: ValueKey("ListaVazia"),
+                                    key: const ValueKey("ListaVazia"),
                                     child: Text(
                                       widget.searchFieldController.text == ""
                                           ? 'Nenhum patrimônio listado para conferência.'
                                           : "Nenhum patrimônio encontrado com o termo pesquisado.",
                                       textAlign: TextAlign.center,
                                     ).animate(
-                                      effects: [
+                                      effects: const [
                                         FadeEffect(
                                           delay: Duration(milliseconds: 100),
                                           duration: Duration(milliseconds: 800),
@@ -401,9 +521,9 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
                                     ),
                                   )
                                   : RawScrollbar(
-                                    key: ValueKey("ListaCheia"),
+                                    key: const ValueKey("ListaCheia"),
                                     controller: widget.primaryScrollController,
-                                    radius: Radius.circular(10),
+                                    radius: const Radius.circular(10),
                                     interactive: true,
                                     scrollbarOrientation:
                                         ScrollbarOrientation.right,
@@ -430,8 +550,10 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
                                                     context,
                                                   ).colorScheme.error,
                                             ),
-                                            padding: EdgeInsets.only(right: 30),
-                                            margin: EdgeInsets.symmetric(
+                                            padding: const EdgeInsets.only(
+                                              right: 30,
+                                            ),
+                                            margin: const EdgeInsets.symmetric(
                                               vertical: 11,
                                             ),
 
@@ -443,7 +565,7 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
                                                   children: [
-                                                    Icon(
+                                                    const Icon(
                                                       Icons.delete_forever,
                                                       color: Colors.white,
                                                       size: 35,
@@ -463,7 +585,7 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
                                                 ),
                                               ],
                                             ).animate(
-                                              effects: [
+                                              effects: const [
                                                 ScaleEffect(
                                                   curve: Curves.easeOutQuart,
                                                   duration: Duration(
@@ -481,31 +603,10 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
                                             );
                                           },
 
-                                          onDismissed: (_) async {
-                                            if (_hasVibrator) {
-                                              Vibration.vibrate(duration: 50);
-                                            }
-                                            final bool success = await context
-                                                .read<ConferenciaProvider>()
-                                                .removerItem(patrimonio);
-                                            if (!success) {
-                                              if (context.mounted) {
-                                                ScaffoldMessenger.of(
-                                                  context,
-                                                ).showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(
-                                                      "Erro ao remover o patrimônio!",
-                                                    ),
-                                                    backgroundColor:
-                                                        Theme.of(
-                                                          context,
-                                                        ).colorScheme.error,
-                                                  ),
-                                                );
-                                              }
-                                            }
-                                          },
+                                          onDismissed:
+                                              (_) => _dismissPatrimonio(
+                                                patrimonio,
+                                              ),
                                           child: Padding(
                                             padding: const EdgeInsets.symmetric(
                                               vertical: 8.0,
@@ -535,13 +636,15 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
                                                 leading:
                                                     patrimonio.situacaoConferencia ==
                                                             "pendente"
-                                                        ? Icon(
+                                                        ? const Icon(
                                                           Icons
                                                               .check_box_outline_blank,
                                                         )
-                                                        : Icon(Icons.check_box),
+                                                        : const Icon(
+                                                          Icons.check_box,
+                                                        ),
                                                 title: Text(
-                                                  patrimonio.nAntigo != ""
+                                                  patrimonio.nAntigo.isNotEmpty
                                                       ? "Patrimônio: ${patrimonio.patrimonio}\nNº Antigo: ${patrimonio.nAntigo}"
                                                       : "Patrimônio: ${patrimonio.patrimonio}",
                                                 ),
@@ -559,9 +662,11 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
                                                           'conferido'
                                                       ? 1
                                                       : 0,
-                                              effects: [
+                                              effects: const [
                                                 ShakeEffect(
-                                                  duration: 300.ms,
+                                                  duration: Duration(
+                                                    milliseconds: 300,
+                                                  ),
                                                   rotation: 0.01,
                                                 ),
                                               ],
@@ -570,8 +675,8 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
                                         );
                                       },
                                     ).animate(
-                                      effects: [
-                                        const FadeEffect(
+                                      effects: const [
+                                        FadeEffect(
                                           delay: Duration(milliseconds: 100),
                                           duration: Duration(milliseconds: 300),
                                         ),
@@ -584,6 +689,7 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
                   ],
                 ),
               ),
+
               if (_tamanhoDaLista != 0 &&
                   !_searchFieldFocused &&
                   widget.searchFieldController.text == "")
@@ -605,19 +711,19 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
                             ? CircularProgressIndicator(
                               backgroundColor:
                                   Theme.of(context).colorScheme.onPrimary,
-                              constraints: BoxConstraints(
+                              constraints: const BoxConstraints(
                                 maxWidth: 25,
                                 maxHeight: 25,
                                 minWidth: 25,
                                 minHeight: 25,
                               ),
                             )
-                            : Text("Enviar conferência"),
+                            : const Text("Enviar conferência"),
                       ],
                     ),
                   ).animate(
-                    effects: [
-                      const FadeEffect(
+                    effects: const [
+                      FadeEffect(
                         delay: Duration(milliseconds: 100),
                         duration: Duration(milliseconds: 200),
                       ),
@@ -627,7 +733,33 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
             ],
           ),
 
-          if (_showCongratulations)
+          // Botão pro leitor óptico de patrimônios
+          Positioned(
+            left: _buttonPosition.dx,
+            top: _buttonPosition.dy,
+            child: Draggable(
+              childWhenDragging: const SizedBox(),
+              feedback: _botaoLeituraOptica,
+              onDragEnd: _botaoLeituraOpticaDragController,
+              child: _botaoLeituraOptica,
+            ),
+          ).animate(
+            target:
+                (_tamanhoDaLista != 0 &&
+                        !_searchFieldFocused &&
+                        widget.searchFieldController.text.isEmpty)
+                    ? 1
+                    : 0,
+            effects: const [
+              ScaleEffect(
+                curve: Curves.easeInOutBack,
+                delay: Duration(milliseconds: 100),
+                duration: Duration(milliseconds: 300),
+              ),
+            ],
+          ),
+
+          if (_showCongratulations && _tamanhoDaLista != 0)
             Positioned(
               bottom: 0,
               child: IgnorePointer(
@@ -641,46 +773,6 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
                 ),
               ),
             ),
-
-          Positioned(
-            left: _buttonPosition.dx,
-            top: _buttonPosition.dy,
-            child: Draggable(
-              childWhenDragging: SizedBox(),
-              feedback: FloatingActionButton(
-                onPressed: _lerPatrimonio,
-                child: Icon(Icons.barcode_reader, size: 30),
-              ),
-              onDragEnd: (details) {
-                final RenderBox renderBox =
-                    _stackKey.currentContext!.findRenderObject() as RenderBox;
-                final Offset localOffset = renderBox.globalToLocal(
-                  details.offset,
-                );
-                setState(() {
-                  _buttonPosition = localOffset;
-                });
-              },
-              child: FloatingActionButton(
-                onPressed: _lerPatrimonio,
-                child: Icon(Icons.barcode_reader, size: 30),
-              ),
-            ),
-          ).animate(
-            target:
-                (_tamanhoDaLista != 0 &&
-                        !_searchFieldFocused &&
-                        widget.searchFieldController.text.isEmpty)
-                    ? 1
-                    : 0,
-            effects: [
-              const ScaleEffect(
-                curve: Curves.easeInOutBack,
-                delay: Duration(milliseconds: 100),
-                duration: Duration(milliseconds: 300),
-              ),
-            ],
-          ),
         ],
       ),
     );
