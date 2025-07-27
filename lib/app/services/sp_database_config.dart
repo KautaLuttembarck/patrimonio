@@ -1,12 +1,15 @@
 class SpDatabaseConfig {
-  static const port = "443";
-  static const baseUrl = "spmetrodf.com";
-  static const loginEndPoint = "/agpat/login_webservice.php";
-  static const localizacaoEndPoint = "/agpat/localizacao_webservice.php";
-  static const listaPatrimoniosEndPoint = "/agpat/relatorio_webservice.php";
-  static const getListaUa = "1"; // Código da consulta para obter a lista de UA
-  static const getListaUl = "2"; // Código da consulta para obter a lista de UL
-  static const headersService = {
+  static const String port = "443";
+  static const String baseUrl = "spmetrodf.com";
+  static const String loginEndPoint = "/agpat/login_webservice.php";
+  static const String localizacaoEndPoint = "/agpat/localizacao_webservice.php";
+  static const String listaPatrimoniosEndPoint =
+      "/agpat/relatorio_webservice.php";
+  static const String getListaUa =
+      "1"; // Código da consulta para obter a lista de UA
+  static const String getListaUl =
+      "2"; // Código da consulta para obter a lista de UL
+  static const Map<String, String> headersService = {
     'Content-Type': 'application/x-www-form-urlencoded',
   };
 }
