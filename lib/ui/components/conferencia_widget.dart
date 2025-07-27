@@ -610,70 +610,70 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
                                               (_) => _dismissPatrimonio(
                                                 patrimonio,
                                               ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                              vertical: 8.0,
+                                          child: Card(
+                                            elevation: 5,
+                                            margin: EdgeInsets.symmetric(
+                                              vertical: 10,
+                                              horizontal: 8,
                                             ),
-                                            child: Card(
-                                              child: ListTile(
-                                                onLongPress:
-                                                    () => help_dialog
-                                                        .showDetalhesPatrimonio(
-                                                          context,
-                                                          patrimonio,
-                                                        ),
-                                                isThreeLine: true,
-                                                selected:
-                                                    patrimonio
-                                                        .situacaoConferencia ==
-                                                    "conferido",
-                                                tileColor:
-                                                    patrimonio.situacaoConferencia ==
-                                                            "pendente"
-                                                        ? null
-                                                        : Theme.of(
-                                                              context,
-                                                            )
-                                                            .colorScheme
-                                                            .surfaceContainerHigh,
-                                                leading:
-                                                    patrimonio.situacaoConferencia ==
-                                                            "pendente"
-                                                        ? const Icon(
-                                                          Icons
-                                                              .check_box_outline_blank,
-                                                        )
-                                                        : const Icon(
-                                                          Icons.check_box,
-                                                        ),
-                                                title: Text(
-                                                  patrimonio.nAntigo.isNotEmpty
-                                                      ? "Patrimônio: ${patrimonio.patrimonio}\nNº Antigo: ${patrimonio.nAntigo}"
-                                                      : "Patrimônio: ${patrimonio.patrimonio}",
-                                                ),
-                                                subtitle: Text(
-                                                  patrimonio.descricao,
-                                                ),
-                                                onTap:
-                                                    () => _marcaComoConferido(
-                                                      patrimonio,
-                                                    ),
-                                              ),
-                                            ).animate(
-                                              target:
+                                            child: ListTile(
+                                              onLongPress:
+                                                  () => help_dialog
+                                                      .showDetalhesPatrimonio(
+                                                        context,
+                                                        patrimonio,
+                                                      ),
+                                              isThreeLine: true,
+                                              selected:
+                                                  patrimonio
+                                                      .situacaoConferencia ==
+                                                  "conferido",
+                                              tileColor:
                                                   patrimonio.situacaoConferencia ==
-                                                          'conferido'
-                                                      ? 1
-                                                      : 0,
-                                              effects: const [
-                                                ShakeEffect(
-                                                  duration: Duration(
-                                                    milliseconds: 300,
+                                                          "pendente"
+                                                      ? null
+                                                      : Theme.of(
+                                                            context,
+                                                          )
+                                                          .colorScheme
+                                                          .surfaceContainerHigh,
+                                              leading:
+                                                  patrimonio.situacaoConferencia ==
+                                                          "pendente"
+                                                      ? const Icon(
+                                                        Icons
+                                                            .check_box_outline_blank,
+                                                      )
+                                                      : const Icon(
+                                                        Icons.check_box,
+                                                      ),
+                                              title: Text(
+                                                patrimonio.nAntigo.isNotEmpty
+                                                    ? "Patrimônio: ${patrimonio.patrimonio}\nNº Antigo: ${patrimonio.nAntigo}"
+                                                    : "Patrimônio: ${patrimonio.patrimonio}",
+                                              ),
+                                              subtitle: Text(
+                                                patrimonio.descricao,
+                                              ),
+                                              onTap:
+                                                  () => _marcaComoConferido(
+                                                    patrimonio,
                                                   ),
-                                                  rotation: 0.01,
-                                                ),
-                                              ],
                                             ),
+                                          ).animate(
+                                            target:
+                                                patrimonio.situacaoConferencia ==
+                                                        'conferido'
+                                                    ? 1
+                                                    : 0,
+                                            effects: const [
+                                              ShakeEffect(
+                                                duration: Duration(
+                                                  milliseconds: 300,
+                                                ),
+                                                rotation: 0.01,
+                                              ),
+                                            ],
                                           ),
                                         );
                                       },
