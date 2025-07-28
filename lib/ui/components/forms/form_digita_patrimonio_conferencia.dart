@@ -99,7 +99,7 @@ class _FormDigitaPatrimonioConferenciaState
               ],
             ),
             actions: [
-              TextButton(
+              OutlinedButton(
                 onPressed: () => Navigator.of(context).pop(),
                 child: Text("Voltar"),
               ),

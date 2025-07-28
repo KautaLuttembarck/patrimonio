@@ -132,7 +132,7 @@ final ThemeData darkTheme = ThemeData(
 
   progressIndicatorTheme: ProgressIndicatorThemeData(
     color: _baseBackgroundColor,
-    circularTrackColor: Color.fromRGBO(0, 0, 0, 0.0),
+    circularTrackColor: Colors.white,
     linearTrackColor: Color.fromRGBO(0, 0, 0, 0.0),
   ),
 

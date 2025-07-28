@@ -184,8 +184,10 @@ class _FormLoginState extends State<FormLogin> {
                 onFieldSubmitted: (_) => submitLogin(),
               ),
 
-              TextButton.icon(
-                label:
+              ElevatedButton.icon(
+                label: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
                     isLoading
                         ? SizedBox(
                           height: 15,
@@ -193,6 +195,9 @@ class _FormLoginState extends State<FormLogin> {
                           child: CircularProgressIndicator(strokeWidth: 3),
                         )
                         : Text("Entrar"),
+                  ],
+                ),
+
                 icon: isLoading ? null : Icon(Icons.login),
                 onPressed: isLoading ? null : submitLogin,
               ),

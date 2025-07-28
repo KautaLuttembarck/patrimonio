@@ -350,7 +350,7 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
                 ),
 
                 actions: [
-                  TextButton(
+                  OutlinedButton(
                     onPressed: () => Navigator.of(context).pop(false),
                     child: Text("Voltar"),
                   ),
