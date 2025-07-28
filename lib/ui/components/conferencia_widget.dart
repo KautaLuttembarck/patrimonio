@@ -121,18 +121,17 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.of(ctx).pop(true); // Retorna `true`
-                },
-                child: Text(
-                  "Finalizar",
-                  style: TextStyle(color: Theme.of(context).colorScheme.error),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
                   Navigator.of(ctx).pop(false); // Retorna `false`
                 },
                 child: Text("Voltar"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop(true);
+                },
+                child: Text(
+                  "Finalizar",
+                ),
               ),
             ],
           ),
@@ -352,17 +351,17 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
 
                 actions: [
                   TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: Text("Voltar"),
+                  ),
+                  ElevatedButton(
                     style: ButtonStyle(
-                      foregroundColor: WidgetStatePropertyAll(
+                      backgroundColor: WidgetStatePropertyAll(
                         Theme.of(context).colorScheme.error,
                       ),
                     ),
                     onPressed: () => Navigator.of(context).pop(true),
                     child: Text("Remover"),
-                  ),
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(false),
-                    child: Text("Voltar"),
                   ),
                 ],
               ),
@@ -432,7 +431,7 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
 
                       Container(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(6),
+                          borderRadius: BorderRadius.circular(10),
                           color: Theme.of(context).colorScheme.surface,
                         ),
                         width: double.infinity,

@@ -36,7 +36,7 @@ class _FormDigitaPatrimonioConferenciaState
       builder:
           (ctx) => AlertDialog(
             icon: Icon(Icons.wrong_location, size: 42),
-            iconColor: Theme.of(context).colorScheme.error,
+            iconColor: Theme.of(context).colorScheme.primary,
             title: Text("Patrimônio não listado"),
             content: Column(
               mainAxisSize: MainAxisSize.min,
@@ -100,11 +100,10 @@ class _FormDigitaPatrimonioConferenciaState
             ),
             actions: [
               TextButton(
-                style: ButtonStyle(
-                  foregroundColor: WidgetStatePropertyAll(
-                    Theme.of(context).colorScheme.error,
-                  ),
-                ),
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text("Voltar"),
+              ),
+              ElevatedButton(
                 onPressed: () async {
                   await context.read<ConferenciaProvider>().adicionarItem(
                     patrimonio,
@@ -113,10 +112,6 @@ class _FormDigitaPatrimonioConferenciaState
                   if (mounted) Navigator.of(context).pop();
                 },
                 child: Text("Adicionar"),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text("Voltar"),
               ),
             ],
           ),

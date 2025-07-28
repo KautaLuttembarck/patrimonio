@@ -138,10 +138,11 @@ final ThemeData darkTheme = ThemeData(
 
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(
+      elevation: WidgetStatePropertyAll(5),
       overlayColor: WidgetStatePropertyAll(_baseOverlayColor),
       shape: WidgetStatePropertyAll(
         RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(3),
+          borderRadius: BorderRadius.circular(10),
         ),
       ),
       backgroundColor: WidgetStatePropertyAll(_baseBackgroundColor),
@@ -154,7 +155,7 @@ final ThemeData darkTheme = ThemeData(
       foregroundColor: WidgetStatePropertyAll(_primaryTextButtonFontColor),
       shape: WidgetStatePropertyAll(
         RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(3),
+          borderRadius: BorderRadius.circular(10),
         ),
       ),
       overlayColor: WidgetStatePropertyAll(_baseOverlayColor),
@@ -166,7 +167,7 @@ final ThemeData darkTheme = ThemeData(
       foregroundColor: WidgetStatePropertyAll(_primaryTextButtonFontColor),
       shape: WidgetStatePropertyAll(
         RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(3),
+          borderRadius: BorderRadius.circular(10),
         ),
       ),
       overlayColor: WidgetStatePropertyAll(_baseOverlayColor),
@@ -191,5 +192,30 @@ final ThemeData darkTheme = ThemeData(
       color: _baseTextColor,
     ),
     behavior: SnackBarBehavior.floating,
+  ),
+
+  inputDecorationTheme: InputDecorationTheme(
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: BorderSide(
+        color: _primaryTextButtonFontColor, // Cor da borda quando habilitado
+      ),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: BorderSide(
+        color: _baseBackgroundColor, // Cor da borda quando em foco
+        width: 2.0,
+      ),
+    ),
+    errorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: BorderSide(
+        color: _errorColor, // Cor da borda quando erro
+      ),
+    ),
   ),
 );

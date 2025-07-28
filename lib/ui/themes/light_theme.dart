@@ -138,10 +138,11 @@ final ThemeData lightTheme = ThemeData(
 
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(
+      elevation: WidgetStatePropertyAll(5),
       overlayColor: WidgetStatePropertyAll(_baseOverlayColor),
       shape: WidgetStatePropertyAll(
         RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(3),
+          borderRadius: BorderRadius.circular(10),
         ),
       ),
       backgroundColor: WidgetStatePropertyAll(_baseBackgroundColor),
@@ -154,7 +155,7 @@ final ThemeData lightTheme = ThemeData(
       foregroundColor: WidgetStatePropertyAll(_primaryTextButtonFontColor),
       shape: WidgetStatePropertyAll(
         RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(3),
+          borderRadius: BorderRadius.circular(10),
         ),
       ),
       overlayColor: WidgetStatePropertyAll(_baseOverlayColor),
@@ -166,7 +167,7 @@ final ThemeData lightTheme = ThemeData(
       foregroundColor: WidgetStatePropertyAll(_primaryTextButtonFontColor),
       shape: WidgetStatePropertyAll(
         RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(3),
+          borderRadius: BorderRadius.circular(10),
         ),
       ),
       overlayColor: WidgetStatePropertyAll(_baseOverlayColor),
