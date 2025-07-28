@@ -20,14 +20,9 @@ class LogoutButton extends StatelessWidget {
     return TextButton(
       style: ButtonStyle(
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        minimumSize: WidgetStatePropertyAll(
-          Size.fromHeight(48),
-        ),
-        overlayColor: WidgetStatePropertyAll(Colors.black12),
+        minimumSize: WidgetStatePropertyAll(Size.fromHeight(48)),
         shape: WidgetStatePropertyAll(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(0),
-          ),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
         ),
       ),
       onPressed: logout,
