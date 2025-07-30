@@ -401,22 +401,48 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
                             Stack(
                               alignment: Alignment.center,
                               children: [
-                                CircularProgressIndicator(
-                                  backgroundColor:
-                                      Theme.of(context).colorScheme.onPrimary,
-                                  value:
-                                      context
-                                          .watch<ConferenciaProvider>()
-                                          .patrimoniosConferidos /
-                                      context
-                                          .watch<ConferenciaProvider>()
-                                          .tamanhoLista,
-                                  constraints: BoxConstraints(
-                                    minHeight: 25,
-                                    minWidth: 25,
+                                TweenAnimationBuilder<double>(
+                                  tween: Tween<double>(
+                                    begin: 0.0,
+                                    end:
+                                        context
+                                            .watch<ConferenciaProvider>()
+                                            .patrimoniosConferidos /
+                                        context
+                                            .watch<ConferenciaProvider>()
+                                            .tamanhoLista,
                                   ),
+                                  duration: const Duration(milliseconds: 500),
+                                  builder: (context, value, _) {
+                                    return CircularProgressIndicator(
+                                      backgroundColor:
+                                          Theme.of(
+                                            context,
+                                          ).colorScheme.onPrimary,
+                                      value: value,
+                                      constraints: BoxConstraints(
+                                        minHeight: 25,
+                                        minWidth: 25,
+                                      ),
+                                    );
+                                  },
                                 ),
 
+                                // CircularProgressIndicator(
+                                //   backgroundColor:
+                                //       Theme.of(context).colorScheme.onPrimary,
+                                //   value:
+                                //       context
+                                //           .watch<ConferenciaProvider>()
+                                //           .patrimoniosConferidos /
+                                //       context
+                                //           .watch<ConferenciaProvider>()
+                                //           .tamanhoLista,
+                                //   constraints: BoxConstraints(
+                                //     minHeight: 25,
+                                //     minWidth: 25,
+                                //   ),
+                                // ),
                                 if (_showCongratulations)
                                   Lottie.asset(
                                     'assets/lotties/success_check_green_transparent.json',
