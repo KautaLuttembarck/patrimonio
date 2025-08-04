@@ -54,6 +54,7 @@ class DrawerOption extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             spacing: 10,
             children: [
+              const SizedBox(width: 0),
               Icon(
                 icon,
                 color:
