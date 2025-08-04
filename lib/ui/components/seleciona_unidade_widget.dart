@@ -207,24 +207,54 @@ class _SelecionaUnidadeWidgetState extends State<SelecionaUnidadeWidget> {
         // Listview dos patrimônios
         if (idUaSelecionada != null && idUlSelecionada != null)
           Expanded(
-            child:
-                _listagemPatrimonial.isEmpty
-                    ? Center(
-                      child: Text(
-                        _precisaAtualizar
-                            ? "Baixe ou atualize os dados locais para visualizar os patrimônios associados a esta Localização (UL)"
-                            : "Não existem patrimônios para conferência nesta Localização (UL)",
-                        textAlign: TextAlign.center,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child:
+                  _listagemPatrimonial.isEmpty
+                      ? Center(
+                        child: Text(
+                          _precisaAtualizar
+                              ? "Baixe ou atualize os dados locais para visualizar os patrimônios associados a esta Localização (UL)"
+                              : "Não existem patrimônios para conferência nesta Localização (UL)",
+                          textAlign: TextAlign.center,
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodyLarge?.copyWith(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                        ),
+                      )
+                      : Center(
+                        child: RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                            text: "${_listagemPatrimonial.length}\n",
+                            style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            children: [
+                              TextSpan(
+                                text:
+                                    "patrimônio ${_listagemPatrimonial.length > 1 ? "s" : ""} para conferência nesta localização (UL)",
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.bodyLarge?.copyWith(
+                                  color:
+                                      Theme.of(
+                                        context,
+                                      ).colorScheme.onPrimary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                    )
-                    : Center(
-                      child: Text(
-                        _listagemPatrimonial.length > 1
-                            ? "Existem ${_listagemPatrimonial.length} patrimônios para conferência nesta localização (UL)"
-                            : "Existe ${_listagemPatrimonial.length} patrimônio para conferência nesta localização (UL)",
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+            ),
           ).animate(
             effects: [
               const FadeEffect(
@@ -239,7 +269,7 @@ class _SelecionaUnidadeWidgetState extends State<SelecionaUnidadeWidget> {
             idUaSelecionada != null &&
             idUlSelecionada != null &&
             !_conferenciaAndamento)
-          ElevatedButton(
+          ElevatedButton.icon(
             onPressed:
                 _listagemPatrimonial.isEmpty
                     ? null
@@ -255,7 +285,12 @@ class _SelecionaUnidadeWidgetState extends State<SelecionaUnidadeWidget> {
                             }
                           });
                     },
-            child: Row(
+            icon: Icon(
+              _listagemPatrimonial.isEmpty
+                  ? Icons.highlight_remove
+                  : Icons.play_circle_outline,
+            ),
+            label: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
