@@ -111,14 +111,20 @@ class _AppDrawerHeaderState extends State<AppDrawerHeader> {
           child: Text(
             context.watch<UserProvider>().nome,
             textAlign: TextAlign.center,
-            style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onPrimary,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         ClarityUnmask(
           child: Text(
             context.watch<UserProvider>().matricula,
             textAlign: TextAlign.center,
-            style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onPrimary,
+              fontSize: 12,
+            ),
           ),
         ),
       ],
