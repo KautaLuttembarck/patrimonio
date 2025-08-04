@@ -3,6 +3,8 @@ import 'package:patrimonio/ui/components/app_drawer_action_list.dart';
 import 'package:patrimonio/ui/components/app_drawer_header.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import 'package:patrimonio/ui/widgets/logout_button.dart';
+
 class AppDrawer extends StatefulWidget {
   const AppDrawer({super.key});
 
@@ -40,16 +42,23 @@ class _AppDrawerState extends State<AppDrawer> {
 
             const AppDrawerActionList(),
             const Expanded(child: SizedBox()),
-            Text(
-              "Versão $_versao",
-              textAlign: TextAlign.center,
-              style: Theme.of(
-                context,
-              ).textTheme.bodySmall?.copyWith(
-                color: Colors.white54,
+
+            // Logout action
+            const LogoutButton(),
+
+            // Version info
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10.0),
+              child: Text(
+                "Versão $_versao",
+                textAlign: TextAlign.center,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(
+                  color: Colors.white54,
+                ),
               ),
             ),
-            const SizedBox(),
           ],
         ),
       ),
