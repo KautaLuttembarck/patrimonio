@@ -132,8 +132,8 @@ final ThemeData lightTheme = ThemeData(
 
   progressIndicatorTheme: ProgressIndicatorThemeData(
     color: _baseBackgroundColor,
-    circularTrackColor: Colors.white,
-    linearTrackColor: Color.fromRGBO(0, 0, 0, 0.0),
+    circularTrackColor: Colors.grey,
+    linearTrackColor: Colors.grey,
   ),
 
   elevatedButtonTheme: ElevatedButtonThemeData(
