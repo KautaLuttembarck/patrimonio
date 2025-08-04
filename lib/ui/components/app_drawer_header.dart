@@ -108,12 +108,16 @@ class _AppDrawerHeaderState extends State<AppDrawerHeader> {
         ),
         const SizedBox(height: 20),
         ClarityMask(
-          child: Text(
-            context.watch<UserProvider>().nome,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onPrimary,
-              fontWeight: FontWeight.bold,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(
+              context.watch<UserProvider>().nome,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimary,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
             ),
           ),
         ),
@@ -123,7 +127,6 @@ class _AppDrawerHeaderState extends State<AppDrawerHeader> {
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Theme.of(context).colorScheme.onPrimary,
-              fontSize: 12,
             ),
           ),
         ),
