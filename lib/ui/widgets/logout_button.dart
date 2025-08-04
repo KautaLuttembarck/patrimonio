@@ -33,6 +33,7 @@ class LogoutButton extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             spacing: 10,
             children: [
+              const SizedBox(width: 0),
               Icon(
                 Icons.exit_to_app,
                 color: Theme.of(context).colorScheme.error,
