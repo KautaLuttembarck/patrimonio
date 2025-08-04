@@ -16,10 +16,10 @@ class AppDrawerActionList extends StatelessWidget {
     bool continuarConferencia =
         context.watch<ConferenciaProvider>().tamanhoLista > 0;
     return Column(
-      spacing: 0,
+      spacing: 10,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Divider(),
+        // const Divider(),
 
         // Ir para o menu inicial
         const DrawerOption(
@@ -27,7 +27,7 @@ class AppDrawerActionList extends StatelessWidget {
           buttonText: "Início",
           icon: Icons.home,
         ),
-        const Divider(),
+        // const Divider(),
 
         // Conferência patrimonial
         if (!continuarConferencia)
@@ -47,7 +47,7 @@ class AppDrawerActionList extends StatelessWidget {
             icon: Icons.barcode_reader,
             helperFunction: helper.showContinuarConferenciaHelpDialog,
           ),
-        const Divider(),
+        // const Divider(),
 
         // Ir para as configurações do app
         const DrawerOption(
@@ -56,11 +56,9 @@ class AppDrawerActionList extends StatelessWidget {
           icon: Icons.settings,
           helperFunction: helper.showSettingsHelpDialog,
         ),
-        const Divider(),
+        // const Divider(),
 
-        // Logout action
-        const LogoutButton(),
-        const Divider(),
+        // const Divider(),
       ],
     );
   }
