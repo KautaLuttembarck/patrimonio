@@ -35,7 +35,7 @@ class LogoutButton extends StatelessWidget {
             children: [
               const SizedBox(width: 0),
               Icon(
-                Icons.exit_to_app,
+                Icons.logout,
                 color: Theme.of(context).colorScheme.error,
               ),
               Text(
