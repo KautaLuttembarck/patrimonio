@@ -427,10 +427,6 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
                           return LinearProgressIndicator(
                             borderRadius: BorderRadius.circular(15),
                             minHeight: 8,
-                            // backgroundColor:
-                            //     Theme.of(
-                            //       context,
-                            //     ).colorScheme.onPrimary,
                             value: value,
                           );
                         },
@@ -704,7 +700,7 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
                   widget.searchFieldController.text == "")
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
-                  child: ElevatedButton(
+                  child: ElevatedButton.icon(
                     onPressed:
                         (_isLoading ||
                                 context
@@ -713,7 +709,8 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
                                     0)
                             ? null
                             : _submitData,
-                    child: Row(
+                    icon: Icon(Icons.send),
+                    label: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         _isLoading
