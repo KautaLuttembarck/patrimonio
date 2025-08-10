@@ -694,49 +694,54 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
                   ],
                 ),
               ),
-
-              if (_tamanhoDaLista != 0 &&
-                  !_searchFieldFocused &&
-                  widget.searchFieldController.text == "")
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: ElevatedButton.icon(
-                    onPressed:
-                        (_isLoading ||
-                                context
-                                        .watch<ConferenciaProvider>()
-                                        .tamanhoLista ==
-                                    0)
-                            ? null
-                            : _submitData,
-                    icon: Icon(Icons.send),
-                    label: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _isLoading
-                            ? CircularProgressIndicator(
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.onPrimary,
-                              constraints: const BoxConstraints(
-                                maxWidth: 25,
-                                maxHeight: 25,
-                                minWidth: 25,
-                                minHeight: 25,
-                              ),
-                            )
-                            : const Text("Enviar conferência"),
-                      ],
-                    ),
-                  ).animate(
-                    effects: const [
-                      FadeEffect(
-                        delay: Duration(milliseconds: 100),
-                        duration: Duration(milliseconds: 200),
-                      ),
-                    ],
-                  ),
-                ),
             ],
+          ),
+
+          Positioned(
+            bottom: 8,
+            left: 9,
+            right: 9,
+            child: ElevatedButton.icon(
+              onPressed:
+                  (_isLoading ||
+                          context.watch<ConferenciaProvider>().tamanhoLista ==
+                              0)
+                      ? null
+                      : _submitData,
+              icon: Icon(Icons.send),
+              label: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  _isLoading
+                      ? CircularProgressIndicator(
+                        backgroundColor:
+                            Theme.of(context).colorScheme.onPrimary,
+                        constraints: const BoxConstraints(
+                          maxWidth: 25,
+                          maxHeight: 25,
+                          minWidth: 25,
+                          minHeight: 25,
+                        ),
+                      )
+                      : const Text("Enviar conferência"),
+                ],
+              ),
+            ).animate(
+              target:
+                  (_tamanhoDaLista != 0 &&
+                          !_searchFieldFocused &&
+                          widget.searchFieldController.text.isEmpty)
+                      ? 1
+                      : 0,
+              effects: const [
+                ScaleEffect(
+                  curve: Curves.easeInOutBack,
+                  delay: Duration(milliseconds: 100),
+                  duration: Duration(milliseconds: 300),
+                ),
+              ],
+            ),
           ),
 
           // Botão pro leitor óptico de patrimônios
@@ -765,6 +770,7 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
             ],
           ),
 
+          // Lottie para animação de conferência concluída
           if (_showCongratulations && _tamanhoDaLista != 0)
             Positioned(
               bottom: 0,
