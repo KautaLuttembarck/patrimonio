@@ -7,7 +7,7 @@ final Color _errorColor = Colors.red.shade900;
 final Color _baseBackgroundColor = Color(0xFF1B3C72);
 final Color _themeSelectedFontColor = Color(0xFF1B3C72);
 final Color _baseOverlayColor = Colors.white38;
-final double _baseElevation = 5;
+final double _baseElevation = 1;
 
 final ThemeData darkTheme = ThemeData(
   useMaterial3: true,
@@ -138,13 +138,14 @@ final ThemeData darkTheme = ThemeData(
 
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(
-      elevation: WidgetStatePropertyAll(5),
+      elevation: WidgetStatePropertyAll(_baseElevation),
       overlayColor: WidgetStatePropertyAll(_baseOverlayColor),
       shape: WidgetStatePropertyAll(
         RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
       ),
+      minimumSize: WidgetStatePropertyAll(Size(150, 50)),
       backgroundColor: WidgetStatePropertyAll(_baseBackgroundColor),
       foregroundColor: WidgetStatePropertyAll(_reverseTextColor),
     ),
@@ -158,6 +159,7 @@ final ThemeData darkTheme = ThemeData(
           borderRadius: BorderRadius.circular(10),
         ),
       ),
+      minimumSize: WidgetStatePropertyAll(Size(0, 50)),
       overlayColor: WidgetStatePropertyAll(_baseOverlayColor),
     ),
   ),
@@ -170,6 +172,7 @@ final ThemeData darkTheme = ThemeData(
           borderRadius: BorderRadius.circular(10),
         ),
       ),
+      minimumSize: WidgetStatePropertyAll(Size(150, 50)),
       overlayColor: WidgetStatePropertyAll(_baseOverlayColor),
     ),
   ),
