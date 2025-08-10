@@ -417,14 +417,30 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
                                     width: 50,
                                     height: 30,
                                     child: Center(
-                                      child: Text(
-                                        "${((_patrimoniosConferidos / _tamanhoDaLista) * 100).toInt()}%",
-                                        style: TextStyle(
-                                          color:
-                                              Theme.of(
-                                                context,
-                                              ).colorScheme.onPrimary,
+                                      child: TweenAnimationBuilder<double>(
+                                        duration: Duration(
+                                          milliseconds: 500,
                                         ),
+                                        tween: Tween<double>(
+                                          begin: 0,
+                                          end:
+                                              _tamanhoDaLista == 0
+                                                  ? 0
+                                                  : (_patrimoniosConferidos /
+                                                          _tamanhoDaLista) *
+                                                      100,
+                                        ),
+                                        builder: (context, value, child) {
+                                          return Text(
+                                            "${value.toInt()}%",
+                                            style: TextStyle(
+                                              color:
+                                                  Theme.of(
+                                                    context,
+                                                  ).colorScheme.onPrimary,
+                                            ),
+                                          );
+                                        },
                                       ),
                                     ),
                                   ),
