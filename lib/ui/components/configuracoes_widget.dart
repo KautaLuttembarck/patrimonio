@@ -157,43 +157,46 @@ class _ConfiguracoesWidgetState extends State<ConfiguracoesWidget> {
       crossAxisAlignment: CrossAxisAlignment.center,
       spacing: 18,
       children: [
-        SizedBox(height: 28),
-        GestureDetector(
-          onLongPress: () async {
-            if (await Vibration.hasVibrator()) {
-              Vibration.vibrate(duration: 50);
-            }
-            if (context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text("🏆🏆🏆"),
-                      Text(
-                        "Desenvolvido pela PGSIS!",
-                        style: TextStyle(
-                          color: Colors.black,
+        SizedBox(
+          height: 150,
+          child: GestureDetector(
+            onLongPress: () async {
+              if (await Vibration.hasVibrator()) {
+                Vibration.vibrate(duration: 50);
+              }
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("🏆🏆🏆"),
+                        Text(
+                          "Desenvolvido pela PGSIS!",
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
                         ),
-                      ),
-                      Text("🏆🏆🏆"),
-                    ],
+                        Text("🏆🏆🏆"),
+                      ],
+                    ),
+                    showCloseIcon: false,
                   ),
-                  showCloseIcon: false,
-                ),
-              );
-            }
-          },
-          child: Icon(
-            Icons.settings,
-            color: Theme.of(context).colorScheme.secondary,
-            size: 90,
-          ).animate(
-            onPlay: (controller) => controller.repeat(),
-            effects: [RotateEffect(duration: Duration(seconds: 5))],
+                );
+              }
+            },
+            child: Center(
+              child: Icon(
+                Icons.settings,
+                color: Theme.of(context).colorScheme.secondary,
+                size: 90,
+              ).animate(
+                onPlay: (controller) => controller.repeat(),
+                effects: [RotateEffect(duration: Duration(seconds: 5))],
+              ),
+            ),
           ),
         ),
-        SizedBox(height: 18),
         Text(
           _dataAtualizacao != null
               ? "Dados patrimoniais atualizados pela última vez em $_dataAtualizacao"
