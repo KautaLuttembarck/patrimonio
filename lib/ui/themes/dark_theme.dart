@@ -145,7 +145,7 @@ final ThemeData darkTheme = ThemeData(
           borderRadius: BorderRadius.circular(10),
         ),
       ),
-      minimumSize: WidgetStatePropertyAll(Size(150, 50)),
+      minimumSize: WidgetStatePropertyAll(Size(110, 50)),
       backgroundColor: WidgetStateProperty.resolveWith<Color>(
         (states) {
           if (states.contains(WidgetState.disabled)) {
@@ -186,7 +186,7 @@ final ThemeData darkTheme = ThemeData(
           borderRadius: BorderRadius.circular(10),
         ),
       ),
-      minimumSize: WidgetStatePropertyAll(Size(150, 50)),
+      minimumSize: WidgetStatePropertyAll(Size(110, 50)),
       overlayColor: WidgetStatePropertyAll(_baseOverlayColor),
     ),
   ),

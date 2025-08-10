@@ -136,20 +136,6 @@ final ThemeData lightTheme = ThemeData(
     linearTrackColor: Colors.grey,
   ),
 
-  // elevatedButtonTheme: ElevatedButtonThemeData(
-  //   style: ButtonStyle(
-  //     elevation: WidgetStatePropertyAll(_baseElevation),
-  //     overlayColor: WidgetStatePropertyAll(_baseOverlayColor),
-  //     shape: WidgetStatePropertyAll(
-  //       RoundedRectangleBorder(
-  //         borderRadius: BorderRadius.circular(10),
-  //       ),
-  //     ),
-  //     minimumSize: WidgetStatePropertyAll(Size(150, 50)),
-  //     backgroundColor: WidgetStatePropertyAll(_baseBackgroundColor),
-  //     foregroundColor: WidgetStatePropertyAll(_reverseTextColor),
-  //   ),
-  // ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(
       elevation: WidgetStatePropertyAll(_baseElevation),
@@ -159,7 +145,7 @@ final ThemeData lightTheme = ThemeData(
           borderRadius: BorderRadius.circular(10),
         ),
       ),
-      minimumSize: WidgetStatePropertyAll(Size(150, 50)),
+      minimumSize: WidgetStatePropertyAll(Size(110, 50)),
       backgroundColor: WidgetStateProperty.resolveWith<Color>(
         (states) {
           if (states.contains(WidgetState.disabled)) {
@@ -200,7 +186,7 @@ final ThemeData lightTheme = ThemeData(
           borderRadius: BorderRadius.circular(10),
         ),
       ),
-      minimumSize: WidgetStatePropertyAll(Size(150, 50)),
+      minimumSize: WidgetStatePropertyAll(Size(110, 50)),
       overlayColor: WidgetStatePropertyAll(_baseOverlayColor),
     ),
   ),
