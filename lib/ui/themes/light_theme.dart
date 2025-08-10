@@ -138,7 +138,7 @@ final ThemeData lightTheme = ThemeData(
 
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(
-      elevation: WidgetStatePropertyAll(5),
+      elevation: WidgetStatePropertyAll(_baseElevation),
       overlayColor: WidgetStatePropertyAll(_baseOverlayColor),
       shape: WidgetStatePropertyAll(
         RoundedRectangleBorder(
@@ -195,5 +195,30 @@ final ThemeData lightTheme = ThemeData(
       color: _reverseTextColor,
     ),
     behavior: SnackBarBehavior.floating,
+  ),
+
+  inputDecorationTheme: InputDecorationTheme(
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: BorderSide(
+        color: _primaryTextButtonFontColor, // Cor da borda quando habilitado
+      ),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: BorderSide(
+        color: _baseBackgroundColor, // Cor da borda quando em foco
+        width: 2.0,
+      ),
+    ),
+    errorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: BorderSide(
+        color: _errorColor, // Cor da borda quando erro
+      ),
+    ),
   ),
 );
