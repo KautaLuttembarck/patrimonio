@@ -136,6 +136,20 @@ final ThemeData lightTheme = ThemeData(
     linearTrackColor: Colors.grey,
   ),
 
+  // elevatedButtonTheme: ElevatedButtonThemeData(
+  //   style: ButtonStyle(
+  //     elevation: WidgetStatePropertyAll(_baseElevation),
+  //     overlayColor: WidgetStatePropertyAll(_baseOverlayColor),
+  //     shape: WidgetStatePropertyAll(
+  //       RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.circular(10),
+  //       ),
+  //     ),
+  //     minimumSize: WidgetStatePropertyAll(Size(150, 50)),
+  //     backgroundColor: WidgetStatePropertyAll(_baseBackgroundColor),
+  //     foregroundColor: WidgetStatePropertyAll(_reverseTextColor),
+  //   ),
+  // ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(
       elevation: WidgetStatePropertyAll(_baseElevation),
@@ -146,8 +160,22 @@ final ThemeData lightTheme = ThemeData(
         ),
       ),
       minimumSize: WidgetStatePropertyAll(Size(150, 50)),
-      backgroundColor: WidgetStatePropertyAll(_baseBackgroundColor),
-      foregroundColor: WidgetStatePropertyAll(_reverseTextColor),
+      backgroundColor: WidgetStateProperty.resolveWith<Color>(
+        (states) {
+          if (states.contains(WidgetState.disabled)) {
+            return Colors.grey; // Cor quando inativo
+          }
+          return _baseBackgroundColor; // Cor normal
+        },
+      ),
+      foregroundColor: WidgetStateProperty.resolveWith<Color>(
+        (states) {
+          if (states.contains(WidgetState.disabled)) {
+            return Colors.black45; // Cor do texto quando inativo
+          }
+          return _reverseTextColor; // Cor normal do texto
+        },
+      ),
     ),
   ),
 
