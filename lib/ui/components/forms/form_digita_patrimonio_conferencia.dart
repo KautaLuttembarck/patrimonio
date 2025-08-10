@@ -100,7 +100,10 @@ class _FormDigitaPatrimonioConferenciaState
             ),
             actions: [
               OutlinedButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () {
+                  _patrimonioFocus.requestFocus();
+                  Navigator.of(context).pop();
+                },
                 child: Text("Voltar"),
               ),
               ElevatedButton(
@@ -110,6 +113,7 @@ class _FormDigitaPatrimonioConferenciaState
                   );
                   if (mounted) await _atualizaPatrimonio();
                   if (mounted) Navigator.of(context).pop();
+                  _patrimonioFocus.requestFocus();
                 },
                 child: Text("Adicionar"),
               ),
@@ -157,6 +161,7 @@ class _FormDigitaPatrimonioConferenciaState
             );
       }
       if (resultado) {
+        _patrimonioFocus.requestFocus();
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -309,9 +314,10 @@ class _FormDigitaPatrimonioConferenciaState
                           ),
                         ],
                       ),
-                      ElevatedButton(
+                      ElevatedButton.icon(
                         onPressed: _atualizaPatrimonio,
-                        child: Row(
+                        icon: Icon(Icons.check),
+                        label: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [Text("Marcar como conferido")],
                         ),

@@ -220,7 +220,8 @@ class _ConfiguracoesWidgetState extends State<ConfiguracoesWidget> {
                   SizedBox(height: 10),
                   LinearProgressIndicator(
                     value: _downloadProgress > 0 ? 1 : null,
-                    minHeight: 5,
+                    borderRadius: BorderRadius.circular(15),
+                    minHeight: 7,
                   ),
                 ],
               ),
@@ -241,15 +242,16 @@ class _ConfiguracoesWidgetState extends State<ConfiguracoesWidget> {
             ],
           ),
 
-        ElevatedButton(
+        ElevatedButton.icon(
           onPressed:
               ((_downloadingData || (_downloadProgress > 0))
                   ? null
                   : _obtemDadosPatrimoniais),
-          child: Row(
+          icon: Icon(Icons.security_update),
+          label: Row(
             spacing: 20,
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [Icon(Icons.security_update), Text("Baixar Patrimônios")],
+            children: [Text("Baixar Patrimônios")],
           ),
         ),
 
@@ -258,18 +260,17 @@ class _ConfiguracoesWidgetState extends State<ConfiguracoesWidget> {
 
         // Remove os dados de conferência em andamento
         if (_conferenciaEmAndamento)
-          ElevatedButton(
+          ElevatedButton.icon(
             onPressed: _limparBancoDeDadosConferencias,
             style: ButtonStyle(
               backgroundColor: WidgetStatePropertyAll(
                 Theme.of(context).colorScheme.error,
               ),
             ),
-            child: Row(
-              spacing: 20,
+            icon: Icon(Icons.cancel),
+            label: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.cancel),
                 Text("Cancelar a conferência patrimonial"),
               ],
             ),
@@ -286,18 +287,18 @@ class _ConfiguracoesWidgetState extends State<ConfiguracoesWidget> {
 
         //Remove os dados de patrimônio e conferência em andamento
         if (_dataAtualizacao != null)
-          ElevatedButton(
+          ElevatedButton.icon(
             onPressed: _limparBancoDeDados,
             style: ButtonStyle(
               backgroundColor: WidgetStatePropertyAll(
                 Theme.of(context).colorScheme.error,
               ),
             ),
-            child: Row(
+            icon: Icon(Icons.delete_forever),
+            label: Row(
               spacing: 20,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.delete_forever),
                 Text("Limpar todos os dados locais"),
               ],
             ),
