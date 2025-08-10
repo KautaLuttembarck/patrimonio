@@ -394,13 +394,48 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
                           children: [
                             Text(
                               "Patrimônios conferidos: "
-                              "$_patrimoniosConferidos / $_tamanhoDaLista",
+                              "$_patrimoniosConferidos/$_tamanhoDaLista",
                               style: Theme.of(context).textTheme.titleSmall,
                             ),
 
                             Stack(
                               alignment: Alignment.center,
                               children: [
+                                Card(
+                                  shape: RoundedRectangleBorder(
+                                    side: BorderSide(
+                                      color:
+                                          Theme.of(
+                                            context,
+                                          ).colorScheme.onPrimary,
+                                      width: 1, // Largura da borda
+                                    ),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  color: Theme.of(context).colorScheme.primary,
+                                  child: SizedBox(
+                                    width: 50,
+                                    height: 30,
+                                    child: Center(
+                                      child: Text(
+                                        "${((_patrimoniosConferidos / _tamanhoDaLista) * 100).toInt()}%",
+                                        style: TextStyle(
+                                          color:
+                                              Theme.of(
+                                                context,
+                                              ).colorScheme.onPrimary,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ).animate(
+                                  target: !_showCongratulations ? 1 : 0,
+                                  effects: [
+                                    FadeEffect(
+                                      duration: Duration(milliseconds: 300),
+                                    ),
+                                  ],
+                                ),
                                 if (_showCongratulations)
                                   Lottie.asset(
                                     'assets/lotties/success_check_green_transparent.json',
@@ -513,7 +548,9 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
                                     key: const ValueKey("ListaVazia"),
                                     child: Text(
                                       widget.searchFieldController.text == ""
-                                          ? 'Nenhum patrimônio listado para conferência.'
+                                          ? _searchFieldFocused
+                                              ? "Digite o que deseja buscar na lista para ver os resultados"
+                                              : 'Nenhum patrimônio listado para conferência.'
                                           : "Nenhum patrimônio encontrado com o termo pesquisado.",
                                       textAlign: TextAlign.center,
                                     ).animate(
