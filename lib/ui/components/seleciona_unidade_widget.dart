@@ -318,11 +318,12 @@ class _SelecionaUnidadeWidgetState extends State<SelecionaUnidadeWidget> {
           ),
 
         if (_conferenciaAndamento)
-          ElevatedButton(
+          ElevatedButton.icon(
             onPressed: () {
               Navigator.of(context).pushNamed(AppRoutes.conferenciaPage);
             },
-            child: Row(
+            icon: Icon(Icons.redo),
+            label: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [Text("Continuar a conferência Patrimonial")],
             ),
