@@ -7,10 +7,12 @@ import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import 'package:clarity_flutter/clarity_flutter.dart';
 import 'package:vibration/vibration.dart';
 import 'package:lottie/lottie.dart';
+import 'package:animations/animations.dart';
 
 import 'package:patrimonio/app/providers/conferencia_provider.dart';
 import 'package:patrimonio/app/models/patrimonio.dart';
 import 'package:patrimonio/app/utils/help_dialog.dart' as help_dialog;
+import 'package:patrimonio/ui/pages/patrimonio_details_page.dart';
 
 class ConferenciaWidget extends StatefulWidget {
   const ConferenciaWidget({
@@ -594,142 +596,173 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
                                       itemCount: lista.length,
                                       itemBuilder: (context, index) {
                                         final patrimonio = lista[index];
-                                        return Dismissible(
-                                          direction:
-                                              DismissDirection.endToStart,
-                                          background: Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                    10,
+                                        return OpenContainer(
+                                          closedElevation: 0,
+                                          openElevation: 0,
+                                          closedColor: Colors.transparent,
+                                          openColor: Colors.transparent,
+                                          transitionDuration: Duration(
+                                            milliseconds: 500,
+                                          ),
+                                          closedBuilder:
+                                              (context, action) => Dismissible(
+                                                direction:
+                                                    DismissDirection.endToStart,
+                                                background: Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          10,
+                                                        ),
+                                                    color:
+                                                        Theme.of(
+                                                          context,
+                                                        ).colorScheme.error,
                                                   ),
-                                              color:
-                                                  Theme.of(
-                                                    context,
-                                                  ).colorScheme.error,
-                                            ),
-                                            padding: const EdgeInsets.only(
-                                              right: 30,
-                                            ),
-                                            margin: const EdgeInsets.symmetric(
-                                              vertical: 11,
-                                            ),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                        right: 30,
+                                                      ),
+                                                  margin:
+                                                      const EdgeInsets.symmetric(
+                                                        vertical: 11,
+                                                      ),
 
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    const Icon(
-                                                      Icons.delete_forever,
-                                                      color: Colors.white,
-                                                      size: 35,
-                                                    ),
-                                                    Text(
-                                                      "Arraste para\napagar",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .bodyMedium
-                                                          ?.copyWith(
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    children: [
+                                                      Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          const Icon(
+                                                            Icons
+                                                                .delete_forever,
                                                             color: Colors.white,
+                                                            size: 35,
                                                           ),
+                                                          Text(
+                                                            "Arraste para\napagar",
+                                                            textAlign:
+                                                                TextAlign
+                                                                    .center,
+                                                            style: Theme.of(
+                                                                  context,
+                                                                )
+                                                                .textTheme
+                                                                .bodyMedium
+                                                                ?.copyWith(
+                                                                  color:
+                                                                      Colors
+                                                                          .white,
+                                                                ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ).animate(
+                                                    effects: const [
+                                                      ScaleEffect(
+                                                        curve:
+                                                            Curves.easeOutQuart,
+                                                        duration: Duration(
+                                                          milliseconds: 600,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                key: ValueKey(
+                                                  patrimonio.patrimonio,
+                                                ),
+
+                                                confirmDismiss: (_) async {
+                                                  return await _confirmaDismiss(
+                                                    patrimonio.patrimonio,
+                                                  );
+                                                },
+
+                                                onDismissed:
+                                                    (_) => _dismissPatrimonio(
+                                                      patrimonio,
+                                                    ),
+                                                child: Card(
+                                                  elevation: 5,
+                                                  margin: EdgeInsets.symmetric(
+                                                    vertical: 10,
+                                                    horizontal: 8,
+                                                  ),
+                                                  child: ListTile(
+                                                    onLongPress: action,
+                                                    // () => help_dialog
+                                                    //     .showDetalhesPatrimonio(
+                                                    //       context,
+                                                    //       patrimonio,
+                                                    //     ),
+                                                    isThreeLine: true,
+                                                    selected:
+                                                        patrimonio
+                                                            .situacaoConferencia ==
+                                                        "conferido",
+                                                    tileColor:
+                                                        patrimonio.situacaoConferencia ==
+                                                                "pendente"
+                                                            ? null
+                                                            : Theme.of(
+                                                                  context,
+                                                                )
+                                                                .colorScheme
+                                                                .surfaceContainerHigh,
+                                                    leading:
+                                                        patrimonio.situacaoConferencia ==
+                                                                "pendente"
+                                                            ? const Icon(
+                                                              Icons
+                                                                  .check_box_outline_blank,
+                                                            )
+                                                            : const Icon(
+                                                              Icons.check_box,
+                                                            ),
+                                                    title: Text(
+                                                      patrimonio
+                                                              .nAntigo
+                                                              .isNotEmpty
+                                                          ? "Patrimônio: ${patrimonio.patrimonio}\nNº Antigo: ${patrimonio.nAntigo}"
+                                                          : "Patrimônio: ${patrimonio.patrimonio}",
+                                                    ),
+                                                    subtitle: Text(
+                                                      patrimonio.descricao,
+                                                    ),
+                                                    onTap:
+                                                        () =>
+                                                            _marcaComoConferido(
+                                                              patrimonio,
+                                                            ),
+                                                  ),
+                                                ).animate(
+                                                  target:
+                                                      patrimonio.situacaoConferencia ==
+                                                              'conferido'
+                                                          ? 1
+                                                          : 0,
+                                                  effects: const [
+                                                    ShakeEffect(
+                                                      duration: Duration(
+                                                        milliseconds: 300,
+                                                      ),
+                                                      rotation: 0.01,
                                                     ),
                                                   ],
                                                 ),
-                                              ],
-                                            ).animate(
-                                              effects: const [
-                                                ScaleEffect(
-                                                  curve: Curves.easeOutQuart,
-                                                  duration: Duration(
-                                                    milliseconds: 600,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          key: ValueKey(patrimonio.patrimonio),
+                                              ),
 
-                                          confirmDismiss: (_) async {
-                                            return await _confirmaDismiss(
-                                              patrimonio.patrimonio,
-                                            );
-                                          },
-
-                                          onDismissed:
-                                              (_) => _dismissPatrimonio(
-                                                patrimonio,
-                                              ),
-                                          child: Card(
-                                            elevation: 5,
-                                            margin: EdgeInsets.symmetric(
-                                              vertical: 10,
-                                              horizontal: 8,
-                                            ),
-                                            child: ListTile(
-                                              onLongPress:
-                                                  () => help_dialog
-                                                      .showDetalhesPatrimonio(
-                                                        context,
-                                                        patrimonio,
-                                                      ),
-                                              isThreeLine: true,
-                                              selected:
-                                                  patrimonio
-                                                      .situacaoConferencia ==
-                                                  "conferido",
-                                              tileColor:
-                                                  patrimonio.situacaoConferencia ==
-                                                          "pendente"
-                                                      ? null
-                                                      : Theme.of(
-                                                            context,
-                                                          )
-                                                          .colorScheme
-                                                          .surfaceContainerHigh,
-                                              leading:
-                                                  patrimonio.situacaoConferencia ==
-                                                          "pendente"
-                                                      ? const Icon(
-                                                        Icons
-                                                            .check_box_outline_blank,
-                                                      )
-                                                      : const Icon(
-                                                        Icons.check_box,
-                                                      ),
-                                              title: Text(
-                                                patrimonio.nAntigo.isNotEmpty
-                                                    ? "Patrimônio: ${patrimonio.patrimonio}\nNº Antigo: ${patrimonio.nAntigo}"
-                                                    : "Patrimônio: ${patrimonio.patrimonio}",
-                                              ),
-                                              subtitle: Text(
-                                                patrimonio.descricao,
-                                              ),
-                                              onTap:
-                                                  () => _marcaComoConferido(
-                                                    patrimonio,
+                                          openBuilder:
+                                              (context, action) =>
+                                                  PatrimonioDetailsPage(
+                                                    patrimonio: patrimonio,
                                                   ),
-                                            ),
-                                          ).animate(
-                                            target:
-                                                patrimonio.situacaoConferencia ==
-                                                        'conferido'
-                                                    ? 1
-                                                    : 0,
-                                            effects: const [
-                                              ShakeEffect(
-                                                duration: Duration(
-                                                  milliseconds: 300,
-                                                ),
-                                                rotation: 0.01,
-                                              ),
-                                            ],
-                                          ),
                                         );
                                       },
                                     ).animate(
