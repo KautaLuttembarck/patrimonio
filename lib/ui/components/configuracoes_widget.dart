@@ -212,7 +212,7 @@ class _ConfiguracoesWidgetState extends State<ConfiguracoesWidget> {
                 color: Theme.of(context).colorScheme.primary,
                 width: 1.6, // Largura da borda
               ),
-              borderRadius: BorderRadius.circular(5),
+              borderRadius: BorderRadius.circular(10),
             ),
             elevation: 15,
             child: Padding(
