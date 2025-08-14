@@ -696,11 +696,6 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
                                                   ),
                                                   child: ListTile(
                                                     onLongPress: action,
-                                                    // () => help_dialog
-                                                    //     .showDetalhesPatrimonio(
-                                                    //       context,
-                                                    //       patrimonio,
-                                                    //     ),
                                                     isThreeLine: true,
                                                     selected:
                                                         patrimonio
