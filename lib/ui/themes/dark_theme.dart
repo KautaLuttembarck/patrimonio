@@ -193,6 +193,7 @@ final ThemeData darkTheme = ThemeData(
 
   cardTheme: CardThemeData(
     elevation: _baseElevation,
+    margin: EdgeInsets.all(0),
     shape: RoundedRectangleBorder(
       side: BorderSide(
         color: Colors.grey.withAlpha(40), // Cor da borda
