@@ -11,7 +11,6 @@ import 'package:animations/animations.dart';
 
 import 'package:patrimonio/app/providers/conferencia_provider.dart';
 import 'package:patrimonio/app/models/patrimonio.dart';
-import 'package:patrimonio/app/utils/help_dialog.dart' as help_dialog;
 import 'package:patrimonio/ui/pages/patrimonio_details_page.dart';
 
 class ConferenciaWidget extends StatefulWidget {
