@@ -157,93 +157,158 @@ class _ConfiguracoesWidgetState extends State<ConfiguracoesWidget> {
       crossAxisAlignment: CrossAxisAlignment.center,
       spacing: 18,
       children: [
-        SizedBox(
-          height: 150,
-          child: GestureDetector(
-            onLongPress: () async {
-              if (await Vibration.hasVibrator()) {
-                Vibration.vibrate(duration: 50);
-              }
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("🏆🏆🏆"),
-                        Text(
-                          "Desenvolvido pela PGSIS!",
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
+        GestureDetector(
+          onLongPress: () async {
+            if (await Vibration.hasVibrator()) {
+              Vibration.vibrate(duration: 50);
+            }
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("🏆🏆🏆"),
+                      Text(
+                        "Desenvolvido pela PGSIS!",
+                        style: TextStyle(
+                          color: Colors.black,
                         ),
-                        Text("🏆🏆🏆"),
-                      ],
-                    ),
-                    showCloseIcon: false,
+                      ),
+                      Text("🏆🏆🏆"),
+                    ],
                   ),
-                );
-              }
-            },
-            child: Center(
-              child: Icon(
-                Icons.settings,
-                color: Theme.of(context).colorScheme.secondary,
-                size: 90,
-              ).animate(
-                onPlay: (controller) => controller.repeat(),
-                effects: [RotateEffect(duration: Duration(seconds: 5))],
+                  showCloseIcon: false,
+                ),
+              );
+            }
+          },
+          child: Container(
+            margin: EdgeInsets.symmetric(vertical: 20),
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              // color: Theme.of(context).colorScheme.surfaceContainer,
+              borderRadius: BorderRadius.circular(80),
+              border: BoxBorder.fromBorderSide(
+                BorderSide(
+                  width: 3,
+                  color: Colors.blueGrey.shade500,
+                ),
               ),
             ),
+            child: Icon(
+              Icons.settings,
+              color: Theme.of(context).colorScheme.secondary,
+              size: 90,
+            ),
           ),
-        ),
-        Text(
-          _dataAtualizacao != null
-              ? "Dados patrimoniais atualizados pela última vez em $_dataAtualizacao"
-              : "Sem registro de obtenção dos dados patrimoniais!",
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.bodyLarge,
         ),
 
-        if (_downloadingData || (_downloadProgress > 0))
-          Card(
-            shape: RoundedRectangleBorder(
-              side: BorderSide(
-                color: Theme.of(context).colorScheme.primary,
-                width: 1.6, // Largura da borda
-              ),
-              borderRadius: BorderRadius.circular(10),
+        Card(
+          shape: RoundedRectangleBorder(
+            side: BorderSide(
+              color: Theme.of(context).colorScheme.primary,
+              width: 1.6, // Largura da borda
             ),
-            elevation: 15,
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  Text(_situacaoTransferencia),
-                  SizedBox(height: 10),
-                  LinearProgressIndicator(
-                    value: _downloadProgress > 0 ? 1 : null,
-                    borderRadius: BorderRadius.circular(15),
-                    minHeight: 7,
-                  ),
-                ],
-              ),
-            ),
-          ).animate(
-            effects: [
-              ShakeEffect(
-                delay: Duration(milliseconds: 250),
-                duration: Duration(milliseconds: 300),
-                rotation: 0.04,
-              ),
-              FadeEffect(
-                delay: Duration(
-                  milliseconds: 30, // * index,
-                ),
-                duration: const Duration(milliseconds: 300),
-              ),
-            ],
+            borderRadius: BorderRadius.circular(10),
           ),
+          // elevation: 15,
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                AnimatedContainer(
+                  duration: Duration(milliseconds: 300),
+                  height: _dataAtualizacao == null ? 20 : 45,
+                  width: MediaQuery.of(context).size.width,
+                  child: RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      text:
+                          _dataAtualizacao != null
+                              ? "Dados patrimoniais atualizados em\n"
+                              : "Dados patrimoniais ausentes!",
+                      style:
+                          _dataAtualizacao != null
+                              ? Theme.of(context).textTheme.bodySmall
+                              : Theme.of(context).textTheme.bodyMedium,
+                      children: [
+                        TextSpan(
+                          text:
+                              _dataAtualizacao != null
+                                  ? "$_dataAtualizacao"
+                                  : "",
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                AnimatedContainer(
+                  duration: Duration(milliseconds: 300),
+                  height:
+                      (_downloadingData || (_downloadProgress > 0)) ? 60 : 0,
+                  child:
+                      (_downloadingData || (_downloadProgress > 0))
+                          ? Column(
+                            children: [
+                              SizedBox(height: 20),
+                              Column(
+                                spacing: 10,
+                                children: [
+                                  AnimatedSwitcher(
+                                    duration: Duration(milliseconds: 300),
+                                    child:
+                                        _situacaoTransferencia ==
+                                                "Transferindo dados patrimoniais"
+                                            ? Text(
+                                              key: ValueKey("Transferindo"),
+                                              _situacaoTransferencia,
+                                            )
+                                            : Text(
+                                              key: ValueKey("Transferido"),
+                                              _situacaoTransferencia,
+                                            ),
+                                  ),
+                                  LinearProgressIndicator(
+                                    value: _downloadProgress > 0 ? 1 : null,
+                                    borderRadius: BorderRadius.circular(15),
+                                    minHeight: 7,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ).animate(
+                            delay: Duration(milliseconds: 300),
+                            effects: [
+                              FadeEffect(
+                                duration: Duration(milliseconds: 500),
+                              ),
+                            ],
+                          )
+                          : SizedBox(
+                            height: 0,
+                          ),
+                ),
+              ],
+            ),
+          ),
+        ).animate(
+          effects: [
+            ShakeEffect(
+              delay: Duration(milliseconds: 250),
+              duration: Duration(milliseconds: 300),
+              rotation: 0.04,
+            ),
+            FadeEffect(
+              delay: Duration(
+                milliseconds: 30, // * index,
+              ),
+              duration: const Duration(milliseconds: 300),
+            ),
+          ],
+        ),
 
         ElevatedButton.icon(
           onPressed:
