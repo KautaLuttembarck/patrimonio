@@ -218,7 +218,7 @@ class _SelecionaUnidadeWidgetState extends State<SelecionaUnidadeWidget> {
                       ? Center(
                         child: Text(
                           _precisaAtualizar
-                              ? "Baixe ou atualize os dados locais para visualizar os patrimônios associados a esta Localização (UL)"
+                              ? "Baixe ou atualize os dados locais para visualizar os patrimônios desta Localização (UL)"
                               : "Não existem patrimônios para conferência nesta Localização (UL)",
                           textAlign: TextAlign.center,
                           style: Theme.of(
@@ -240,7 +240,7 @@ class _SelecionaUnidadeWidgetState extends State<SelecionaUnidadeWidget> {
                             children: [
                               TextSpan(
                                 text:
-                                    "patrimônio ${_listagemPatrimonial.length > 1 ? "s" : ""} para conferência nesta localização (UL)",
+                                    "patrimônio${_listagemPatrimonial.length > 1 ? "s" : ""} para conferência nesta localização (UL)",
                                 style: Theme.of(
                                   context,
                                 ).textTheme.bodyLarge?.copyWith(
@@ -341,9 +341,10 @@ class _SelecionaUnidadeWidgetState extends State<SelecionaUnidadeWidget> {
         if (idUaSelecionada != null &&
             idUlSelecionada != null &&
             _precisaAtualizar)
-          OutlinedButton(
+          OutlinedButton.icon(
             onPressed: _isLoadingPatrimonios ? null : obtemDadosPatrimoniais,
-            child:
+            icon: Icon(Icons.security_update),
+            label:
                 _isLoadingPatrimonios
                     ? Center(
                       child: CircularProgressIndicator(
@@ -366,7 +367,6 @@ class _SelecionaUnidadeWidgetState extends State<SelecionaUnidadeWidget> {
                       spacing: 20,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.security_update),
                         Text(
                           _precisaAtualizar
                               ? "Atualizar dados"
