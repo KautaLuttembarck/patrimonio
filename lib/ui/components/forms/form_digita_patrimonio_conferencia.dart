@@ -227,29 +227,23 @@ class _FormDigitaPatrimonioConferenciaState
     return DraggableScrollableSheet(
       expand: false,
       snap: true,
+      snapSizes: [
+        tamanhoMinimo,
+      ],
       initialChildSize: tamanhoMinimo,
       minChildSize: 0.01,
-      maxChildSize: _tamanhoMaximo,
       builder: (context, scrollController) {
         return Scaffold(
           backgroundColor: Theme.of(context).colorScheme.surface,
           body: Container(
-            padding: EdgeInsets.all(16),
-            child: ListView(
-              controller: scrollController,
+            padding: EdgeInsets.only(
+              right: 16,
+              bottom: 16,
+              left: 16,
+            ),
+            child: Column(
+              // controller: scrollController,
               children: [
-                // puxador da tela
-                Center(
-                  child: Container(
-                    width: 40,
-                    height: 5,
-                    margin: EdgeInsets.only(bottom: 16),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[400],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
                 Text(
                   'Informar a conferência',
                   style: Theme.of(context).textTheme.headlineSmall,
@@ -303,13 +297,20 @@ class _FormDigitaPatrimonioConferenciaState
                               Checkbox(
                                 visualDensity: VisualDensity.compact,
                                 value: _useNAntigo,
-                                onChanged: (value) {
+                                onChanged: (_) {
                                   setState(() {
-                                    _useNAntigo = value!;
+                                    _useNAntigo = !_useNAntigo;
                                   });
                                 },
                               ),
-                              Text("Número patrimonial antigo"),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _useNAntigo = !_useNAntigo;
+                                  });
+                                },
+                                child: Text("Número patrimonial antigo"),
+                              ),
                             ],
                           ),
                         ],
