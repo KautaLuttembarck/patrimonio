@@ -6,7 +6,6 @@ import 'package:patrimonio/app/navigation/app_routes.dart';
 import 'package:patrimonio/ui/widgets/drawer_option.dart';
 
 import 'package:patrimonio/app/utils/help_dialog.dart' as helper;
-import 'package:patrimonio/ui/widgets/logout_button.dart';
 
 class AppDrawerActionList extends StatelessWidget {
   const AppDrawerActionList({super.key});
