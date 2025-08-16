@@ -18,15 +18,12 @@ class AppDrawerActionList extends StatelessWidget {
       spacing: 10,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // const Divider(),
-
         // Ir para o menu inicial
         const DrawerOption(
           route: AppRoutes.menuInicial,
           buttonText: "Início",
           icon: Icons.home,
         ),
-        // const Divider(),
 
         // Conferência patrimonial
         if (!continuarConferencia)
@@ -46,7 +43,6 @@ class AppDrawerActionList extends StatelessWidget {
             icon: Icons.barcode_reader,
             helperFunction: helper.showContinuarConferenciaHelpDialog,
           ),
-        // const Divider(),
 
         // Ir para as configurações do app
         const DrawerOption(
@@ -55,9 +51,6 @@ class AppDrawerActionList extends StatelessWidget {
           icon: Icons.settings,
           helperFunction: helper.showSettingsHelpDialog,
         ),
-        // const Divider(),
-
-        // const Divider(),
       ],
     );
   }
