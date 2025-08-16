@@ -170,9 +170,13 @@ class _ConfiguracoesWidgetState extends State<ConfiguracoesWidget> {
                     children: [
                       Text("🏆🏆🏆"),
                       Text(
-                        "Desenvolvido pela PGSIS!",
+                        "Desenvolvido pela PGSIS",
                         style: TextStyle(
-                          color: Colors.black,
+                          color:
+                              MediaQuery.of(context).platformBrightness ==
+                                      Brightness.dark
+                                  ? Colors.black
+                                  : null,
                         ),
                       ),
                       Text("🏆🏆🏆"),
