@@ -31,6 +31,7 @@ class _ConferenciaPageState extends State<ConferenciaPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true, // permite altura maior
+      showDragHandle: true,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
