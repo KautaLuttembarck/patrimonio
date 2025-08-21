@@ -596,6 +596,7 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
                                       itemBuilder: (context, index) {
                                         final patrimonio = lista[index];
                                         return OpenContainer(
+                                          tappable: false,
                                           closedElevation: 0,
                                           openElevation: 0,
                                           closedColor: Colors.transparent,
