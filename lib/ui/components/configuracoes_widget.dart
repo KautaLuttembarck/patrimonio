@@ -47,14 +47,7 @@ class _ConfiguracoesWidgetState extends State<ConfiguracoesWidget> {
         Clarity.sendCustomEvent(
           "Obteve os dados patrimoniais na tela de Configuração",
         );
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Dados salvos com sucesso!"),
-            backgroundColor: Colors.green,
-            showCloseIcon: true,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+
         setState(() {
           _situacaoTransferencia = "Transferência realizada!";
           _downloadProgress = 1;
@@ -99,16 +92,6 @@ class _ConfiguracoesWidgetState extends State<ConfiguracoesWidget> {
       });
       if (mounted) {
         context.read<ConferenciaProvider>().carregarItens();
-      }
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Dados removidos"),
-            backgroundColor: Colors.green,
-            showCloseIcon: true,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
       }
     }
   }
@@ -358,32 +341,33 @@ class _ConfiguracoesWidgetState extends State<ConfiguracoesWidget> {
           ),
 
         //Remove os dados de patrimônio e conferência em andamento
-        if (_dataAtualizacao != null)
-          ElevatedButton.icon(
-            onPressed: _limparBancoDeDados,
-            style: ButtonStyle(
-              backgroundColor: WidgetStatePropertyAll(
-                Theme.of(context).colorScheme.error,
-              ),
+        // if (_dataAtualizacao != null)
+        ElevatedButton.icon(
+          onPressed: _limparBancoDeDados,
+          style: ButtonStyle(
+            backgroundColor: WidgetStatePropertyAll(
+              Theme.of(context).colorScheme.error,
             ),
-            icon: Icon(Icons.delete_forever),
-            label: Row(
-              spacing: 20,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Limpar todos os dados locais"),
-              ],
-            ),
-          ).animate(
-            effects: [
-              FadeEffect(
-                delay: const Duration(
-                  milliseconds: 30, // * index,
-                ),
-                duration: const Duration(milliseconds: 200),
-              ),
+          ),
+          icon: Icon(Icons.delete_forever),
+          label: Row(
+            spacing: 20,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Limpar todos os dados locais"),
             ],
           ),
+        ).animate(
+          target: _dataAtualizacao != null ? 1 : 0,
+          effects: [
+            FadeEffect(
+              delay: const Duration(
+                milliseconds: 100,
+              ),
+              duration: const Duration(milliseconds: 500),
+            ),
+          ],
+        ),
       ],
     );
   }
