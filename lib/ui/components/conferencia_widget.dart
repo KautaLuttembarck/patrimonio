@@ -590,7 +590,7 @@ class _PatrimonioReaderComponentState extends State<ConferenciaWidget> {
                                       controller:
                                           widget.primaryScrollController,
                                       padding: const EdgeInsets.only(
-                                        bottom: 60.0,
+                                        bottom: 120.0,
                                       ),
                                       itemCount: lista.length,
                                       itemBuilder: (context, index) {
