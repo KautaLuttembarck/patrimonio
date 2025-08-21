@@ -208,7 +208,7 @@ class _SelecionaUnidadeWidgetState extends State<SelecionaUnidadeWidget> {
         if (idUaSelecionada != null && idUlSelecionada != null)
           Expanded(
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 15),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.primary,
                 borderRadius: BorderRadius.circular(15),
@@ -218,7 +218,7 @@ class _SelecionaUnidadeWidgetState extends State<SelecionaUnidadeWidget> {
                       ? Center(
                         child: Text(
                           _precisaAtualizar
-                              ? "Baixe ou atualize os dados locais para visualizar os patrimônios desta Localização (UL)"
+                              ? "É necessário baixar os patrimônios para prosseguir com a conferência"
                               : "Não existem patrimônios para conferência nesta Localização (UL)",
                           textAlign: TextAlign.center,
                           style: Theme.of(
@@ -367,11 +367,7 @@ class _SelecionaUnidadeWidgetState extends State<SelecionaUnidadeWidget> {
                       spacing: 20,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          _precisaAtualizar
-                              ? "Atualizar dados"
-                              : "Baixar Patrimônios",
-                        ),
+                        Text("Baixar Patrimônios"),
                       ],
                     ),
           ).animate(
